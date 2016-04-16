@@ -11,11 +11,12 @@ local player = {}
 player.image = love.graphics.newImage( "assets/ugly_sprite.png")
 player.x = 100
 player.y = 200
-player.width = 32
-player.height = 32
+player.width = 24
+player.height = 24
 player.shape = require 'entities.shapes.porcupine'
 player.locked_update = nil
 player.locked_draw = nil
+player.orientation= "left"
 player.hitbox = {}
 player.speed = 80
 function player.load()
@@ -26,8 +27,11 @@ function player.draw()
 		player.locked_draw()
 		return
 	end
-	love.graphics.draw(player.image,game.player.col.x+2, game.player.col.y+2, 0,28/32)
+
+	
+	love.graphics.rectangle("fill",player.col.x,player.col.y,player.col.width,player.col.height)
 	player.shape.draw()
+
 end
 function player.update(dt)
 	if player.locked_update then
@@ -51,45 +55,48 @@ end
 	end
 	if love.mouse.isDown(1) then
 		player.shape.A()
+		return
 	end
 	if love.mouse.isDown(2) then
 		player.shape.B()
+		return
 	end
 
 	if dx > 0 then
 		-- right
-			game.player.shape.images.current = game.player.shape.images.right
+			player.orientation="right"
 
 		if dy > 0 then
 			-- top right
-			game.player.shape.images.current = game.player.shape.images.downright
+			player.orientation="downright"
 
 		elseif dy < 0 then
 			-- bottom right
-			game.player.shape.images.current = game.player.shape.images.upright
+			player.orientation="upright"
 		end
 	elseif dx < 0 then
 		-- left
-			game.player.shape.images.current = game.player.shape.images.left
+			player.orientation="left"
 		if dy > 0 then
 			-- top left
-			game.player.shape.images.current = game.player.shape.images.downleft
+			player.orientation="downleft"
 		end
 		if dy < 0 then
-			game.player.shape.images.current = game.player.shape.images.upleft
+			player.orientation="upleft"
 			-- bottom left
 		end
 	else
 		if dy > 0 then
 			-- down	
-			game.player.shape.images.current = game.player.shape.images.down
-
+			player.orientation="down"
 		end
 		if dy < 0 then
 			-- up
-			game.player.shape.images.current = game.player.shape.images.up
+			player.orientation="up"
 		end
 	end
+			game.player.shape.images.current = game.player.shape.images[player.orientation]
+
 --porcupine.images.down =love.graphics.newImage('entities/porcupine/porcupine_walk_0-Sheet.png')
 --porcupine.images.downright =love.graphics.newImage('entities/porcupine/porcupine_walk_1-Sheet.png')
 --porcupine.images.right =love.graphics.newImage('entities/porcupine/porcupine_walk_2-Sheet.png')
