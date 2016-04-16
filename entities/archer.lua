@@ -2,6 +2,8 @@
 require 'entities.enemy'
 --items, length = game.world:querysegment(x1,y1,x2,y2)
 --template
+-- patrol points = { (x,y)}
+-- if no patrol give empty list
 function getNewArcher(patrolpoints)
 	local enemy = {}
 	enemy.x = 100
@@ -13,6 +15,8 @@ function getNewArcher(patrolpoints)
 	enemy.aggro = false
 	enemy.speed = 60
 	enemy.patrolindex = 1
+
+	enemy.patrol = patrolpoints
 
 
 	enemy.path = nil
@@ -28,6 +32,7 @@ function getNewArcher(patrolpoints)
     enemy.col = game.world:add(enemy,enemy.x,enemy.y,32,32)
 	enemy.update = function(dt) 
 		-- ai en shit
+		local dest = {}
 
 
 		if (enemy.currentanimationToLive == -1) then
@@ -86,7 +91,6 @@ function getNewArcher(patrolpoints)
 				
 					--else move in direction of player to get in los
 					--TODO add animations
-					local dest = {}
 					if not path._nodes[2] then
 						return
 					end
@@ -158,10 +162,71 @@ function getNewArcher(patrolpoints)
 
 				end
 			else
-			-- patrol area
-			
+			-- patrol area if patrol specified
+			if(#enemy.patrol>0) then
+				
+			dest.x = enemy.patrol[enemy.patrolindex].x
+			dest.y = enemy.patrol[enemy.patrolindex].y
+			local dx = 0
+					local dy = 0
+					if(dest.x < enemy.x)then
+						dx = dx - dt*enemy.speed
+						
 
+						if(dest.y < enemy.y)then
+							dy = dy - dt*enemy.speed
+							
+							--TODO activate animation
+						elseif(dest.y>enemy.y)then
+							dy = dy + dt*enemy.speed
+							--TODO activate animation
+						else
+							--TODO activate animation
+						end
+					elseif(dest.x>enemy.x)then
+						dx = dx + dt*enemy.speed
+						
 
+						if(dest.y < enemy.y)then
+							dy = dy - dt*enemy.speed
+							--TODO activate animation
+						elseif(dest.y>enemy.y)then
+							dy = dy + dt*enemy.speed
+							--TODO activate animation
+						else
+							--TODO activate animation
+						end
+					else
+						if(dest.y < enemy.y)then
+							dy = dy - dt*enemy.speed
+							--TODO activate animation
+						elseif(dest.y>enemy.y)then
+							dy = dy + dt*enemy.speed
+							--TODO activate animation
+						else
+							--illegalstate, no movement
+						end
+					end
+					if enemy.x + dx < dest.x and dx < 0 then
+							dx = dest.x - enemy.x
+					end
+					if enemy.x + dx > dest.x and dx > 0 then
+							dx = dest.x - enemy.x
+					end
+					if enemy.y + dy < dest.y and dy < 0 then
+							dy = dest.y - enemy.y
+					end
+					if enemy.y + dy > dest.y and dy > 0 then
+							dy = dest.y - enemy.y
+					end
+
+					enemy.col.x,enemy.col.y = game.world:move(enemy,enemy.col.x+dx,enemy.col.y+dy)
+					-- now aggroed
+					if(not enemy.aggro)then
+						enemy.aggro = false
+					end
+
+				end
 
 
 			end
