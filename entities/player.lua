@@ -1,12 +1,22 @@
+local function regularmove(item, other)
+	 if other.isPorcupine then
+	 	return "cross"
+	 end
+	 if other.isWall then
+	 	return "slide"
+	 end
+end
 local player = {}
 player.image = love.graphics.newImage( "assets/ugly_sprite.png")
 player.x = 100
-player.y = 100
+player.y = 200
 player.width = 32
 player.height = 32
 player.shape = require 'entities.shapes.porcupine'
 player.locked_update = nil
 player.locked_draw = nil
+player.hitbox = {}
+player.speed = 80
 function player.load()
 	game.player.col = game.world:add(game.player, game.player.x, game.player.x, game.player.width, game.player.height) 
 end
@@ -27,16 +37,16 @@ function player.update(dt)
 	local dy = 0
 	 game.camera:lookAt(math.floor(game.player.col.x),math.floor(game.player.col.y))
 	if  love.keyboard.isDown(CONTROLS.UP) then
-	 dy = dy  - dt*60
+	 dy = dy  - dt*player.shape.speed
 end
 	if  love.keyboard.isDown(CONTROLS.DOWN) then
-		dy = dy + dt*60
+		dy = dy + dt*player.shape.speed
 	end
 	if  love.keyboard.isDown(CONTROLS.RIGHT) then
-		dx = dx + dt*60
+		dx = dx + dt*player.shape.speed
 	end
 	if  love.keyboard.isDown(CONTROLS.LEFT) then
-		dx = dx  - dt*60
+		dx = dx  - dt*player.shape.speed
 	end
 	if love.mouse.isDown(1) then
 		player.shape.A()
@@ -85,7 +95,7 @@ end
 --porcupine.images.upright =love.graphics.newImage('entities/porcupine/porcupine_walk_3-Sheet.png')
 --porcupine.images.up =love.
 
-	game.player.col.x , game.player.col.y, cols, len =game.world:move(game.player,game.player.col.x+dx,game.player.col.y+dy)
+	game.player.col.x , game.player.col.y, cols, len =game.world:move(game.player,game.player.col.x+dx,game.player.col.y+dy,regularmove)
 	player.shape.update(dt)
 end
 return player

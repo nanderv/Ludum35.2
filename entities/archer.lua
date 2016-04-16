@@ -165,11 +165,8 @@ function getNewArcher(patrolpoints)
 			-- patrol area if patrol specified
 			if(#enemy.patrol>0) then
 				
-				dest.x = enemy.patrol[enemy.patrolindex].x
-				dest.y = enemy.patrol[enemy.patrolindex].y
-
-				enemy.patrolindex = (patrolindex+1)%(#enemy.patrol+1)
-			end
+			dest.x = enemy.patrol[enemy.patrolindex].x
+			dest.y = enemy.patrol[enemy.patrolindex].y
 			local dx = 0
 					local dy = 0
 					if(dest.x < enemy.x)then
