@@ -24,6 +24,20 @@ porcupine.images_B.up =love.graphics.newImage('entities/porcupine/porcupine_atta
 porcupine.images_B.upleft =love.graphics.newImage('entities/porcupine/porcupine_attack_b_4.png')
 porcupine.images_B.left =love.graphics.newImage('entities/porcupine/porcupine_attack_b_6_Sheet.png')
 porcupine.images_B.downleft =love.graphics.newImage('entities/porcupine/porcupine_attack_b_6_Sheet.png')
+
+
+
+porcupine.images_idle = {}
+porcupine.images_idle.down =love.graphics.newImage('entities/porcupine/porcupine_idle_0_Sheet.png')
+porcupine.images_idle.downright =love.graphics.newImage('entities/porcupine/porcupine_idle_1_Sheet.png')
+porcupine.images_idle.right =love.graphics.newImage('entities/porcupine/porcupine_idle_2_Sheet.png')
+porcupine.images_idle.upright =love.graphics.newImage('entities/porcupine/porcupine_idle_3_Sheet.png')
+porcupine.images_idle.up =love.graphics.newImage('entities/porcupine/porcupine_idle_4_Sheet.png')
+porcupine.images_idle.upleft =love.graphics.newImage('entities/porcupine/porcupine_idle_5_Sheet.png')
+porcupine.images_idle.left =love.graphics.newImage('entities/porcupine/porcupine_idle_6_Sheet.png')
+porcupine.images_idle.downleft =love.graphics.newImage('entities/porcupine/porcupine_idle_7_Sheet.png')
+
+
 porcupine.grids.B = core.anim8.newGrid(porcupine.images.current:getWidth()/8, 96, porcupine.images.current:getWidth(), porcupine.images.current:getHeight())
 porcupine.animations.B = core.anim8.newAnimation(porcupine.grids.B('1-8',1), 0.02,  'pauseAtEnd')
 
@@ -43,7 +57,7 @@ function porcupine.update(dt)
   porcupine.animations.current:update(dt)
 end
 function porcupine.draw()
-	porcupine.animations.current:draw(porcupine.images.current,game.player.col.x-36,game.player.col.y-36)
+	porcupine.animations.current:draw(porcupine.images.current,game.player.col.x-37,game.player.col.y-37)
 
 end
 function porcupine.updateA(dt)
@@ -54,7 +68,7 @@ function porcupine.updateA(dt)
 	end
 end
 function porcupine.drawA()
-	porcupine.animations.current:draw(porcupine.images.current,game.player.col.x-32,game.player.col.y-32)
+	porcupine.animations.current:draw(porcupine.images.current,game.player.col.x-37,game.player.col.y-37)
 
 end
 function porcupine.updateB(dt)
@@ -72,7 +86,7 @@ function porcupine.updateB(dt)
 
 end
 function porcupine.drawB()
-	porcupine.animations.current:draw(porcupine.images.current,game.player.col.x-36,game.player.col.y-36)
+	porcupine.animations.current:draw(porcupine.images.current,game.player.col.x-37,game.player.col.y-37)
 	
 
 end

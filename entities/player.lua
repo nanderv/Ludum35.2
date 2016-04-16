@@ -11,8 +11,8 @@ local player = {}
 player.image = love.graphics.newImage( "assets/ugly_sprite.png")
 player.x = 100
 player.y = 200
-player.width = 24
-player.height = 24
+player.width = 28
+player.height = 28
 player.shape = require 'entities.shapes.porcupine'
 player.locked_update = nil
 player.locked_draw = nil
@@ -34,6 +34,8 @@ function player.draw()
 
 end
 function player.update(dt)
+	player.x = player.col.x
+	player.y = player.col.y
 	if player.locked_update then
 		player.locked_update(dt)
 		return
@@ -41,21 +43,25 @@ function player.update(dt)
 	local dx = 0
 	local dy = 0
 	 game.camera:lookAt(math.floor(game.player.col.x),math.floor(game.player.col.y))
-	if  love.keyboard.isDown(CONTROLS.UP) then
-	 dy = dy  - dt*player.shape.speed
-end
-	if  love.keyboard.isDown(CONTROLS.DOWN) then
-		dy = dy + dt*player.shape.speed
+	 if core.gamepad == nil then
+		if  love.keyboard.isDown(CONTROLS.UP) then
+		 dy = dy  - dt*player.shape.speed
 	end
-	if  love.keyboard.isDown(CONTROLS.RIGHT) then
-		dx = dx + dt*player.shape.speed
-	end
-	if  love.keyboard.isDown(CONTROLS.LEFT) then
-		dx = dx  - dt*player.shape.speed
-	end
-	if love.mouse.isDown(1) then
-		player.shape.A()
-		return
+		if  love.keyboard.isDown(CONTROLS.DOWN) then
+			dy = dy + dt*player.shape.speed
+		end
+		if  love.keyboard.isDown(CONTROLS.RIGHT) then
+			dx = dx + dt*player.shape.speed
+		end
+		if  love.keyboard.isDown(CONTROLS.LEFT) then
+			dx = dx  - dt*player.shape.speed
+		end
+		if love.mouse.isDown(1) then
+			player.shape.A()
+			return
+		end
+	else
+		print(core.gamepad)
 	end
 	if love.mouse.isDown(2) then
 		player.shape.B()
@@ -95,7 +101,11 @@ end
 			player.orientation="up"
 		end
 	end
+	if dx ==  0 and dy == 0 then
+			game.player.shape.images.current = game.player.shape.images_idle[player.orientation]
+	else
 			game.player.shape.images.current = game.player.shape.images[player.orientation]
+		end
 
 --porcupine.images.down =love.graphics.newImage('entities/porcupine/porcupine_walk_0-Sheet.png')
 --porcupine.images.downright =love.graphics.newImage('entities/porcupine/porcupine_walk_1-Sheet.png')

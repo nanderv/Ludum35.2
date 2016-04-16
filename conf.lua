@@ -5,7 +5,7 @@ love.conf = function(t)
   t.window.height = 700
   t.window.resizable = true
   t.console = true
-  t.window.vsync = false
+  t.window.vsync = true
 end
 CONTROLS = {}
 CONTROLS.UP = "w"
