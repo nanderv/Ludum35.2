@@ -5,7 +5,7 @@ require 'entities.enemy'
 -- patrol points = { (x,y)}
 -- if no patrol give empty list
 -- cone width and length in pixels
-function getNewWatcher(patrolpoints, conelength, conewidth)
+function getNewWatcher(patrolpoints, conelength)
 	local enemy = {}
 	enemy.x = 59
 	enemy.y = 600
@@ -13,12 +13,13 @@ function getNewWatcher(patrolpoints, conelength, conewidth)
 	enemy.width = 32
 	enemy.aggroRange = 100
 	enemy.attackRange = 50
-	enemy.aggro = false
+	enemy.aggro = 0
 	enemy.speed = 60
 	enemy.patrolindex = 1
 	enemy.conelength = conelength
 	enemy.patrol = patrolpoints
-	enemy.aggrotimer = 500
+	enemy.aggrotimer = 5
+	enemy.orientation = "BOT"
 
 
 	enemy.path = nil
@@ -58,8 +59,14 @@ function getNewWatcher(patrolpoints, conelength, conewidth)
 			end
 			-- precheck to avoid pathfinding when possible
 			local rawdist = math.sqrt((math.abs(game.player.col.x-enemy.col.x)^2)+(math.abs(game.player.col.y-enemy.col.y)^2))
+			inCone = playerInCone(enemy.conelength,enemy.orientation,enemy.x,enemy.y)
+			if(inCone)then
+				enemy.aggro = enemy.aggrotimer
+			end
 
-			if(enemy.aggro or rawdist<enemy.aggroRange) then
+			--only follow if in aggro mode
+
+			if(enemy.aggro > 0) then
 
 				-- find dat path
 				local path, length = pathFinder:getPath(tx,ty,gx,gy)
@@ -77,26 +84,14 @@ function getNewWatcher(patrolpoints, conelength, conewidth)
 				end
 				local len = #path
 
-				if((math.abs(gx-tx) < 3 or math.abs(gy-ty)<3) or enemy.aggro) then
+				if(math.abs(gx-tx) < 3 or math.abs(gy-ty)<3) then
 
-					if(rawdist < enemy.attackRange) then 
+					if(rawdist <= enemy.attackRange) then 
 						-- aanvallen!
-
-						local x1,y1,x2,y2 = enemy.x+16, enemy.y+16, game.player.col.x+16, game.player.col.y+16
-						local items, length = game.world:querySegment(x1,y1,x2,y2)
-						if(items[2] == game.player) then
-							--aanvallen want player in los
-							enemy.currentanimationToLive = 5
-							print("Ik BEN TELEURGESTELD")
-							if(not enemy.aggro)then
-								enemy.aggro =true
-							end
-							return
-						end
+						print("Ik BEN TELEURGESTELD")
 					end
 			
 					--else move in direction of player to get in los
-					--TODO add animations
 					if not path._nodes[2] then
 						return
 					end
@@ -106,44 +101,27 @@ function getNewWatcher(patrolpoints, conelength, conewidth)
 					dest.y = dest.y * 32
 					local dx = 0
 					local dy = 0
+					local goalorientation
 					if(dest.x < enemy.x)then
 						dx = dx - dt*enemy.speed
-						
-
 						if(dest.y < enemy.y)then
 							dy = dy - dt*enemy.speed
-							
-							--TODO activate animation
 						elseif(dest.y>enemy.y)then
 							dy = dy + dt*enemy.speed
-							--TODO activate animation
-						else
-							--TODO activate animation
-						end
 					elseif(dest.x>enemy.x)then
 						dx = dx + dt*enemy.speed
-						
-
 						if(dest.y < enemy.y)then
 							dy = dy - dt*enemy.speed
-							--TODO activate animation
 						elseif(dest.y>enemy.y)then
 							dy = dy + dt*enemy.speed
-							--TODO activate animation
-						else
-							--TODO activate animation
-						end
 					else
 						if(dest.y < enemy.y)then
 							dy = dy - dt*enemy.speed
-							--TODO activate animation
+
 						elseif(dest.y>enemy.y)then
 							dy = dy + dt*enemy.speed
-							--TODO activate animation
-						else
-							--illegalstate, no movement
-						end
 					end
+					--rounding fix ding AKA magic n shit
 					if enemy.x + dx < dest.x and dx < 0 then
 							dx = dest.x - enemy.x
 					end
@@ -156,13 +134,67 @@ function getNewWatcher(patrolpoints, conelength, conewidth)
 					if enemy.y + dy > dest.y and dy > 0 then
 							dy = dest.y - enemy.y
 					end
+					--Bepaal orientation, even moar magic
+					ding = abs(dx)/abs(dy)
+					if(ding > 2)then
+						if(dx>0)then
+							goalorientation = "RIGHT"
+						else
+							goalorientation = "LEFT"
+						end
+					elseif(ding<0.5)then
+						if(dy>0)then
+							goalorientation = "DOWN"
+						else
+							goalorientation = "TOP"
+						end
+					else
+						if(dx>0)then
+							if(dy>0)then
+								goalorientation = "BOTRIGHT"
+							else
+								goalorientation= "TOPRIGHT"
+							end
+						else
+							if(dy>0)then
+								goalorientation = "BOTLEFT"
+							else
+								goalorientation= "TOPLEFT"
+							end
+					--check for need of turning
+					if(goalorientation ~= enemy.orientation)then
+						--turn dat shit
+						--cant act during turn
+						enemy.currentanimationToLive = 0.25
+						local stepor = turnmatrix[indexOf(enemy.orientation)][indexOf(goalorientation)]
+						enemy.orientation=stepor
+						if(stepor = "TOP")then
+							--assign animation
+						elseif(stepor = "TOPRIGHT")then
+							--assign animation
+						elseif(stepor = "TOPLEFT")then
+							--assign animation
+						elseif(stepor = "RIGHT")then
+							--assign animation
+						elseif(stepor = "LEFT")then
+							--assign animation
+						elseif(stepor = "BOT")then
+							--assign animation
+						elseif(stepor = "BOTRIGHT")then
+							--assign animation
+						elseif(stepor = "BOTLEFT")then
+							--assign animation
+						elseif(stepor = "RIGHT")then
+							--assign animation
+						end
 
-					enemy.col.x,enemy.col.y = game.world:move(enemy,enemy.col.x+dx,enemy.col.y+dy)
-					-- now aggroed
-					if(not enemy.aggro)then
-						enemy.aggro =true
+					else
+						--lekker moven
+						enemy.col.x,enemy.col.y = game.world:move(enemy,enemy.col.x+dx,enemy.col.y+dy)
+						enemy.currentanimationToLive = -1
 					end
 				end
+				aggro = aggro - dt
 			else
 
 				-- patrol area if patrol specified
@@ -230,7 +262,65 @@ function getNewWatcher(patrolpoints, conelength, conewidth)
 							dy = dest.y - enemy.y
 					end
 
-					enemy.col.x,enemy.col.y = game.world:move(enemy,enemy.col.x+dx,enemy.col.y+dy)				
+					--COPYPASTA ALERT
+					ding = abs(dx)/abs(dy)
+					if(ding > 2)then
+						if(dx>0)then
+							goalorientation = "RIGHT"
+						else
+							goalorientation = "LEFT"
+						end
+					elseif(ding<0.5)then
+						if(dy>0)then
+							goalorientation = "DOWN"
+						else
+							goalorientation = "TOP"
+						end
+					else
+						if(dx>0)then
+							if(dy>0)then
+								goalorientation = "BOTRIGHT"
+							else
+								goalorientation= "TOPRIGHT"
+							end
+						else
+							if(dy>0)then
+								goalorientation = "BOTLEFT"
+							else
+								goalorientation= "TOPLEFT"
+							end
+					--check for need of turning
+					if(goalorientation ~= enemy.orientation)then
+						--turn dat shit
+						--cant act during turn
+						enemy.currentanimationToLive = 0.25
+						local stepor = turnmatrix[indexOf(enemy.orientation)][indexOf(goalorientation)]
+						enemy.orientation=stepor
+						if(stepor = "TOP")then
+							--assign animation
+						elseif(stepor = "TOPRIGHT")then
+							--assign animation
+						elseif(stepor = "TOPLEFT")then
+							--assign animation
+						elseif(stepor = "RIGHT")then
+							--assign animation
+						elseif(stepor = "LEFT")then
+							--assign animation
+						elseif(stepor = "BOT")then
+							--assign animation
+						elseif(stepor = "BOTRIGHT")then
+							--assign animation
+						elseif(stepor = "BOTLEFT")then
+							--assign animation
+						elseif(stepor = "RIGHT")then
+							--assign animation
+						end
+
+					else
+						--lekker moven
+						enemy.col.x,enemy.col.y = game.world:move(enemy,enemy.col.x+dx,enemy.col.y+dy)
+						enemy.currentanimationToLive = -1
+					end				
 			end --anders nog bezig, dus mag niks
 		end
 			--animation updates
@@ -239,9 +329,12 @@ function getNewWatcher(patrolpoints, conelength, conewidth)
 						enemy.currentanimationToLive = enemy.currentanimationToLive - dt 
 					end
 			enemy.currentanimation:update(dt)
+		elseif(aggro>0)
+			print("IK BEN NOG BOOS")
+			enemy.currentanimationToLive = -1
+			enemy.currentanimation:update(dt)
 		else
-			print("IK BEN WEER BOOS")
-
+			print("IK BEN niet echt meer BOOS")
 			enemy.currentanimation = enemy.animationIdle
 			enemy.currentanimationToLive = -1
 			enemy.currentanimation:update(dt)
@@ -255,13 +348,82 @@ function getNewWatcher(patrolpoints, conelength, conewidth)
 end
 
 
-orientations = {"TOP","TOPRIGHT","TOPLEFT","RIGHT","LEFT","BOT","BOTLEFT","BOTRIGHT"}
-function playerincone(conelength, orientation, enemyx, enemyy)
+orientations = {"TOP","TOPRIGHT","RIGHT","BOTRIGHT","BOT","BOTLEFT","LEFT","TOPLEFT"}
+function playerInCone(conelength, orientation, enemyx, enemyy)
 	relx = game.player.col.x - enemyx
 	rely = game.player.col.y - enemyy
 	absx = math.abs(relx)
 	absy = math.abs(rely)
 	rbool = false
+<<<<<<< HEAD
+	-- not too far?
+	if(math.sqrt(relx^2+rely^2)<conelength)then
+		local x1,y1,x2,y2 = enemy.x+16, enemy.y+16, game.player.col.x+16, game.player.col.y+16
+		local items, length = game.world:querySegment(x1,y1,x2,y2)
+		-- can i see it?
+		if(items[2] == game.player) then
+			-- is it inside the correct cone?
+			if(orientation = "TOP")then
+				if(rely>=0 and absy>=absx)then
+					rbool=true
+				end
+			elseif(orientation = "TOPRIGHT")then
+				if(rely>=0 and relx>=0)then
+					rbool=true
+				end
+			elseif(orientation = "TOPLEFT")then
+				if(relx<=0 and y>=0)then
+					rbool = true
+				end
+			elseif(orientation = "RIGHT")then
+				if(relx>=0 and absy>=absx)then
+					rbool =true
+				end
+			elseif(orientation = "LEFT")then
+				if(x<=0 and absy<=absx)then
+					rbool = true
+				end
+			elseif(orientation = "BOT")then
+				if(rely<=0 and absy>=absx)then
+					rbool=true
+				end
+			elseif(orientation = "BOTRIGHT")then
+				if(relx>=0 and rely<=0)then
+					rbool=true
+				end
+			elseif(orientation = "BOTLEFT")then
+				if(rely<=0 and relx<=0)then
+					rbool=true
+				end
+			elseif(orientation = "RIGHT")then
+				if(relx>=0 and absy>=absx)then
+					rbool =true
+				end
+			end
+		end
+	return rbool
+end
+
+function indexOf(element)
+    for i=1,(#orientations+1) do
+    	if(orientations[i]==element)then
+    		return i;
+    	end
+    end
+    return 0 --gebeurt toch niet
+end
+
+-- {start,goal} -> firststep
+-- 				{"TOP",		"TOPRIGHT",	"RIGHT",	"BOTRIGHT",	"BOT",		"BOTLEFT",	"LEFT",		"TOPLEFT"}
+turnmatrix= {	{nil,		"TOP",		"TOPRIGHT",	"RIGHT",	"BOTRIGHT",	"LEFT",		"TOPLEFT",	"TOP"}, --TOP
+			 	{"TOPRIGHT",nil,		"TOPRIGHT",	"RIGHT",	"BOTRIGHT",	"BOT",		"TOPLEFT",	"TOP"}, --TOPRIGHT
+			 	{"TOPRIGHT","RIGHT",	nil,		"RIGHT",	"BOTRIGHT",	"BOT",		"BOTLEFT", 	"TOP"}, --RIGHT
+			 	{"TOPRIGHT","RIGHT",	"BOTRIGHT",	nil,		"BOTRIGHT",	"BOT",		"BOTLEFT",	"TOP"}, --BOTRIGHT
+			 	{"TOPRIGHT","RIGHT",	"BOTRIGHT",	"BOT",		nil,		"BOT",		"BOTLEFT",	"LEFT"}, --BOT
+			 	{"TOPLEFT",	"RIGHT",	"BOTRIGHT",	"BOT",		"BOTLEFT",	nil,		"BOTLEFT",	"LEFT"}, --BOTLEFT
+			 	{"TOPLEFT",	"TOP",		"BOTRIGHT",	"BOT",		"BOTLEFT",	"LEFT",		nil,		"LEFT"}, --LEFT
+			 	{"TOPLEFT",	"TOP",		"TOPRIGHT",	"BOT",		"BOTLEFT",	"LEFT",		"TOPLEFT",	nil}	}--TOPLEFT
+=======
 	if(orientation = "TOP")then
 		if(rely>=0 and absy>=absx)then
 			rbool=true
@@ -289,3 +451,4 @@ function playerincone(conelength, orientation, enemyx, enemyy)
 
 	return true
 	end
+>>>>>>> origin/master
