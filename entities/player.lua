@@ -59,10 +59,13 @@ end
 		end
 	elseif dx < 0 then
 		-- left
+			game.player.shape.images.current = game.player.shape.images.left
 		if dy > 0 then
 			-- top left
+			game.player.shape.images.current = game.player.shape.images.bottomleft
 		end
 		if dy < 0 then
+			game.player.shape.images.current = game.player.shape.images.topleft
 			-- bottom left
 		end
 	else
