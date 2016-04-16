@@ -2,7 +2,7 @@ local ctx = GS.new()
 function ctx:enter(dt)
     GS.push(core.states.loading)
 
-	print("LOADING")
+    print("LOADING")
 end
 function ctx:update(dt)
     core.events.exec(dt)

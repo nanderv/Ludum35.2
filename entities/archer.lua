@@ -2,17 +2,21 @@
 require 'entities.enemy'
 --items, length = game.world:querysegment(x1,y1,x2,y2)
 --template
+-- patrol points = { (x,y)}
+-- if no patrol give empty list
 function getNewArcher(patrolpoints)
 	local enemy = {}
-	enemy.x = 100
-	enemy.y = 100
+	enemy.x = 59
+	enemy.y = 127
 	enemy.height = 32
 	enemy.width = 32
-	enemy.aggroRange = 10*32
+	enemy.aggroRange = 10
 	enemy.attackRange = 350
 	enemy.aggro = false
 	enemy.speed = 60
 	enemy.patrolindex = 1
+
+	enemy.patrol = patrolpoints
 
 
 	enemy.path = nil
@@ -28,6 +32,7 @@ function getNewArcher(patrolpoints)
     enemy.col = game.world:add(enemy,enemy.x,enemy.y,32,32)
 	enemy.update = function(dt) 
 		-- ai en shit
+		local dest = {}
 
 
 		if (enemy.currentanimationToLive == -1) then
@@ -86,7 +91,6 @@ function getNewArcher(patrolpoints)
 				
 					--else move in direction of player to get in los
 					--TODO add animations
-					local dest = {}
 					if not path._nodes[2] then
 						return
 					end
@@ -149,26 +153,88 @@ function getNewArcher(patrolpoints)
 
 					enemy.col.x,enemy.col.y = game.world:move(enemy,enemy.col.x+dx,enemy.col.y+dy)
 					-- now aggroed
-					if(not enemy.aggro)then
-						enemy.aggro =true
-					end
+					--if(not enemy.aggro)then
+					--	enemy.aggro =true
+					--end
 				
 				else --idle
 					--TODO activate animation
 
 				end
-			else
-			-- patrol area
-			
-
-
-
-
 			end
-		end --anders nog bezig, dus mag niks
+			else
+				-- patrol area if patrol specified
+				if(#enemy.patrol>0) then
+					if(math.abs(enemy.x - enemy.patrol[enemy.patrolindex+1].x)<32 and math.abs(enemy.y - enemy.patrol[enemy.patrolindex+1].y)<32)then
+						enemy.patrolindex = (enemy.patrolindex+1)%(#enemy.patrol)
+					end
+					dest.x = enemy.patrol[enemy.patrolindex+1].x
+					dest.y = enemy.patrol[enemy.patrolindex+1].y
 
 
-	end
+
+				end
+				local dx = 0
+				local dy = 0
+				if(dest.x < enemy.x)then
+					dx = dx - dt*enemy.speed
+					
+
+					if(dest.y < enemy.y)then
+						dy = dy - dt*enemy.speed
+						
+						--TODO activate animation
+					elseif(dest.y>enemy.y)then
+						dy = dy + dt*enemy.speed
+						--TODO activate animation
+					else
+						--TODO activate animation
+					end
+					elseif(dest.x>enemy.x)then
+						dx = dx + dt*enemy.speed
+						
+
+						if(dest.y < enemy.y)then
+							dy = dy - dt*enemy.speed
+							--TODO activate animation
+						elseif(dest.y>enemy.y)then
+							dy = dy + dt*enemy.speed
+							--TODO activate animation
+						else
+							--TODO activate animation
+						end
+					else
+						if(dest.y < enemy.y)then
+							dy = dy - dt*enemy.speed
+							--TODO activate animation
+						elseif(dest.y>enemy.y)then
+							dy = dy + dt*enemy.speed
+							--TODO activate animation
+						else
+							--illegalstate, no movement
+						end
+					end
+					if enemy.x + dx < dest.x and dx < 0 then
+							dx = dest.x - enemy.x
+					end
+					if enemy.x + dx > dest.x and dx > 0 then
+							dx = dest.x - enemy.x
+					end
+					if enemy.y + dy < dest.y and dy < 0 then
+							dy = dest.y - enemy.y
+					end
+					if enemy.y + dy > dest.y and dy > 0 then
+							dy = dest.y - enemy.y
+					end
+
+					enemy.col.x,enemy.col.y = game.world:move(enemy,enemy.col.x+dx,enemy.col.y+dy)
+					-- now aggroed
+					if(not enemy.aggro)then
+						enemy.aggro = false
+					end
+				
+			end --anders nog bezig, dus mag niks
+		end
 			--animation updates
 		if(enemy.currentanimationToLive == -1 or enemy.currentanimationToLive > 0) then
 			if enemy.currentanimationToLive > 0 then
@@ -182,7 +248,8 @@ function getNewArcher(patrolpoints)
 			enemy.currentanimationToLive = -1
 			enemy.currentanimation:update(dt)
 		end
-end
+	end
+
 	enemy.draw = function()
 		enemy.currentanimation:draw(enemy.imageIdle,enemy.x,enemy.y)
 	end
