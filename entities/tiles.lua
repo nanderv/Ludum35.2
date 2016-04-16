@@ -11,28 +11,51 @@ local function addBlock(x,y,w,h,game)
   return block
 end
 
-
+  
 game.abstractmap={}
 game.loadMap=function(filename)
-	game.map = sti.new(filename)
+  game.map = sti.new(filename)
 
 
     local map = game.map
     local collidable_tiles = {}
     local layer = map.layers["collision"]
+
     for y = 1, map.height do
-    	game.abstractmap[y] = {}
-    	for x = 1, map.width do
+      game.abstractmap[y] = {}
+      for x = 1, map.width do
 
         if layer.data[y][x] then
            collidable_tiles[#collidable_tiles] = addBlock((x-1)*tile_width,(y-1)*tile_height,tile_width,tile_height,game)
 
 
            game.abstractmap[y][x] = 1
-     	else
-			game.abstractmap[y][x] = 0
+      else
+      game.abstractmap[y][x] = 0
         end
       end
   end
+  local i = 0
+  while true do
+      i=i+1
+      for y = 1, map.height do
+      local layer = map.layers["collision"..i]  
+      if layer == nil then
+        return
+      end
+    
+        game.abstractmap[y] = {}
+        for x = 1, map.width do
 
+          if layer.data[y][x] then
+             collidable_tiles[#collidable_tiles] = addBlock((x-1)*tile_width,(y-1)*tile_height,tile_width,tile_height,game)
+
+
+             game.abstractmap[y][x] = 1
+        else
+        game.abstractmap[y][x] = 0
+          end
+        end
+    end
+  end
 end

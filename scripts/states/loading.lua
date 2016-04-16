@@ -15,7 +15,7 @@ loading.phases = {
     function()
     game.player = require 'entities.player'
     game.player.load()
-    game.camera = core.camera(0,0)
+    game.camera = core.camera(0,0,2)
     print(game.camera)
     end,
     function()
