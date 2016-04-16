@@ -275,9 +275,8 @@ function playerincone(conelength, orientation, enemyx, enemyy)
 			rbool = true
 		end
 	elseif(orientation = "RIGHT")then
-		if(relx>=0 and absy>=absx)then
-			rbool =true
-		end
+		if(relx>=0)
+
 	elseif(orientation = "LEFT")then
 
 	elseif(orientation = "BOT")then
