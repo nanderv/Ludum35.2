@@ -15,7 +15,7 @@ function player.draw()
 		player.locked_draw()
 		return
 	end
-	love.graphics.draw(player.image,game.player.col.x+2, game.player.col.y+2, 0,28)
+	love.graphics.draw(player.image,game.player.col.x+2, game.player.col.y+2, 0,28/32)
 	player.shape.draw()
 end
 function player.update(dt)
@@ -62,10 +62,10 @@ end
 			game.player.shape.images.current = game.player.shape.images.left
 		if dy > 0 then
 			-- top left
-			game.player.shape.images.current = game.player.shape.images.bottomleft
+			game.player.shape.images.current = game.player.shape.images.downleft
 		end
 		if dy < 0 then
-			game.player.shape.images.current = game.player.shape.images.topleft
+			game.player.shape.images.current = game.player.shape.images.upleft
 			-- bottom left
 		end
 	else
