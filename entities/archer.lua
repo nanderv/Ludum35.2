@@ -58,7 +58,6 @@ function getNewArcher(patrolpoints)
 			local rawdist = math.sqrt((math.abs(game.player.col.x-enemy.col.x)^2)+(math.abs(game.player.col.y-enemy.col.y)^2))
 
 			if(enemy.aggro or rawdist<enemy.aggroRange) then
-				print("henk")
 
 				-- find dat path
 				local path, length = pathFinder:getPath(tx,ty,gx,gy)
@@ -162,16 +161,18 @@ function getNewArcher(patrolpoints)
 					--TODO activate animation
 
 				end
+			end
 			else
-				print("henk")
 				-- patrol area if patrol specified
 				if(#enemy.patrol>0) then
-					print("hier")
-					
-					dest.x = enemy.patrol[enemy.patrolindex].x
-					dest.y = enemy.patrol[enemy.patrolindex].y
+					if(math.abs(enemy.x - enemy.patrol[enemy.patrolindex+1].x)<32 and math.abs(enemy.y - enemy.patrol[enemy.patrolindex+1].y)<32)then
+						enemy.patrolindex = (enemy.patrolindex+1)%(#enemy.patrol)
+					end
+					dest.x = enemy.patrol[enemy.patrolindex+1].x
+					dest.y = enemy.patrol[enemy.patrolindex+1].y
 
-					enemy.patrolindex = (patrolindex+1)%(#enemy.patrol+1)
+
+
 				end
 				local dx = 0
 				local dy = 0
@@ -231,7 +232,7 @@ function getNewArcher(patrolpoints)
 					if(not enemy.aggro)then
 						enemy.aggro = false
 					end
-				end
+				
 			end --anders nog bezig, dus mag niks
 		end
 			--animation updates
