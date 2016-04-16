@@ -355,6 +355,7 @@ function playerInCone(conelength, orientation, enemyx, enemyy)
 	absx = math.abs(relx)
 	absy = math.abs(rely)
 	rbool = false
+<<<<<<< HEAD
 	-- not too far?
 	if(math.sqrt(relx^2+rely^2)<conelength)then
 		local x1,y1,x2,y2 = enemy.x+16, enemy.y+16, game.player.col.x+16, game.player.col.y+16
@@ -422,3 +423,32 @@ turnmatrix= {	{nil,		"TOP",		"TOPRIGHT",	"RIGHT",	"BOTRIGHT",	"LEFT",		"TOPLEFT"
 			 	{"TOPLEFT",	"RIGHT",	"BOTRIGHT",	"BOT",		"BOTLEFT",	nil,		"BOTLEFT",	"LEFT"}, --BOTLEFT
 			 	{"TOPLEFT",	"TOP",		"BOTRIGHT",	"BOT",		"BOTLEFT",	"LEFT",		nil,		"LEFT"}, --LEFT
 			 	{"TOPLEFT",	"TOP",		"TOPRIGHT",	"BOT",		"BOTLEFT",	"LEFT",		"TOPLEFT",	nil}	}--TOPLEFT
+=======
+	if(orientation = "TOP")then
+		if(rely>=0 and absy>=absx)then
+			rbool=true
+		end
+	elseif(orientation = "TOPRIGHT")then
+		if(rely>=0 and relx>=0)then
+			rbool=true
+		end
+	elseif(orientation = "TOPLEFT")then
+		if(relx<=0 and y>=0)then
+			rbool = true
+		end
+	elseif(orientation = "RIGHT")then
+		if(relx>=0)
+
+	elseif(orientation = "LEFT")then
+
+	elseif(orientation = "BOT")then
+
+	elseif(orientation = "BOTRIGHT")then
+
+	elseif(orientation = "BOTLEFT")then
+
+	elseif(orientation = "RIGHT")then
+
+	return true
+	end
+>>>>>>> origin/master
