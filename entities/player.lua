@@ -5,6 +5,7 @@ local function regularmove(item, other)
 	 if other.isWall then
 	 	return "slide"
 	 end
+	 return "slide"
 end
 local player = {}
 player.image = love.graphics.newImage( "assets/ugly_sprite.png")
