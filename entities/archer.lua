@@ -7,11 +7,11 @@ require 'entities.enemy'
 function getNewArcher(patrolpoints)
 	local enemy = {}
 	enemy.x = 59
-	enemy.y = 127
+	enemy.y = 600
 	enemy.height = 32
 	enemy.width = 32
-	enemy.aggroRange = 10
-	enemy.attackRange = 350
+	enemy.aggroRange = 100
+	enemy.attackRange = 50
 	enemy.aggro = false
 	enemy.speed = 60
 	enemy.patrolindex = 1
@@ -76,6 +76,7 @@ function getNewArcher(patrolpoints)
 				local len = #path
 
 				if((math.abs(gx-tx) < 3 or math.abs(gy-ty)<3) or enemy.aggro) then
+
 					if(rawdist < enemy.attackRange) then 
 						-- aanvallen!
 
@@ -83,12 +84,15 @@ function getNewArcher(patrolpoints)
 						local items, length = game.world:querySegment(x1,y1,x2,y2)
 						if(items[2] == game.player) then
 							--aanvallen want player in los
-							enemy.currentanimationToLive = 2
+							enemy.currentanimationToLive = 5
 							print("Ik BEN TELEURGESTELD")
+							if(not enemy.aggro)then
+								enemy.aggro =true
+							end
 							return
 						end
-						
-				
+					end
+			
 					--else move in direction of player to get in los
 					--TODO add animations
 					if not path._nodes[2] then
@@ -153,15 +157,10 @@ function getNewArcher(patrolpoints)
 
 					enemy.col.x,enemy.col.y = game.world:move(enemy,enemy.col.x+dx,enemy.col.y+dy)
 					-- now aggroed
-					--if(not enemy.aggro)then
-					--	enemy.aggro =true
-					--end
-				
-				else --idle
-					--TODO activate animation
-
+					if(not enemy.aggro)then
+						enemy.aggro =true
+					end
 				end
-			end
 			else
 
 				-- patrol area if patrol specified
@@ -229,12 +228,7 @@ function getNewArcher(patrolpoints)
 							dy = dest.y - enemy.y
 					end
 
-					enemy.col.x,enemy.col.y = game.world:move(enemy,enemy.col.x+dx,enemy.col.y+dy)
-					-- now aggroed
-					if(not enemy.aggro)then
-						enemy.aggro = false
-					end
-				
+					enemy.col.x,enemy.col.y = game.world:move(enemy,enemy.col.x+dx,enemy.col.y+dy)				
 			end --anders nog bezig, dus mag niks
 		end
 			--animation updates
