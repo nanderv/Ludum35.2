@@ -15,9 +15,9 @@ core.gamepad = nil
 
 function love.load()
     GS.registerEvents()
-    print(     #love.joystick.getJoysticks())
+    
     for k,v in pairs(love.joystick.getJoysticks()) do
-        love.graphics.print(joystick:getName(), 10, i * 20)
+        love.graphics.print(v:getName(), 10, i * 20)
     end
     GS.switch(core.states.menu)
 end
