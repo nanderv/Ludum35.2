@@ -22,8 +22,9 @@ local function get_col(self, other)
 		if other.isEnemy then
 			game.enemy_ids_to_delete[#game.enemy_ids_to_delete+1] = other
 		end
-		print("KILL")
 		self.delete = true
+		return "touch"
+
 	end
 	return "cross"
 end
