@@ -119,6 +119,7 @@ function getNewArcher(x,y,patrolpoints)
 						beun1,beun2,beun3,beun4=x1,y1,x2,y2
 						if(items[1]==game.player or items[2] == game.player) then
 							--aanvallen want player in los
+
 							enemy.currentanimationToLive = 0.5
 							enemy.currentanimation = enemy.animationAttack
 							enemy.currentimage = enemy.imageAttack
@@ -127,6 +128,7 @@ function getNewArcher(x,y,patrolpoints)
 							enemy.aimx = x
 							enemy.aimy = y
 							enemy.shootbool = true
+
 							if(not enemy.aggro)then
 								enemy.aggro =true
 							end

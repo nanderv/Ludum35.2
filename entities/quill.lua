@@ -19,7 +19,9 @@ local function get_col(self, other)
 	if self.deadly then
 
 		if other == game.player then
-			game.player.shape.damage(1,nil)
+	     local s = core.status_effects.knockback(1,game.player,self.dx*100, self.dy*100)
+
+			game.player.shape.damage(1,s)
 				self.delete = true
 		end
 	else
