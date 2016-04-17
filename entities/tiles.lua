@@ -19,10 +19,9 @@ local function load_armadillo_gates(map)
         for x = 1, map.width do
 
           if layer.data[y][x] then
-             collidable_tiles[#collidable_tiles] = addBlock((x-1)*tile_width,(y-1)*tile_height,tile_width,tile_height,game,false)
+      addBlock((x-1)*tile_width,(y-1)*tile_height,tile_width,tile_height,game,false)
 
 
-             game.abstractmap[y][x] = 1
         
           end
         end
@@ -38,11 +37,10 @@ local function load_armadillo_walls(map)
         for x = 1, map.width do
 
           if layer.data[y][x] then
-            print("HOI")
-             collidable_tiles[#collidable_tiles] = addBlock((x-1)*tile_width,(y-1)*tile_height,tile_width,tile_height,game,true)
+            
+             addBlock((x-1)*tile_width,(y-1)*tile_height,tile_width,tile_height,game,true)
 
 
-             game.abstractmap[y][x] = 1
         
           end
         end
@@ -63,10 +61,10 @@ core.loadMap=function(filename)
       for x = 1, map.width do
 
         if layer.data[y][x] then
-           collidable_tiles[#collidable_tiles] = addBlock((x-1)*tile_width,(y-1)*tile_height,tile_width,tile_height,game, false)
+            addBlock((x-1)*tile_width,(y-1)*tile_height,tile_width,tile_height,game, false)
+            game.abstractmap[y][x] = 1
 
 
-           game.abstractmap[y][x] = 1
       else
         game.abstractmap[y][x] = 0
         end
@@ -85,12 +83,11 @@ core.loadMap=function(filename)
         for x = 1, map.width do
 
           if layer.data[y][x] then
-             collidable_tiles[#collidable_tiles] = addBlock((x-1)*tile_width,(y-1)*tile_height,tile_width,tile_height,game,false)
+             addBlock((x-1)*tile_width,(y-1)*tile_height,tile_width,tile_height,game,false)
 
 
              game.abstractmap[y][x] = 1
         else
-        game.abstractmap[y][x] = 0
           end
         end
     end
