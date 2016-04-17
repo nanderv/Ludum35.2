@@ -36,6 +36,9 @@ function ctx:draw()
     --  if DEBUG.hax then
         --DEBUG.bump_debug.draw(game.world)
       --end
+
+
+
     for _,enemy in pairs(game.enemies) do
         enemy.draw()
     end
@@ -45,6 +48,8 @@ for _,obj in pairs(game.projectiles) do
     end
     local x,y = game.camera:worldCoords(love.mouse.getPosition())
     love.graphics.line(game.player.x+16,game.player.y+16,x,y)
+          drawBlocks()
+
     game.camera:detach()
 
       love.graphics.print(love.timer.getFPS(), 400, 20 )

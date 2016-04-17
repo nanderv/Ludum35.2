@@ -17,8 +17,10 @@ function getNewWatcher(x,y,patrolpoints, conelength)
 	local enemy = {}
 	enemy.x = x
 	enemy.y = y
-	enemy.height = 32
-	enemy.width = 32
+	enemy.height = 21
+	enemy.width = 39
+	enemy.offx = 28
+	enemy.offy = 40
 	enemy.aggro = 0
 	enemy.speed = 60
 	enemy.patrolindex = 1
@@ -34,15 +36,15 @@ function getNewWatcher(x,y,patrolpoints, conelength)
 
 	enemy.path = nil
 	--animations
-	enemy.imageIdle = love.graphics.newImage("assets/ugly_sprite.png")
-	local g = core.anim8.newGrid(32, 32, enemy.imageIdle:getWidth(), enemy.imageIdle:getHeight())
-    enemy.animationIdle = core.anim8.newAnimation(g('1-1',1), 0.1) -- ("frame numbers", "index starting frame", "time per frame", optional end of loop)
+	enemy.image = love.graphics.newImage("entities/watcher/watcher_0_Sheet.png")
+	local g = core.anim8.newGrid(96, 96, enemy.image:getWidth(), enemy.image:getHeight())
+    enemy.animation = core.anim8.newAnimation(g('1-8',1), 0.06) -- ("frame numbers", "index starting frame", "time per frame", optional end of loop)
     -- do other animations
 
     --initially idle
     enemy.currentanimation = enemy.animationIdle
     enemy.currentanimationToLive = -1
-    enemy.col = game.world:add(enemy,enemy.x,enemy.y,32,32)
+    enemy.col = game.world:add(enemy,enemy.x+48,enemy.y+52,39,21)
 
 	enemy.update = function(dt) 
 		-- ai en shit
@@ -133,38 +135,38 @@ function getNewWatcher(x,y,patrolpoints, conelength)
 			if enemy.currentanimationToLive > 0 then
 						enemy.currentanimationToLive = enemy.currentanimationToLive - dt 
 					end
-			enemy.currentanimation:update(dt)
+			enemy.animation:update(dt)
 		elseif(enemy.aggro>0) then
 			enemy.currentanimationToLive = -1
-			enemy.currentanimation:update(dt)
+			enemy.animation:update(dt)
 		else
-			enemy.currentanimation = enemy.animationIdle
 			enemy.currentanimationToLive = -1
-			enemy.currentanimation:update(dt)
+			enemy.animation:update(dt)
 		end
 		return true
 	end
 
 	enemy.draw = function()
-		enemy.currentanimation:draw(enemy.imageIdle,enemy.x,enemy.y)
+
+	love.graphics.line(enemy.col.x,enemy.col.y,enemy.x+enemy.width,enemy.col.y+enemy.col.height)
+
+	love.graphics.line(enemy.col.x+enemy.width,enemy.col.y,enemy.col.x,enemy.col.y+enemy.height)
 		if(enemy.orientation == "TOP")then
-			love.graphics.line(enemy.x,enemy.y,enemy.x,(enemy.y-enemy.conelength))
+			enemy.animation:draw(enemy.image,enemy.col.x+19,enemy.col.y+15,(180*math.pi/180),1,1,48,48)
 		elseif(enemy.orientation == "TOPRIGHT")then
-			love.graphics.line(enemy.x,enemy.y,(enemy.x+0.5*enemy.conelength),(enemy.y-0.5*enemy.conelength))
+			enemy.animation:draw(enemy.image,enemy.col.x+19,enemy.col.y+15,(225*math.pi/180),1,1,48,48)
 		elseif(enemy.orientation == "TOPLEFT")then
-			love.graphics.line(enemy.x,enemy.y,(enemy.x-0.5*enemy.conelength),(enemy.y-enemy.conelength))
+			enemy.animation:draw(enemy.image,enemy.col.x+19,enemy.col.y+15,(135*math.pi/180),1,1,48,48)
 		elseif(enemy.orientation == "RIGHT")then
-			love.graphics.line(enemy.x,enemy.y,(enemy.x+enemy.conelength),enemy.y)
+			enemy.animation:draw(enemy.image,enemy.col.x+19,enemy.col.y+15,(270*math.pi/180),1,1,48,48)
 		elseif(enemy.orientation == "LEFT")then
-			love.graphics.line(enemy.x,enemy.y,(enemy.x-enemy.conelength),enemy.y)
+			enemy.animation:draw(enemy.image,enemy.col.x+19,enemy.col.y+15,(90*math.pi/180),1,1,48,48)
 		elseif(enemy.orientation == "BOT")then
-			love.graphics.line(enemy.x,enemy.y,enemy.x,(enemy.y+enemy.conelength))
+			enemy.animation:draw(enemy.image,enemy.col.x-enemy.offx,enemy.col.y-enemy.offy)
 		elseif(enemy.orientation =="BOTRIGHT")then
-			love.graphics.line(enemy.x,enemy.y,(enemy.x+0.5*enemy.conelength),(enemy.y+0.5*enemy.conelength))
+			enemy.animation:draw(enemy.image,enemy.col.x+19,enemy.col.y+15,(315*math.pi/180),1,1,48,48)
 		elseif(enemy.orientation == "BOTLEFT")then
-			love.graphics.line(enemy.x,enemy.y,(enemy.x-0.5*enemy.conelength),(enemy.y+0.5*enemy.conelength))
-		elseif(enemy.orientation == "RIGHT")then
-			love.graphics.line(enemy.x,enemy.y,(enemy.x+enemy.conelength),enemy.y)
+			enemy.animation:draw(enemy.image,enemy.col.x+19,enemy.col.y+15,(45*math.pi/180),1,1,48,48)
 		end
 	end
 	return enemy
@@ -310,11 +312,13 @@ function playerInCone(conelength, orientation, enemy)
 
 	-- not too far?
 	if(math.sqrt(relx^2+rely^2)<enemy.conelength)then
-		local x1,y1,x2,y2 = enemy.x+16, enemy.y+16, game.player.col.x+16, game.player.col.y+16
+
+		local x1,y1,x2,y2 = enemy.x+0.5*enemy.width, enemy.y+0.5*enemy.height, game.player.col.x+0.5*game.player.width, game.player.col.y+0.5*game.player.height
 		local items, length = game.world:querySegment(x1,y1,x2,y2)
 		-- can i see it?
 		if(items[2] == game.player) then
 			-- is it inside the correct cone?
+
 			if(orientation == "TOP")then
 				if(rely<=0 and absy>=absx)then
 					rbool=true
