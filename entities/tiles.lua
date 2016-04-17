@@ -1,3 +1,4 @@
+require 'entities.objects'
 tile_width =32
 tile_height=32
 local function addBlock(x,y,w,h,game,isPorcupine, isCatWater)
@@ -14,12 +15,55 @@ local function addBlock(x,y,w,h,game,isPorcupine, isCatWater)
   game.world:add(block, x,y,w,h)
   return block
 end
+local function load_objects(map)
+  local layer = map.layers["objects"]  
+        if layer == nil then
+        return
+      end
+  local map = gamestate.map
 
+  local o = layer.objects
+  for _, v in pairs(o) do
+    if  v then
+    --  if v.properties.type =="line" then
+    
+      if v.properties.type == "start" then
+          print(v.x, v.y)
+      end
+      if v.properties.type == "watcher" then
+          print(v.x, v.y)
+      end
+      if v.properties.type == "enemy" then
+        print(v.x, v.y)
+      end
+      if v.properties.type == "boss" then
+        print(v.x, v.y)
+      end
+      if v.properties.type == "heart" then
+        print(v.x, v.y)
+      end
+      if v.properties.type == "health" then
+          print(v.x, v.y)
+      end
+      if v.properties.type == "key" then
+        print(v.x, v.y)
+      end
+      if v.properties.type == "target" then
+        print(v.x, v.y)
+      end
+
+    end
+  end
+  return enemies
+
+
+end
 
 local function load_cat_water(map)
   local layer = map.layers["cat_water"]  
         if layer == nil then
         return
+
       end
         for y = 1, map.height do
 

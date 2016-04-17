@@ -1,6 +1,9 @@
+starting_level_name = "assets/maps/bestmap.lua"
+current_level_name = "assets/maps/bestmap.lua"
 local loading = {}
 loading.loaded = 1
 loading.first = true
+
 -- Loading screen phases, split up loading code among these phases
 loading.phases = {
     function()
@@ -17,7 +20,7 @@ loading.phases = {
         game.blocks = {}
     game.n_blocks = 0
     game.projectiles = {}
-    game.loadMap("assets/maps/bestmap.lua")
+    game.loadMap(current_level_name)
 
     end,
     function()
