@@ -2,7 +2,6 @@ local ctx = GS.new()
 function ctx:enter(dt)
     GS.push(core.states.loading)
 
-    print("LOADING")
 end
 function ctx:update(dt)
 
@@ -22,7 +21,7 @@ function ctx:update(dt)
     end
     for zz, obj in pairs(game.enemy_ids_to_delete)do
         game.world:remove(obj)
-        
+
         game.enemies[obj.id] = nil
         game.enemy_ids_to_delete[zz] = nil
     end

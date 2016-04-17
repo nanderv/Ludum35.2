@@ -17,7 +17,6 @@ end
 
 function menu:keypressed(key)
 	if key =="return" then
-		print("ROADING")
 		GS.switch(core.states.main)
 	elseif key == 'escape' then
                 GS.push(settingsmenu)
