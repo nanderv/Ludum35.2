@@ -93,7 +93,7 @@ function getNewMrT(x,y)
 					-- meh mag niet aanvallen dan maar lopen
 					copyPastaKiller(dest, mrt, dt, mrt.turn[mrt.actp], true)
 				end
-			elseif(mrt.tailattacktimer<=0 and mrt.tailattacktimer ~= -5 and rawdistance<tailattackrange and facingPlayer(true))
+			elseif(mrt.tailattacktimer<=0 and mrt.tailattacktimer ~= -5 and rawdistance<tailattackrange and facingPlayer(true))then
 				tailattack(mrt)
 			else
 				--turn to player and move towards it
@@ -140,7 +140,7 @@ function getNewMrT(x,y)
 			-- TODO show correct part of tail attack
 		elseif(mrt.biteactive)then
 			-- TODO show correct part of the biteattack
-		elseif((mrt.dy+mrt.dx)>)
+		elseif((mrt.dy+mrt.dx)>)then
 			-- TODO show correct movement
 		else
 			-- TODO show idle
@@ -155,12 +155,12 @@ function getNewMrT(x,y)
 			mrt.nuclearstriketimer = 0
 			mrt.walltimer = 0
 			mrt.lasereyestimer = 0
-		elseif(mrt.hp<mrt.p2)
+		elseif(mrt.hp<mrt.p2)then
 			mrt.actp = 3
 			--resetcd's
 			mrt.nuclearstriketimer = 0
 			mrt.walltimer = 0
-		elseif(mrt.hp<mrt.p1)
+		elseif(mrt.hp<mrt.p1)then
 			mrt.act = 2
 			--resetcd's
 			mrt.nuclearstriketimer = 0
@@ -179,31 +179,31 @@ function getNewMrT(x,y)
 				rbool=true
 			end
 		elseif(mrt.orientation == "TOPRIGHT")then
-			if(rely>=0 and relx<=0 and booltail)or(rely<=0 and relx>=0 and not booltail))then
+			if(rely>=0 and relx<=0 and booltail)or(rely<=0 and relx>=0 and not booltail)then
 				rbool=true
 			end
 		elseif(mrt.orientation == "TOPLEFT")then
-			if(relx>=0 and rely>=0 and booltail)or(rely<=0 and relx<=0 and not booltail))then
+			if(relx>=0 and rely>=0 and booltail)or(rely<=0 and relx<=0 and not booltail)then
 				rbool = true
 			end
 		elseif(mrt.orientation == "RIGHT")then
-			if(relx<=0 and absy<=absx and booltail)or(relx>=0 and absy<=absx and not booltail))then
+			if(relx<=0 and absy<=absx and booltail)or(relx>=0 and absy<=absx and not booltail)then
 				rbool =true
 			end
 		elseif(mrt.orientation == "LEFT")then
-			if(relx>=0 and absy<=absx and booltail)or(relx<=0 and absy<=absx and not booltail))then
+			if(relx>=0 and absy<=absx and booltail)or(relx<=0 and absy<=absx and not booltail)then
 				rbool = true
 			end
 		elseif(mrt.orientation == "BOT")then
-			if(rely<=0 and absy>=absx and booltail)or(rely>=0 and absy>=absx and not booltail))then
+			if(rely<=0 and absy>=absx and booltail)or(rely>=0 and absy>=absx and not booltail)then
 				rbool=true
 			end
 		elseif(mrt.orientation == "BOTRIGHT")then
-			if(relx<=0 and rely<=0 and booltail)or(rely>=0 and rely>=0 and not booltail))then
+			if(relx<=0 and rely<=0 and booltail)or(rely>=0 and rely>=0 and not booltail)then
 				rbool=true
 			end
 		elseif(mrt.orientation == "BOTLEFT")then
-			if(rely<=0 and relx>=0 and booltail)or(rely>=0 and relx<=0 and not booltail))then
+			if(rely<=0 and relx>=0 and booltail)or(rely>=0 and relx<=0 and not booltail)then
 				rbool=true
 			end
 		end
