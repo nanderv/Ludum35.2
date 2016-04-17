@@ -22,8 +22,8 @@ return function ()
 
 local player = {}
 player.image = love.graphics.newImage( "assets/ugly_sprite.png")
-player.x = 100
-player.y = 200
+player.x = game.startX
+player.y = game.startY
 player.width = 16
 player.height = 16
 player.health = 4
@@ -172,7 +172,9 @@ player.orientation= "left"
 player.hitbox = {}
 player.speed = 80
 function player.load()
-	game.player.col = game.world:add(game.player, game.player.x, game.player.x, game.player.width, game.player.height) 
+	
+
+	game.player.col = game.world:add(game.player, game.player.x, game.player.y, game.player.width, game.player.height) 
 end
 function player.draw(a )
 	if player.locked_draw  and not a then

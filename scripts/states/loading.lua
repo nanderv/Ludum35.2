@@ -14,33 +14,29 @@ loading.phases = {
     function()
         end,
         function()
+            game.enemies = {}
             game.enemy_ids_to_delete = {}
                     game.world = core.bump.newWorld()
         game.objects = {}
         game.blocks = {}
     game.n_blocks = 0
     game.projectiles = {}
-    game.loadMap(current_level_name)
+    game.loadMap("assets/maps/bestmap.lua")
 
     end,
     function()
+
+        require ("entities.watcher")
+        require ("entities.archer")
+        require ("entities.enemy")
+        load_objects(map)
+
    game.player = require 'entities.player'()
     game.player.load()
     print("LP")
     game.camera = core.camera(0,0,2)
     end,
     function()
-        require ("entities.watcher")
-        require ("entities.archer")
-        game.enemies={}
-        game.enemies_in_range = {}
-        game.enemies_out_of_range = {}
-        game.reload_enemies = {}
-
-        game.enemies[1]= getNewArcher(250,250,{{x=59, y=127},{x=59, y=400}})
-        game.enemies[1].id = 1
-        game.enemies[2]= getNewWatcher(10,100,{{x=59, y=127},{x=59, y=400}},100)
-        game.enemies[2].id = 2
     end
 }
 
