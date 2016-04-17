@@ -35,7 +35,7 @@ function load_objects()
           game.enemies[#game.enemies + 1]= getNewWatcher(v.x,v.y,{{x=59, y=127},{x=59, y=400}})
       end
       if v.type == "enemy" then
-        game.enemies[#game.enemies + 1]= getNewEnemy(v.x,v.y,{{x=59, y=127},{x=59, y=400}})
+        game.enemies[#game.enemies + 1]= getNewEnemy(v.x,v.y,{{x=59, y=127},{x=59, y=400}},200)
       end
       if v.type == "boss" then
         game.enemies[#game.enemies + 1]= getNewMrT(v.x,v.y,{{x=59, y=127},{x=59, y=400}})
