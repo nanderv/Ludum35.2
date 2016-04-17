@@ -3,7 +3,7 @@ local function regularmove(item, other)
 		 if other.isPorcupine then
 		 	return "cross"
 		 end
-		 if other.isWall then
+		 if other.isWall or other.isCatWater then
 		 	return "slide"
 		 end
 		 return "cross"
@@ -98,9 +98,7 @@ function getNewWatcher(x,y,patrolpoints, conelength)
 				local rawdist = math.sqrt((math.abs(game.player.col.x-enemy.col.x)^2)+(math.abs(game.player.col.y-enemy.col.y)^2))
 				if(rawdist <= enemy.attackrange) then 
 					--aanvallen!
-				     local s = core.status_effects.stun(1,game.player)
-				     game.player.locked_update = s.update
-				     game.player.locked_draw = s.draw
+				     game.player.shape.damage(1,"stun")
 
 					enemy.currentanimationToLive = 2
 

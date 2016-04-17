@@ -58,14 +58,26 @@ porcupine.B = function()
 		porcupine.images.current = porcupine.images_B[game.player.orientation]
 end
 function porcupine.damage(hit, status)
-	game.player.health = game.player.health - hit
-	print("HIT")
+			if game.player.invincibility > 0 then
+				return
+			end
+
+			game.player.health = game.player.health - hit
+			print("HIT")
+
+			if game.player.health <= 0 then
+				print("DEAD")
+				GS.push(core.states.death )
+				return
+			end
+	 game.player.invincibility = 2
+		
 end	
 function porcupine.update(dt)
   porcupine.animations.current:update(dt)
 end
 function porcupine.draw()
-	porcupine.animations.current:draw(porcupine.images.current,game.player.col.x-34,game.player.col.y-37)
+	porcupine.animations.current:draw(porcupine.images.current,game.player.col.x-34-game.player.offx,game.player.col.y-37-game.player.offy)
 
 end
 function porcupine.updateA(dt)
