@@ -9,8 +9,7 @@ local function regularmove(item, other)
 		 return "cross"
 end
 require 'entities.enemy'
---items, length = game.world:querysegment(x1,y1,x2,y2)
---template
+
 -- patrol points = { (x,y)}
 -- if no patrol give empty list
 -- cone width and length in pixels
@@ -29,6 +28,8 @@ function getNewWatcher(x,y,patrolpoints, conelength)
 	enemy.orientation = "BOT"
 	enemy.attackrange = 50
 	enemy.testcounter = 0
+	enemy.dy = 0
+	enemy.dx = 0
 
 
 	enemy.path = nil
@@ -111,7 +112,7 @@ function getNewWatcher(x,y,patrolpoints, conelength)
 				dest.y =   path._nodes[2]._y 
 				dest.x = dest.x * 32
 				dest.y = dest.y * 32
-				copyPastaKiller(dest,enemy, dt)
+				copyPastaKiller(dest,enemy, dt,0.25, false)
 				enemy.aggro = enemy.aggro - dt
 			else
 				-- patrol area if patrol specified
@@ -122,7 +123,7 @@ function getNewWatcher(x,y,patrolpoints, conelength)
 					dest.x = enemy.patrol[enemy.patrolindex+1].x
 					dest.y = enemy.patrol[enemy.patrolindex+1].y
 				end
-				copyPastaKiller(dest, enemy, dt)
+				copyPastaKiller(dest, enemy, dt, 0.25, false)
 			end --anders nog bezig, dus mag niks
 		end
 			--animation updates
@@ -169,7 +170,7 @@ function getNewWatcher(x,y,patrolpoints, conelength)
 end
 
 
-function copyPastaKiller(dest, enemy, dt)
+function copyPastaKiller(dest, enemy, dt,delay,mrtbool)
 	local dx = 0
 	local dy = 0	
 	if(dest.x < enemy.x)then
@@ -261,7 +262,7 @@ function copyPastaKiller(dest, enemy, dt)
 	if(goalorientation ~= enemy.orientation and enemy.currentanimationToLive < 0)then
 		--turn dat shit
 		--cant act during turn
-		enemy.currentanimationToLive = 0.25
+		enemy.currentanimationToLive = delay
 		local stepor = turnmatrix[indexOf(goalorientation)][indexOf(enemy.orientation)]
 		enemy.orientation=stepor
 		if(stepor == "TOP")then
@@ -282,21 +283,29 @@ function copyPastaKiller(dest, enemy, dt)
 			--assign animation
 		elseif(stepor == "RIGHT")then
 			--assign animation
-	end
+		end
+		if(mrtbool)then
+			--lekker moven, mrt doesnt giva a shit
+			enemy.col.x,enemy.col.y = game.world:move(enemy,enemy.col.x+dx,enemy.col.y+dy,regularmove)
+			enemy.dx = dx
+			enemy.dy = dy
+		end
 	else
 		--lekker moven
 		enemy.col.x,enemy.col.y = game.world:move(enemy,enemy.col.x+dx,enemy.col.y+dy,regularmove)
+		enemy.dx = dx
+		enemy.dy = dy
 	end	
 end
 
 
 orientations = {"TOP","TOPRIGHT","RIGHT","BOTRIGHT","BOT","BOTLEFT","LEFT","TOPLEFT"}
 function playerInCone(conelength, orientation, enemy)
-	relx = game.player.col.x - enemy.x
-	rely = game.player.col.y - enemy.y
-	absx = math.abs(relx)
-	absy = math.abs(rely)
-	rbool = false
+	local relx = game.player.col.x - enemy.x
+	local rely = game.player.col.y - enemy.y
+	local absx = math.abs(relx)
+	local absy = math.abs(rely)
+	local rbool = false
 
 	-- not too far?
 	if(math.sqrt(relx^2+rely^2)<enemy.conelength)then
