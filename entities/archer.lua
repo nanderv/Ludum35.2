@@ -57,7 +57,7 @@ function getNewArcher(patrolpoints)
 			-- precheck to avoid pathfinding when possible
 			local rawdist = math.sqrt((math.abs(game.player.col.x-enemy.col.x)^2)+(math.abs(game.player.col.y-enemy.col.y)^2))
 
-			if(enemy.aggro or rawdist<enemy.aggroRange) then
+			if(enemy.aggro or rawdist<=enemy.aggroRange) then
 
 				-- find dat path
 				local path, length = pathFinder:getPath(tx,ty,gx,gy)
