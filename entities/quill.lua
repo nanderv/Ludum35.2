@@ -1,3 +1,4 @@
+laserbolt = love.graphics.newImage("entities/archer/laser_ball_4.png")
 
 local function ignore_col(self,other)
 	return "cross"
@@ -31,7 +32,7 @@ end
 local function update(quill,dt)
 		quill.timeout = quill.timeout - dt
 
-		quill.x, quill.y, a, b = game.world:move(quill, quill.x+quill.dx*dt*400, quill.y+quill.dy*dt*400, get_col)
+		quill.x, quill.y, a, b = game.world:move(quill, quill.x+quill.dx*dt*250, quill.y+quill.dy*dt*250, get_col)
 
 		if quill.delete then
 
@@ -46,8 +47,12 @@ local function update(quill,dt)
 
 	end
 local function draw(quill)
-	love.graphics.print("*",quill.x,quill.y)
-	love.graphics.rectangle("fill",quill.x,quill.y,10,10)
+	if(quill.deadly)then
+		love.graphics.draw(laserbolt,quill.x,quill.y)
+	else
+		love.graphics.print("*",quill.x,quill.y)
+		love.graphics.rectangle("fill",quill.x,quill.y,10,10)
+	end
 end
 function new_quill(xx,yy,dx, dy,deadly)
 	local quill={isQuill=true,x=xx,y=yy,width=1,height=1}

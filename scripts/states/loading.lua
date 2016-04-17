@@ -37,7 +37,7 @@ loading.phases = {
         game.enemies_out_of_range = {}
         game.reload_enemies = {}
 
-        game.enemies[1]= getNewArcher(10,100,{{x=59, y=127},{x=59, y=400}})
+        game.enemies[1]= getNewArcher(250,250,{{x=59, y=127},{x=59, y=400}})
         game.enemies[1].id = 1
         game.enemies[2]= getNewWatcher(10,100,{{x=59, y=127},{x=59, y=400}},100)
         game.enemies[2].id = 2
