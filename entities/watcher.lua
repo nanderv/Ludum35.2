@@ -313,15 +313,13 @@ function playerInCone(conelength, orientation, enemy)
 	-- not too far?
 	if(math.sqrt(relx^2+rely^2)<enemy.conelength)then
 
-		local x1,y1,x2,y2 = enemy.x+16, enemy.y+16, game.player.col.x+16, game.player.col.y+16
+		local x1,y1,x2,y2 = enemy.x+0.5*enemy.width, enemy.y+0.5*enemy.height, game.player.col.x+0.5*game.player.width, game.player.col.y+0.5*game.player.height
 		local items, length = game.world:querySegment(x1,y1,x2,y2)
 		-- can i see it?
-		print(items[1])
 		if(items[2] == game.player) then
 			-- is it inside the correct cone?
 
 			if(orientation == "TOP")then
-				print("hoi")
 				if(rely<=0 and absy>=absx)then
 					rbool=true
 				end
