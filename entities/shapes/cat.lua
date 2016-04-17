@@ -26,8 +26,12 @@ cat.grids.walk = core.anim8.newGrid(cat.images.current:getWidth()/8, 96, cat.ima
 cat.animations.walk = core.anim8.newAnimation(cat.grids.walk('1-8',1), 0.06)
 cat.animations.current = cat.animations.walk
 
-cat.images_B = {}
-cat.images_B.down =love.graphics.newImage('entities/cat/cat_attack_A_0_Sheet.png')
+
+
+cat.images_A =love.graphics.newImage('entities/cat/cat_attack_A_0_Sheet.png')
+
+
+cat.images_B =love.graphics.newImage('entities/cat/cat_dodge_0_Sheet.png')
 
 
 cat.images_idle = {}
