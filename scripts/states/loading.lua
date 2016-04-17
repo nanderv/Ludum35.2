@@ -26,8 +26,10 @@ loading.phases = {
     game.camera = core.camera(0,0,2)
     end,
     function()
-        core.enemy = require ("entities.archer")
+        require ("entities.watcher")
+        require ("entities.archer")
         game.enemies={}
+
         game.enemies[1]= getNewArcher(10,100,{{x=59, y=127},{x=59, y=400}})
         game.enemies[1].id = 1
         for i=2,5 do
@@ -35,9 +37,16 @@ loading.phases = {
             game.enemies[i].id = i
             
         end
-    end
 
+
+        game.enemies[1]= getNewWatcher(10,10,{{x=59, y=127},{x=59, y=400}},200)
+
+        
+        game.enemies[1].id = 1
+
+    end
 }
+
 function loading:enter(from)
      print("LOADING")
      game = nil
