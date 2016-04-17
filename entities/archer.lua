@@ -63,10 +63,9 @@ function getNewArcher(x,y,patrolpoints)
 			--FIRE!!!!
 			new_quill(enemy.x+0.5*enemy.width,enemy.y+0.5*enemy.height, enemy.aimx,enemy.aimy, true)
 			enemy.shootbool = false
-			currentanimation = enemy.animationIdle
-			currentimage = enemy.imageIdle
-			currentanimationToLive = 1
-			print("saldfjslkdf")
+			enemy.currentanimation = enemy.animationIdle
+			enemy.currentimage = enemy.imageIdle
+			enemy.currentanimationToLive = 1
 		elseif (enemy.currentanimationToLive == -1) then
 			enemy.y = enemy.col.y
 			enemy.x = enemy.col.x

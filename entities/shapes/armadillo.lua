@@ -68,6 +68,13 @@ function armadillo.damage(hit, status)
 	if game.player.invincibility > 0 then
 		return
 	end
+
+
+	-- Apply condition
+	if status and status.draw then
+		game.player.locked_draw = status.draw
+		game.player.locked_update = status.update
+	end
 	if game.player.locked_update == armadillo.updateA then
 		print("HIT STUN")
 	    local s = core.status_effects.stun(1,game.player)
@@ -79,13 +86,27 @@ function armadillo.damage(hit, status)
 		end
 
 	end
-	print(game.player.health)
-	game.player.health = game.player.health - hit
-	if game.player.health <= 0 then
-		GS.push(core.states.death )
-		print("DEAD")
+
+
+	-- Modifier
+	hit = hit * 1
+	hit = math.floor(hit)
+	if hit <1 then
+		hit = 1
 	end
-	game.player.invincibility = 2
+
+
+	-- Apply damage
+	game.player.health = game.player.health - hit
+
+	-- Check death
+	if game.player.health <= 0 then
+		print("DEAD")
+		GS.push(core.states.death )
+		return
+	end
+
+		game.player.invincibility = 2
 end	
 armadillo.B = function()
 		game.player.locked_update = armadillo.updateB
