@@ -11,6 +11,7 @@ loading.phases = {
     function()
         end,
         function()
+            game.enemy_ids_to_delete = {}
                     game.world = core.bump.newWorld()
         game.objects = {}
         game.blocks = {}

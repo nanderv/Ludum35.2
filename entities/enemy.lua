@@ -1,4 +1,3 @@
-
 local function regularmove(item, other)
 		 if other.isPorcupine then
 		 	return "cross"
@@ -26,25 +25,22 @@ function getNewEnemy()
 	enemy.attackRange = 50
 	enemy.aggro = false
 	enemy.speed = 60
-
+enemy.isEnemy=true
 	enemy.path = nil
 	--animations
 	enemy.imageIdle = love.graphics.newImage("assets/ugly_sprite.png")
 	local g = core.anim8.newGrid(32, 32, enemy.imageIdle:getWidth(), enemy.imageIdle:getHeight())
     enemy.animationIdle = core.anim8.newAnimation(g('1-1',1), 0.1) -- ("frame numbers", "index starting frame", "time per frame", optional end of loop)
     -- do other animations
-
     --initially idle
     enemy.currentanimation = enemy.animationIdle
     enemy.currentanimationToLive = -1
     enemy.col = game.world:add(enemy,enemy.x,enemy.y,32,32)
 	enemy.update = function(dt) 
 		-- ai en shit
-		
 		enemy.y = enemy.col.y
 		enemy.x = enemy.col.x
 		if (enemy.currentanimationToLive == -1) then
-
 			--denken
 			-- eerst goal bepalen!
 			local gx, gy = math.floor(.5+game.player.col.x/32),math.floor(.5+game.player.col.y/32) --prolly just player pos
@@ -70,7 +66,6 @@ function getNewEnemy()
 				path,length = pathFinder:getPath(tx,ty,gx,gy)
 				if path == nil then
 				 	path, length = pathFinder:getPath(tx,ty,gx+1,gy+1)
-
 				end
 				end
 				if path == nil then
@@ -104,11 +99,8 @@ function getNewEnemy()
 						local dy = 0
 						if(dest.x < enemy.x)then
 							dx = dx - dt*enemy.speed
-							
-
 							if(dest.y < enemy.y)then
 								dy = dy - dt*enemy.speed
-								
 								--TODO activate animation
 							elseif(dest.y>enemy.y)then
 								dy = dy + dt*enemy.speed
@@ -165,9 +157,6 @@ function getNewEnemy()
 				end
 			else
 			-- idle -- TODO activate animation
-
-
-
 			end
 			return true
 		end --anders nog bezig, dus mag niks

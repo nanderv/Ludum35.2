@@ -1,5 +1,5 @@
 -- remove the next line to disable console
-require("lib.debug.debug")
+-- require("lib.debug.debug")
 game = {}
 
 GS  = require "lib.hump.gamestate"
@@ -10,6 +10,7 @@ core.anim8 = require 'lib.anim8.anim8'
 core.bump = require 'lib.bump.bump'
 core.camera = require 'lib.hump.camera'
 core.states = require 'scripts.gamestates'
+require 'entities.status_effects.events'
 require 'entities.tiles'
 
 core.gamepad = nil
@@ -33,11 +34,16 @@ function love.keypressed(key)
         	GS.pop()
         end
     end
-    if DEBUG and DEBUG.print then
-        print(key)
-    end
+    --if DEBUG and DEBUG.print then
+     --   print(key)
+    --end
     if key =="r"  then
                 GS.push(core.states.loading)
+    end
+    if key == "q"then
+     local s = core.status_effects.stun(1,game.player)
+     game.player.locked_update = s.update
+     game.player.locked_draw = s.draw
     end
 end
 function love.gamepadpressed( joystick, button )

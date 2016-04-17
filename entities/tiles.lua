@@ -1,6 +1,6 @@
 tile_width =32
 tile_height=32
-local function addBlock(x,y,w,h,game,isPorcupine)
+local function addBlock(x,y,w,h,game,isPorcupine, isCatWater)
   local block = {x=x,y=y,w=w,h=h,ctype="aa"}
   game.n_blocks =game.n_blocks +1
   block.isWall = true
@@ -9,6 +9,28 @@ local function addBlock(x,y,w,h,game,isPorcupine)
   game.world:add(block, x,y,w,h)
   return block
 end
+
+
+local function load_cat_water(map)
+  local layer = map.layers["cat_water"]  
+        if layer == nil then
+        return
+      end
+        for y = 1, map.height do
+
+        for x = 1, map.width do
+
+          if layer.data[y][x] then
+              addBlock((x-1)*tile_width,(y-1)*tile_height,tile_width,tile_height,game,false,true)
+
+
+        
+          end
+        end
+end
+end
+
+
 local function load_armadillo_gates(map)
   local layer = map.layers["armadillo_gates"]  
         if layer == nil then
@@ -94,6 +116,7 @@ core.loadMap=function(filename)
   end
     load_armadillo_walls(map)
     load_armadillo_gates(map)
-    
+    load_cat_water(map)
+
 
 end

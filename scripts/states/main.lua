@@ -9,14 +9,21 @@ function ctx:update(dt)
     core.events.exec(dt)
     core.music.script.update(dt)
     for z,enemy in pairs(game.enemies) do
+       
         if not enemy.update(dt) then
                
 
         end
+        
     end
 
     for _,obj in pairs(game.projectiles) do
         obj:update(dt)
+    end
+    for zz, obj in pairs(game.enemy_ids_to_delete)do
+        game.world:remove(obj)
+        game.enemies[obj.id] = nil
+        game.enemy_ids_to_delete[zz] = nil
     end
     game.player.update(dt)
 end
@@ -26,9 +33,9 @@ function ctx:draw()
     game.camera:attach()
     local x,y = game.camera:position()
     game.map:draw(x,y,love.graphics.getWidth()/2, love.graphics.getHeight()/2)
-      if DEBUG.hax then
-        DEBUG.bump_debug.draw(game.world)
-      end
+    --  if DEBUG.hax then
+        --DEBUG.bump_debug.draw(game.world)
+      --end
     for _,enemy in pairs(game.enemies) do
         enemy.draw()
     end

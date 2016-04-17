@@ -57,6 +57,10 @@ porcupine.B = function()
 		porcupine.animations.current = porcupine.animations.B:clone()
 		porcupine.images.current = porcupine.images_B[game.player.orientation]
 end
+function porcupine.damage(hit, status)
+	game.player.health = game.player.health - hit
+	print("HIT")
+end	
 function porcupine.update(dt)
   porcupine.animations.current:update(dt)
 end
