@@ -12,10 +12,8 @@
 		 if other.isEnemy then
 		 	return "slide"
 		 end
-		 if other.isWall or other.isCatWall then
-		 	if other.isCatWall then
-		 		print("HOI")
-		 	end
+		 if other.isWall or other.isCatWater then
+		 	
 		 	return "slide"
 		 end
 		 return "cross"
@@ -66,7 +64,6 @@ player.invincibility = 0.5
 				if love.mouse.isDown(2) then
 
 					if not  player.shape.B() then
-						print("A")
 						return
 					end
 				end
