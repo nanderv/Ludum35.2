@@ -7,7 +7,7 @@ return {
   height = 100,
   tilewidth = 32,
   tileheight = 32,
-  nextobjectid = 9,
+  nextobjectid = 10,
   properties = {},
   tilesets = {
     {
@@ -1946,6 +1946,20 @@ return {
           gid = 66,
           visible = true,
           properties = {}
+        },
+        {
+          id = 9,
+          name = "watcher_1",
+          type = "watcher",
+          shape = "rectangle",
+          x = 1628,
+          y = 1095.33,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 114,
+          visible = true,
+          properties = {}
         }
       }
     },
@@ -2179,7 +2193,7 @@ return {
     },
     {
       type = "tilelayer",
-      name = "Exit",
+      name = "exit",
       x = 0,
       y = 0,
       width = 100,
