@@ -3,7 +3,12 @@ tile_height=32
 local function addBlock(x,y,w,h,game,isPorcupine, isCatWater)
   local block = {x=x,y=y,w=w,h=h,ctype="aa"}
   game.n_blocks =game.n_blocks +1
-  block.isWall = true
+  if not isCatWater  then
+    block.isWall = true
+  else
+      block.isCatWater = true
+      print(block.isCatWater)
+    end
   block.isPorcupine = isPorcupine
   game.blocks["a"..game.n_blocks] = block
   game.world:add(block, x,y,w,h)
@@ -24,7 +29,6 @@ local function load_cat_water(map)
               addBlock((x-1)*tile_width,(y-1)*tile_height,tile_width,tile_height,game,false,true)
 
 
-        
           end
         end
 end
