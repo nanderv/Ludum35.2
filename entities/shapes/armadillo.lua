@@ -150,7 +150,6 @@ function armadillo.drawA()
 		angle=45*math.pi/180
 	end
 
-	print(game.player.angle)
 	armadillo.animations.current:draw(armadillo.images.current,game.player.col.x+14,game.player.col.y+17,game.player.angle,1,1,48,48)
 
 end
