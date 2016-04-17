@@ -19,9 +19,9 @@ loading.phases = {
     print(game.camera)
     end,
     function()
-        core.enemy = require ("entities.archer")
+        core.enemy = require ("entities.watcher")
         game.enemies={}
-        game.enemies[1]= getNewArcher({{x=59, y=127},{x=59, y=400}})
+        game.enemies[1]= getNewWatcher({{x=59, y=127},{x=59, y=400}},200)
     end
 
 }
