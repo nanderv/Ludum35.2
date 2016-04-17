@@ -29,10 +29,13 @@ function ctx:draw()
         enemy.draw()
     end
     game.player.draw()
-    game.camera:detach()
 for _,obj in pairs(game.projectiles) do
         obj:draw()
     end
+    local x,y = game.camera:worldCoords(love.mouse.getPosition())
+    love.graphics.line(game.player.x+16,game.player.y+16,x,y)
+    game.camera:detach()
+
       love.graphics.print(love.timer.getFPS(), 400, 20 )
 
 end

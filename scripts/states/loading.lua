@@ -29,6 +29,7 @@ loading.phases = {
         core.enemy = require ("entities.archer")
         game.enemies={}
         game.enemies[1]= getNewArcher({{x=59, y=127},{x=59, y=400}})
+        game.enemies[1].id = 1
     end
 
 }

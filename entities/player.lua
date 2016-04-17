@@ -14,7 +14,7 @@ player.x = 100
 player.y = 200
 player.width = 28
 player.height = 28
-player.shape = require 'entities.shapes.porcupine'
+player.shape = require 'entities.shapes.armadillo'
 player.locked_update = nil
 player.locked_draw = nil
 player.orientation= "left"
@@ -58,7 +58,10 @@ function player.update(dt)
 			dx = dx  - dt*player.shape.speed
 		end
 		if love.mouse.isDown(1) then
-			player.shape.A(dt)
+		    local x,y = game.camera:worldCoords(love.mouse.getPosition())
+		    local hyp = math.sqrt((x-game.player.x)*(x-game.player.x)+ (y-game.player.y)*(y-game.player.y))
+
+			player.shape.A((x-game.player.x)/hyp,(y-game.player.y)/hyp)
 			return
 		end
 

@@ -43,11 +43,12 @@ porcupine.images_idle.downleft =love.graphics.newImage('entities/porcupine/porcu
 porcupine.grids.B = core.anim8.newGrid(porcupine.images.current:getWidth()/8, 96, porcupine.images.current:getWidth(), porcupine.images.current:getHeight())
 porcupine.animations.B = core.anim8.newAnimation(porcupine.grids.B('1-8',1), 0.02,  'pauseAtEnd')
 
-porcupine.A = function(dt)
+porcupine.A = function(dx,dy)
 		game.player.locked_update = porcupine.updateA
 		game.player.locked_draw = porcupine.drawA
 		porcupine.timeout = 1
-		new_quill(game.player.x,game.player.y,300, 300)
+
+		new_quill(game.player.x,game.player.y,dx,dy)
 end
 porcupine.B = function()
 		game.player.locked_update = porcupine.updateB
