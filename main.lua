@@ -42,7 +42,7 @@ function love.keypressed(key)
                 GS.push(core.states.loading)
     end
     if key == "q"then
-     local s = core.status_effects.stun(1,game.player)
+     local s = core.status_effects.knockback(1,game.player,100,100)
      game.player.locked_update = s.update
      game.player.locked_draw = s.draw
     end

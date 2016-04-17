@@ -48,16 +48,12 @@ function load_objects()
         game.enemies[#game.enemies].id =   #game.enemies
       end
       if v.type == "heart" then
-        print(v.x, v.y)
       end
       if v.type == "health" then
-          print(v.x, v.y)
       end
       if v.type == "key" then
-        print(v.x, v.y)
       end
       if v.type == "target" then
-        print(v.x, v.y)
       end
 
     end

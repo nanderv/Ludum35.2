@@ -187,6 +187,7 @@ function player.load()
 	game.player.col = game.world:add(game.player, game.player.x, game.player.y, game.player.width, game.player.height) 
 end
 function player.draw(a )
+	
 	if player.locked_draw  and not a then
 		player.locked_draw()
 		return
