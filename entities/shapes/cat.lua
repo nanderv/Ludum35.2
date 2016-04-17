@@ -26,8 +26,12 @@ cat.grids.walk = core.anim8.newGrid(cat.images.current:getWidth()/8, 96, cat.ima
 cat.animations.walk = core.anim8.newAnimation(cat.grids.walk('1-8',1), 0.06)
 cat.animations.current = cat.animations.walk
 
-cat.images_B = {}
-cat.images_B.down =love.graphics.newImage('entities/cat/cat_attack_A_0_Sheet.png')
+
+
+cat.images_A =love.graphics.newImage('entities/cat/cat_attack_A_0_Sheet.png')
+
+
+cat.images_B =love.graphics.newImage('entities/cat/cat_dodge_0_Sheet.png')
 
 
 cat.images_idle = {}
@@ -35,8 +39,8 @@ cat.images_idle.down =love.graphics.newImage('entities/cat/cat_walking_0_Sheet.p
 
 
 
-cat.grids.B = core.anim8.newGrid(cat.images.current:getWidth()/8, 96, cat.images.current:getWidth(), cat.images.current:getHeight())
-cat.animations.B = core.anim8.newAnimation(cat.grids.B('1-8',1), 0.02,  'pauseAtEnd')
+cat.grids.B = core.anim8.newGrid(cat.images_B:getWidth()/11, 96, cat.images_B:getWidth(), cat.images_B:getHeight())
+cat.animations.B = core.anim8.newAnimation(cat.grids.B('1-11',1), 0.02,  'pauseAtEnd')
 
 cat.A = function(dx,dy)
 
@@ -84,6 +88,7 @@ cat.B = function()
 	if 	game.player.shape.attack_B_pause and 		game.player.shape.attack_B_pause > 0 then
 		return true
 	end
+	
 		game.player.locked_update = cat.updateB
 		game.player.locked_draw = cat.drawB
 		cat.timeout = 0.3
@@ -122,7 +127,7 @@ cat.B = function()
 		game.player.ddx = ddx
 		game.player.ddy = ddy
 		cat.animations.current = cat.animations.B:clone()
-		cat.images.current = cat.images_B[game.player.orientation]
+		cat.images.current = cat.images_B
 end
 function cat.damage(hit, status)
 			if game.player.invincibility > 0 then
@@ -174,7 +179,7 @@ if game.player.orientation == "upright" then
 
 
 
-
+		
 	cat.animations.current:draw(cat.images.current,game.player.col.x+14,game.player.col.y+17,angle,1,1,48,48)
 
 end
@@ -261,7 +266,7 @@ if game.player.orientation == "upright" then
 
 
 
-
+cat.images.current = cat.images_B
 	cat.animations.current:draw(cat.images.current,game.player.col.x+14,game.player.col.y+17,angle,1,1,48,48)	
 
 end
