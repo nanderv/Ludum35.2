@@ -55,6 +55,7 @@ cat.A = function(dx,dy)
 		game.player.locked_update = cat.updateA
 		game.player.locked_draw = cat.drawA
 		cat.timeout = 0.3
+		game.player.invincibility = 0.3
 		local ddx = 0
 		local ddy = 0
 		if game.player.orientation == "up" then
@@ -137,7 +138,7 @@ cat.B = function()
 		cat.animations.current = cat.animations.B:clone()
 		cat.images.current = cat.images_B
 end
-function cat.damage(hit, status)
+function cat.damage(hit, status, enemy)
 			if game.player.invincibility > 0 then
 				return
 			end

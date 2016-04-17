@@ -64,7 +64,7 @@ armadillo.A = function(dx,dy)
 
 
 end
-function armadillo.damage(hit, status)
+function armadillo.damage(hit, status, enemy)
 	if game.player.invincibility > 0 then
 		return
 	end

@@ -103,7 +103,7 @@ function getNewWatcher(x,y,patrolpoints, conelength)
 					--aanvallen!
 
 					 s = core.status_effects.knockback(1,game.player,enemy.dx*100, enemy.dy*100)
-				     game.player.shape.damage(1,s)
+				     game.player.shape.damage(2,s)
 
 					enemy.currentanimationToLive = 2
 

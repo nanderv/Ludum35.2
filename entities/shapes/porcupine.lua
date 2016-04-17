@@ -57,20 +57,38 @@ porcupine.B = function()
 		porcupine.animations.current = porcupine.animations.B:clone()
 		porcupine.images.current = porcupine.images_B[game.player.orientation]
 end
-function porcupine.damage(hit, status)
-			if game.player.invincibility > 0 then
+function porcupine.damage(hit, status, enemy)
+		if game.player.invincibility > 0 then
 				return
 			end
 
-			game.player.health = game.player.health - hit
-			print("HIT")
+			-- Modifier
+			hit = hit * 1.5
+			hit = math.floor(hit)
+			if hit <1 then
+				hit = 1
+			end
+			if enemy and enemy.health and game.player.locked_update == porcupine.updateB then
+				enemy.health = enemy.health - 2*hit
 
+			end
+			-- Apply condition
+			if status and status.draw then
+				game.player.locked_draw = status.draw
+				game.player.locked_update = status.update
+			end
+
+			-- Apply damage
+			game.player.health = game.player.health - hit
+
+			-- Check death
 			if game.player.health <= 0 then
 				print("DEAD")
 				GS.push(core.states.death )
 				return
 			end
-	 game.player.invincibility = 2
+
+	 		game.player.invincibility = 2
 		
 end	
 function porcupine.update(dt)
