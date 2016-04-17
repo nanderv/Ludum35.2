@@ -50,12 +50,6 @@ loading.phases = {
     game.camera = core.camera(0,0,2)
     end,
     function()
-
-        if loading.health then
-               game.player.health  =       loading.health 
-           game.player.max_health =  loading.max_health
-       end
-       
     end
 }
 

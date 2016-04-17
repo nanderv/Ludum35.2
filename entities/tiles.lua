@@ -42,10 +42,18 @@ function load_objects()
       if v.type == "enemy" then
         game.enemies[#game.enemies + 1]= getNewEnemy(v.x,v.y,{{x=v.x, y=v.y},{x=v.x, y=v.y+10}})
         game.enemies[#game.enemies].id =   #game.enemies
+        print(game.enemies[#game.enemies])
+        print("ENEMY")
+      end
+        if v.type == "archer" then
+        game.enemies[#game.enemies + 1]= getNewArcher(v.x,v.y,{{x=v.x, y=v.y},{x=v.x, y=v.y+10}})
+        game.enemies[#game.enemies].id =   #game.enemies
+        print("ENEMY")
       end
       if v.type == "boss" then
         game.enemies[#game.enemies + 1]= getNewMrT(v.x,v.y,{{x=v.x, y=v.y},{x=v.x, y=v.y+10}})
         game.enemies[#game.enemies].id =   #game.enemies
+        
       end
       if v.type == "heart" then
       end

@@ -270,25 +270,6 @@ function copyPastaKiller(dest, enemy, dt,delay,mrtbool)
 		enemy.currentanimationToLive = delay
 		local stepor = turnmatrix[indexOf(goalorientation)][indexOf(enemy.orientation)]
 		enemy.orientation=stepor
-		if(stepor == "TOP")then
-			--assign animation
-		elseif(stepor == "TOPRIGHT")then
-			--assign animation
-		elseif(stepor == "TOPLEFT")then
-			--assign animation
-		elseif(stepor =="RIGHT")then
-			--assign animation
-		elseif(stepor == "LEFT")then
-			--assign animation
-		elseif(stepor == "BOT")then
-			--assign animation
-		elseif(stepor == "BOTRIGHT")then
-			--assign animation
-		elseif(stepor == "BOTLEFT")then
-			--assign animation
-		elseif(stepor == "RIGHT")then
-			--assign animation
-		end
 		if(mrtbool)then
 			--lekker moven, mrt doesnt giva a shit
 			enemy.col.x,enemy.col.y = game.world:move(enemy,enemy.col.x+dx,enemy.col.y+dy,regularmove)
