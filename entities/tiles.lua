@@ -17,39 +17,39 @@ end
 local function load_objects(map)
   local layer = map.layers["objects"]  
         if layer == nil then
+
         return
       end
-  local map = gamestate.map
+  local map = game.map
 
   local o = layer.objects
   for _, v in pairs(o) do
     if  v then
     --  if v.properties.type =="line" then
-      for k, w in pairs(v) do
-          print(w)
+      
+      if v.type == "start" then
+          game.startX = v.x
+          game.startY = v.y
       end
-      if v.properties.type == "start" then
+      if v.type == "watcher" then
+          game.enemies[#game.enemies + 1]= getNewWatcher(v.x,v.y,{{x=59, y=127},{x=59, y=400}})
+      end
+      if v.type == "enemy" then
+        game.enemies[#game.enemies + 1]= getNewEnemy(v.x,v.y,{{x=59, y=127},{x=59, y=400}})
+      end
+      if v.type == "boss" then
+        game.enemies[#game.enemies + 1]= getNewMrT(v.x,v.y,{{x=59, y=127},{x=59, y=400}})
+      end
+      if v.type == "heart" then
+        print(v.x, v.y)
+      end
+      if v.type == "health" then
           print(v.x, v.y)
       end
-      if v.properties.type == "watcher" then
-          print(v.x, v.y)
-      end
-      if v.properties.type == "enemy" then
+      if v.type == "key" then
         print(v.x, v.y)
       end
-      if v.properties.type == "boss" then
-        print(v.x, v.y)
-      end
-      if v.properties.type == "heart" then
-        print(v.x, v.y)
-      end
-      if v.properties.type == "health" then
-          print(v.x, v.y)
-      end
-      if v.properties.type == "key" then
-        print(v.x, v.y)
-      end
-      if v.properties.type == "target" then
+      if v.type == "target" then
         print(v.x, v.y)
       end
 
@@ -166,6 +166,6 @@ core.loadMap=function(filename)
     load_armadillo_walls(map)
     load_armadillo_gates(map)
     load_cat_water(map)
-
+    load_objects(map)
 
 end
