@@ -7,8 +7,17 @@
 		
 	end
 
-		local function regularmove(item, other)
-
+	local function regularmove(item, other)
+		if other.isExit then
+			
+			print("AAAAA")
+			if not to_load then
+				current_level = current_level + 1
+				GS.push(core.states.loading)
+			end
+			to_load = true
+			return
+		end
 		 if other.isEnemy then
 		 	return "slide"
 		 end
@@ -157,7 +166,7 @@ player.invincibility = 0.5
 			game.player.col.x , game.player.col.y, cols, len =game.world:move(game.player,game.player.col.x+dx,game.player.col.y+dy,armadillo_move)
 			
 		end
-		game.player.shape.update(dt)
+		player.shape.update(dt)
 	end
 
 player.shapes = {}
@@ -177,6 +186,7 @@ function player.load()
 	game.player.col = game.world:add(game.player, game.player.x, game.player.y, game.player.width, game.player.height) 
 end
 function player.draw(a )
+	
 	if player.locked_draw  and not a then
 		player.locked_draw()
 		return

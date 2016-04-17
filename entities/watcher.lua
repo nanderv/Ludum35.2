@@ -30,6 +30,7 @@ function getNewWatcher(x,y,patrolpoints, conelength)
 	enemy.orientation = "BOT"
 	enemy.attackrange = 23
 	enemy.testcounter = 0
+	enemy.health = 5
 	enemy.dy = 0
 	enemy.dx = 0
 	enemy.isEnemy=true
@@ -101,7 +102,9 @@ function getNewWatcher(x,y,patrolpoints, conelength)
 				local rawdist = math.sqrt((math.abs(game.player.col.x-enemy.col.x)^2)+(math.abs(game.player.col.y-enemy.col.y)^2))
 				if(rawdist <= enemy.attackrange) then 
 					--aanvallen!
-				     game.player.shape.damage(1,"stun")
+
+					 s = core.status_effects.knockback(1,game.player,enemy.dx*100, enemy.dy*100)
+				     game.player.shape.damage(2,s, enemy)
 
 					enemy.currentanimationToLive = 2
 
@@ -268,25 +271,6 @@ function copyPastaKiller(dest, enemy, dt,delay,mrtbool)
 		enemy.currentanimationToLive = delay
 		local stepor = turnmatrix[indexOf(goalorientation)][indexOf(enemy.orientation)]
 		enemy.orientation=stepor
-		if(stepor == "TOP")then
-			--assign animation
-		elseif(stepor == "TOPRIGHT")then
-			--assign animation
-		elseif(stepor == "TOPLEFT")then
-			--assign animation
-		elseif(stepor =="RIGHT")then
-			--assign animation
-		elseif(stepor == "LEFT")then
-			--assign animation
-		elseif(stepor == "BOT")then
-			--assign animation
-		elseif(stepor == "BOTRIGHT")then
-			--assign animation
-		elseif(stepor == "BOTLEFT")then
-			--assign animation
-		elseif(stepor == "RIGHT")then
-			--assign animation
-		end
 		if(mrtbool)then
 			--lekker moven, mrt doesnt giva a shit
 			enemy.col.x,enemy.col.y = game.world:move(enemy,enemy.col.x+dx,enemy.col.y+dy,regularmove)

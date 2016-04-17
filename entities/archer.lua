@@ -22,31 +22,51 @@ function getNewArcher(x,y,patrolpoints)
 	local enemy = {}
 	enemy.x = x
 	enemy.y = y
-	enemy.height = 32
-	enemy.width = 32
-	enemy.aggroRange = 200
-	enemy.attackRange = 200
+	enemy.height = 40
+	enemy.width = 30
+	enemy.aggroRange = 300
+	enemy.attackRange = 180
 	enemy.aggro = false
 	enemy.speed = 60
 	enemy.patrolindex = 1
 	enemy.isEnemy=true
 	enemy.patrol = patrolpoints
 	enemy.path = nil
+	enemy.dx = 0
+	enemy.dy = 0
+	enemy.angle = 0
+	enemy.aimx = 0
+	enemy.aimy = 0
+	enemy.shootbool = false
+
 	--animations
-	enemy.imageIdle = love.graphics.newImage("assets/ugly_sprite.png")
-	local g = core.anim8.newGrid(32, 32, enemy.imageIdle:getWidth(), enemy.imageIdle:getHeight())
-    enemy.animationIdle = core.anim8.newAnimation(g('1-1',1), 0.1) -- ("frame numbers", "index starting frame", "time per frame", optional end of loop)
-    -- do other animations
+	enemy.imageIdle = love.graphics.newImage("entities/archer/scorpion_1.png")
+	local g1 = core.anim8.newGrid(96, 96, enemy.imageIdle:getWidth(), enemy.imageIdle:getHeight())
+    enemy.animationIdle = core.anim8.newAnimation(g1('1-1',1), 0.1)
+    enemy.imageAttack = love.graphics.newImage("entities/archer/scorpion_attack_1_Sheet.png")
+	local g2 = core.anim8.newGrid(96, 96, enemy.imageAttack:getWidth(), enemy.imageAttack:getHeight())
+    enemy.animationAttack = core.anim8.newAnimation(g2('1-7',1), 0.5/7) 
+    enemy.imageWalk = love.graphics.newImage("entities/archer/scorpion_move_1_Sheet.png")
+	local g3 = core.anim8.newGrid(96, 96, enemy.imageWalk:getWidth(), enemy.imageWalk:getHeight())
+    enemy.animationWalk = core.anim8.newAnimation(g3('1-8',1), 0.1) 
 
     --initially idle
     enemy.currentanimation = enemy.animationIdle
+    enemy.currentimage = enemy.imageIdle
     enemy.currentanimationToLive = -1
-    enemy.col = game.world:add(enemy,enemy.x,enemy.y,32,32)
+
+    enemy.col = game.world:add(enemy,enemy.x+32,enemy.y+30,enemy.width,enemy.height)
 	enemy.update = function(dt) 
 		-- ai en shit
 		local dest = {}
-
-		if (enemy.currentanimationToLive == -1) then
+		if(enemy.shootbool and enemy.currentanimationToLive < 0)then
+			--FIRE!!!!
+			new_quill(enemy.x+0.5*enemy.width,enemy.y+0.5*enemy.height, enemy.aimx,enemy.aimy, true)
+			enemy.shootbool = false
+			enemy.currentanimation = enemy.animationIdle
+			enemy.currentimage = enemy.imageIdle
+			enemy.currentanimationToLive = 1
+		elseif (enemy.currentanimationToLive == -1) then
 			enemy.y = enemy.col.y
 			enemy.x = enemy.col.x
 			--denken
@@ -71,22 +91,18 @@ function getNewArcher(x,y,patrolpoints)
 				return true
 			end
 			if(enemy.aggro or rawdist<=enemy.aggroRange) then
-
 				-- find dat path
 				local path, length = nil,nil
 				if not game.player.invisible then
 				path,length = pathFinder:getPath(tx,ty,gx,gy)
-
-				if path == nil then
-
-				 	path, length = pathFinder:getPath(tx,ty,gx+1,gy+1)
-
+					if path == nil then
+					 	path, length = pathFinder:getPath(tx,ty,gx+1,gy+1)
+					end
 				end
-				end
-				
 				if path == nil then
 					path = enemy.path 
 					if enemy.path == nil then
+						enemy.currentanimation:update(dt)
 						return false
 					end
 				else
@@ -95,21 +111,23 @@ function getNewArcher(x,y,patrolpoints)
 				local len = #path
 
 				if((math.abs(gx-tx) < 3 or math.abs(gy-ty)<3) or enemy.aggro) then
-
 					if(rawdist < enemy.attackRange) then 
 						-- aanvallen!
-
-						local x1,y1,x2,y2 = enemy.x+16, enemy.y+16, game.player.col.x+16, game.player.col.y+16
+						local x1,y1,x2,y2 = enemy.x+0.5*enemy.width, enemy.y+0.5*enemy.height, game.player.col.x+0.5*game.player.width, game.player.col.y+0.5*game.player.height
 						local items, length = game.world:querySegment(x1,y1,x2,y2,found_shot)
-						if(items[2] == game.player) then
+						beun1,beun2,beun3,beun4=x1,y1,x2,y2
+						if(items[1]==game.player or items[2] == game.player) then
 							--aanvallen want player in los
-							enemy.currentanimationToLive = 1
-    					    local hyp = math.sqrt((enemy.x-game.player.x)*(enemy.x-game.player.x)+ (enemy.y-game.player.y)*(enemy.y-game.player.y))
-						    local x,y = (-enemy.x+game.player.x)/hyp, (-enemy.y+game.player.y)/hyp
-						    print(x,y)
-							new_quill(enemy.x+16,enemy.y+16, x,y, true)
 
-							print("Ik BEN TELEURGESTELD")
+							enemy.currentanimationToLive = 0.5
+							enemy.currentanimation = enemy.animationAttack
+							enemy.currentimage = enemy.imageAttack
+							local hyp = math.sqrt((enemy.x-game.player.x)*(enemy.x-game.player.x)+ (enemy.y-game.player.y)*(enemy.y-game.player.y))
+							local x,y = (-enemy.x+game.player.x)/hyp, (-enemy.y+game.player.y)/hyp
+							enemy.aimx = x
+							enemy.aimy = y
+							enemy.shootbool = true
+
 							if(not enemy.aggro)then
 								enemy.aggro =true
 							end
@@ -118,73 +136,58 @@ function getNewArcher(x,y,patrolpoints)
 					end
 			
 					--else move in direction of player to get in los
-					--TODO add animations
 					if not path._nodes[2] then
+						enemy.currentanimation:update(dt)
 						return true
 					end
 					dest.x =   path._nodes[2]._x 
 					dest.y =   path._nodes[2]._y 
 					dest.x = dest.x * 32
 					dest.y = dest.y * 32
-					local dx = 0
-					local dy = 0
+					enemy.dx = 0
+					enemy.dy = 0
 					if(dest.x < enemy.x)then
-						dx = dx - dt*enemy.speed
+						enemy.dx = enemy.dx - dt*enemy.speed
 					if(dest.y < enemy.y)then
-							dy = dy - dt*enemy.speed
-							
-							--TODO activate animation
-						elseif(dest.y>enemy.y)then
-							dy = dy + dt*enemy.speed
-							--TODO activate animation
-						else
-							--TODO activate animation
-						end
+						enemy.dy = enemy.dy - dt*enemy.speed
+					elseif(dest.y>enemy.y)then
+						enemy.dy = enemy.dy + dt*enemy.speed
+					end
 					elseif(dest.x>enemy.x)then
-						dx = dx + dt*enemy.speed
-						
-
+						enemy.dx = enemy.dx + dt*enemy.speed
 						if(dest.y < enemy.y)then
-							dy = dy - dt*enemy.speed
-							--TODO activate animation
+							enemy.dy = enemy.dy - dt*enemy.speed
 						elseif(dest.y>enemy.y)then
-							dy = dy + dt*enemy.speed
-							--TODO activate animation
-						else
-							--TODO activate animation
+							enemy.dy = enemy.dy + dt*enemy.speed
 						end
 					else
 						if(dest.y < enemy.y)then
-							dy = dy - dt*enemy.speed
-							--TODO activate animation
+							enemy.dy = enemy.dy - dt*enemy.speed
 						elseif(dest.y>enemy.y)then
-							dy = dy + dt*enemy.speed
-							--TODO activate animation
-						else
-							--illegalstate, no movement
+							enemy.dy = enemy.dy + dt*enemy.speed
 						end
 					end
-					if enemy.x + dx < dest.x and dx < 0 then
-							dx = dest.x - enemy.x
+					if enemy.x + enemy.dx < dest.x and enemy.dx < 0 then
+							enemydx = dest.x - enemy.x
 					end
-					if enemy.x + dx > dest.x and dx > 0 then
-							dx = dest.x - enemy.x
+					if enemy.x + enemy.dx > dest.x and enemy.dx > 0 then
+							enemy.dx = dest.x - enemy.x
 					end
-					if enemy.y + dy < dest.y and dy < 0 then
-							dy = dest.y - enemy.y
+					if enemy.y + enemy.dy < dest.y and enemy.dy < 0 then
+							enemy.dy = dest.y - enemy.y
 					end
-					if enemy.y + dy > dest.y and dy > 0 then
-							dy = dest.y - enemy.y
+					if enemy.y + enemy.dy > dest.y and enemy.dy > 0 then
+							enemy.dy = dest.y - enemy.y
 					end
-
-					enemy.col.x,enemy.col.y = game.world:move(enemy,enemy.col.x+dx,enemy.col.y+dy,regularmove)
+					enemy.currentanimation = enemy.animationWalk
+					enemy.currentimage = enemy.imageWalk
+					enemy.col.x,enemy.col.y = game.world:move(enemy,enemy.col.x+enemy.dx,enemy.col.y+enemy.dy,regularmove)
 					-- now aggroed
 					if(not enemy.aggro)then
 						enemy.aggro =true
 					end
 				end
 			else
-
 				-- patrol area if patrol specified
 				if(#enemy.patrol>0) then
 					if(math.abs(enemy.x - enemy.patrol[enemy.patrolindex+1].x)<32 and math.abs(enemy.y - enemy.patrol[enemy.patrolindex+1].y)<32)then
@@ -193,79 +196,135 @@ function getNewArcher(x,y,patrolpoints)
 					dest.x = enemy.patrol[enemy.patrolindex+1].x
 					dest.y = enemy.patrol[enemy.patrolindex+1].y
 				end
-				local dx = 0
-				local dy = 0
+				enemy.dy = 0
+				enemy.dx=0
 				if(dest.x < enemy.x)then
-					dx = dx - dt*enemy.speed
-					
-
+					enemy.dx = enemy.dx - dt*enemy.speed
 					if(dest.y < enemy.y)then
-						dy = dy - dt*enemy.speed
-						
-						--TODO activate animation
+						enemy.dy = enemy.dy - dt*enemy.speed
 					elseif(dest.y>enemy.y)then
-						dy = dy + dt*enemy.speed
-						--TODO activate animation
-					else
-						--TODO activate animation
+						enemy.dy = enemy.dy + dt*enemy.speed
 					end
 					elseif(dest.x>enemy.x)then
-						dx = dx + dt*enemy.speed
-						
-
+						enemy.dx = enemy.dx + dt*enemy.speed
 						if(dest.y < enemy.y)then
-							dy = dy - dt*enemy.speed
-							--TODO activate animation
+							enemy.dy = enemy.dy - dt*enemy.speed
 						elseif(dest.y>enemy.y)then
-							dy = dy + dt*enemy.speed
-							--TODO activate animation
-						else
-							--TODO activate animation
+							enemy.dy = enemy.dy + dt*enemy.speed
 						end
 					else
 						if(dest.y < enemy.y)then
-							dy = dy - dt*enemy.speed
-							--TODO activate animation
+							enemy.dy = enemy.dy - dt*enemy.speed
 						elseif(dest.y>enemy.y)then
-							dy = dy + dt*enemy.speed
-							--TODO activate animation
-						else
-							--illegalstate, no movement
+							enemy.dy = enemy.dy + dt*enemy.speed
 						end
 					end
-					if enemy.x + dx < dest.x and dx < 0 then
-							dx = dest.x - enemy.x
+					if enemy.x + enemy.dx < dest.x and enemy.dx < 0 then
+							enemydx = dest.x - enemy.x
 					end
-					if enemy.x + dx > dest.x and dx > 0 then
-							dx = dest.x - enemy.x
+					if enemy.x + enemy.dx > dest.x and enemy.dx > 0 then
+							enemy.dx = dest.x - enemy.x
 					end
-					if enemy.y + dy < dest.y and dy < 0 then
-							dy = dest.y - enemy.y
+					if enemy.y + enemy.dy < dest.y and enemy.dy < 0 then
+							enemy.dy = dest.y - enemy.y
 					end
-					if enemy.y + dy > dest.y and dy > 0 then
-							dy = dest.y - enemy.y
+					if enemy.y + enemy.dy > dest.y and enemy.dy > 0 then
+							enemy.dy = dest.y - enemy.y
 					end
-					enemy.col.x,enemy.col.y = game.world:move(enemy,enemy.col.x+dx,enemy.col.y+dy,regularmove)				
-			end --anders nog bezig, dus mag niks
-		end
-			--animation updates
+					enemy.col.x,enemy.col.y = game.world:move(enemy,enemy.col.x+enemy.dx,enemy.col.y+enemy.dy,regularmove)	
+					enemy.currentanimation = enemy.animationWalk
+					enemy.currentimage = enemy.imageWalk	
+			end 
+		end--anders nog bezig, dus mag niks
+		--animation updates
 		if(enemy.currentanimationToLive == -1 or enemy.currentanimationToLive > 0) then
 			if enemy.currentanimationToLive > 0 then
 						enemy.currentanimationToLive = enemy.currentanimationToLive - dt 
 					end
 			enemy.currentanimation:update(dt)
 		else
-			print("IK BEN WEER BOOS")
-
-			enemy.currentanimation = enemy.animationIdle
+			enemy.currentanimation = enemy.animationWalk
+			enemy.currentimage = enemy.imageWalk
 			enemy.currentanimationToLive = -1
 			enemy.currentanimation:update(dt)
 		end
 		return true
 	end
 
+
 	enemy.draw = function()
-		enemy.currentanimation:draw(enemy.imageIdle,enemy.x,enemy.y)
+		love.graphics.line(enemy.col.x,enemy.col.y,enemy.x+enemy.width,enemy.col.y+enemy.col.height)
+		love.graphics.line(enemy.col.x+enemy.width,enemy.col.y,enemy.col.x,enemy.col.y+enemy.height)
+		love.graphics.line(beun1,beun2,beun3,beun4)
+		local ding
+		if(enemy.dy == 0) then 
+			ding = math.abs(enemy.dx)/0.001
+		else
+			ding = math.abs(enemy.dx)/math.abs(enemy.dy)
+		end
+		if(ding > 4)then
+			if(enemy.dx>0)then
+				enemy.currentanimation:draw(enemy.currentimage,enemy.col.x+15,enemy.col.y+22,(270*math.pi/180),1,1,48,48)
+			else
+				enemy.currentanimation:draw(enemy.currentimage,enemy.col.x+15,enemy.col.y+22,(90*math.pi/180),1,1,48,48)
+			end
+		elseif(ding<0.25)then
+			if(enemy.dy>0)then
+				enemy.currentanimation:draw(enemy.currentimage,enemy.col.x-33,enemy.col.y-30)
+			else
+				enemy.currentanimation:draw(enemy.currentimage,enemy.col.x+15,enemy.col.y+22,(180*math.pi/180),1,1,48,48)
+			end
+		else
+			if(enemy.dx>0)then
+				if(enemy.dy>0)then
+					enemy.currentanimation:draw(enemy.currentimage,enemy.col.x+15,enemy.col.y+22,(315*math.pi/180),1,1,48,48)
+				else
+					enemy.currentanimation:draw(enemy.currentimage,enemy.col.x+15,enemy.col.y+22,(225*math.pi/180),1,1,48,48)
+				end
+			else
+				if(enemy.dy>0)then
+					enemy.currentanimation:draw(enemy.currentimage,enemy.col.x+15,enemy.col.y+22,(45*math.pi/180),1,1,48,48)
+				else
+					enemy.currentanimation:draw(enemy.currentimage,enemy.col.x+15,enemy.col.y+22,(125*math.pi/180),1,1,48,48)
+				end
+			end
+		end
 	end
 	return enemy
+end
+
+function getLaserStart(enemy)
+	local ding
+	if(dy == 0) then 
+		ding = math.abs(dx)/0.001
+	else
+		ding = math.abs(dx)/math.abs(dy)
+	end
+	if(ding > 2)then
+		if(dx>0)then
+			goalorientation = "RIGHT"
+		else
+			goalorientation = "LEFT"
+		end
+	elseif(ding<0.5)then
+		if(dy>0)then
+			goalorientation = "BOT"
+		else
+			goalorientation = "TOP"
+		end
+	else
+		if(dx>0)then
+			if(dy>0)then
+				goalorientation = "BOTRIGHT"
+			else
+				goalorientation= "TOPRIGHT"
+			end
+		else
+			if(dy>0)then
+				goalorientation = "BOTLEFT"
+			else
+				goalorientation= "TOPLEFT"
+			end
+		end
+	end
 end

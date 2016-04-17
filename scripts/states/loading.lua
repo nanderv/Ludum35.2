@@ -1,5 +1,7 @@
-starting_level_name = "assets/maps/bestmap.lua"
-current_level_name = "assets/maps/bestmap.lua"
+levels  = {"assets/maps/bestmap.lua","assets/maps/testmap.lua","assets/maps/bestmap.lua"}
+current_level = 1
+to_load = false
+true_mode = false
 local loading = {}
 loading.loaded = 1
 loading.first = true
@@ -7,6 +9,10 @@ loading.first = true
 -- Loading screen phases, split up loading code among these phases
 loading.phases = {
     function()
+        if game and game.player and game.player.health then
+            loading.health = game.player.health
+            loading.max_health = game.player.max_health
+        end
 
     require 'assets.music.script1'.load()
 
@@ -21,25 +27,29 @@ loading.phases = {
         game.blocks = {}
     game.n_blocks = 0
     game.projectiles = {}
-    game.loadMap("assets/maps/bestmap.lua")
+    if current_level > #levels then
+        print(current_level)
+        GS.switch(core.states.victory)
+        return
+    end
+    game.loadMap(levels[current_level])
 
     end,
     function()
-
+          game.startX = 100
+          game.startY = 100
         require ("entities.watcher")
         require ("entities.archer")
         require ("entities.enemy")
         load_objects(map)
 
    game.player = require 'entities.player'()
+
     game.player.load()
-    print("LP")
+    print(game.player)
     game.camera = core.camera(0,0,2)
     end,
     function()
-
-
-       
     end
 }
 
@@ -61,6 +71,7 @@ end
 -- Leave loading screen
 function loading:leave(from)
     print("GAME LOADED")
+    to_load = false
 end
 function loading:update()
     if self.loaded <= #self.phases then
@@ -74,7 +85,6 @@ end
 -- Draw loading screen
 function loading:draw()
     local W, H = love.graphics.getWidth(), love.graphics.getHeight()
-    print(game.map)
     -- draw previous screen
     -- overlay with pause message
     love.graphics.setColor(0,0,0, 100)
