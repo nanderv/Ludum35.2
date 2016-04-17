@@ -34,7 +34,6 @@ player.invisible = false
 player.invincibility = 0.5
 	function player.update_player(dt,handle_mouse,is_armadillo_move)
 		local sto_arma =false
-		player.invincibility = player.invincibility - dt
 		local dx = 0
 		local dy = 0
 		 if core.gamepad == nil then
@@ -187,6 +186,8 @@ function player.draw(a )
 
 end
 function player.update(dt)
+	player.invincibility = player.invincibility - dt
+
 	player.x = player.col.x
 	player.y = player.col.y
 		 game.camera:lookAt(math.floor(game.player.col.x),math.floor(game.player.col.y))
