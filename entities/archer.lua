@@ -292,39 +292,3 @@ function getNewArcher(x,y,patrolpoints)
 	end
 	return enemy
 end
-
-function getLaserStart(enemy)
-	local ding
-	if(dy == 0) then 
-		ding = math.abs(dx)/0.001
-	else
-		ding = math.abs(dx)/math.abs(dy)
-	end
-	if(ding > 2)then
-		if(dx>0)then
-			goalorientation = "RIGHT"
-		else
-			goalorientation = "LEFT"
-		end
-	elseif(ding<0.5)then
-		if(dy>0)then
-			goalorientation = "BOT"
-		else
-			goalorientation = "TOP"
-		end
-	else
-		if(dx>0)then
-			if(dy>0)then
-				goalorientation = "BOTRIGHT"
-			else
-				goalorientation= "TOPRIGHT"
-			end
-		else
-			if(dy>0)then
-				goalorientation = "BOTLEFT"
-			else
-				goalorientation= "TOPLEFT"
-			end
-		end
-	end
-end
