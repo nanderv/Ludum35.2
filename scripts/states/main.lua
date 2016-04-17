@@ -48,6 +48,7 @@ for _,obj in pairs(game.projectiles) do
     game.camera:detach()
 
       love.graphics.print(love.timer.getFPS(), 400, 20 )
+      love.graphics.print(game.player.health, 400, 30 )
 
 end
 return ctx

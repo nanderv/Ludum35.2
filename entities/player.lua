@@ -8,10 +8,14 @@
 	end
 
 		local function regularmove(item, other)
-		 if other.isPorcupine then
-		 	return "cross"
+
+		 if other.isEnemy then
+		 	return "slide"
 		 end
-		 if other.isWall then
+		 if other.isWall or other.isCatWall then
+		 	if other.isCatWall then
+		 		print("HOI")
+		 	end
 		 	return "slide"
 		 end
 		 return "cross"
@@ -22,15 +26,17 @@ local player = {}
 player.image = love.graphics.newImage( "assets/ugly_sprite.png")
 player.x = 100
 player.y = 200
-player.width = 28
-player.height = 28
+player.width = 16
+player.height = 16
 player.health = 4
+player.offx = 6
+player.offy = 5
 player.max_health = 4
 player.invisible = false
-
+player.invincibility = 0.5
 	function player.update_player(dt,handle_mouse,is_armadillo_move)
 		local sto_arma =false
-
+		player.invincibility = player.invincibility - dt
 		local dx = 0
 		local dy = 0
 		 if core.gamepad == nil then
@@ -46,6 +52,8 @@ player.invisible = false
 			if  love.keyboard.isDown(CONTROLS.LEFT) then
 				dx = dx  - dt*player.shape.speed
 			end
+			game.player.dx = dx
+			game.player.dy = dy
 			if handle_mouse then
 				if love.mouse.isDown(1) then
 				    local x,y = game.camera:worldCoords(love.mouse.getPosition())
@@ -56,28 +64,37 @@ player.invisible = false
 
 				end
 				if love.mouse.isDown(2) then
-					player.shape.B()
 
-					return
+					if not  player.shape.B() then
+						print("A")
+						return
+					end
 				end
+
+			if love.keyboard.isDown("t") then
+				player.shape =  player.shapes[1]
+
+			end
+		if love.keyboard.isDown("g") then
+				player.shape =  player.shapes[2]
+
+			end	
+	if love.keyboard.isDown("f") then
+				player.shape =  player.shapes[3]
+
+			end
 			end
 			if is_armadillo_move and not love.mouse.isDown(2) then
 					sto_arma = true
 			else
 					sto_arma = false
 			end
-			if love.keyboard.isDown("t") then
-				player.shape =  player.shapes[1]
 
-			end
-			if love.keyboard.isDown("g") then
-				player.shape =  player.shapes[2]
-
-			end
 
 		else
 			print(core.gamepad)
 		end
+
 
 		if dx > 0 then
 			-- right
@@ -150,6 +167,8 @@ player.invisible = false
 player.shapes = {}
 player.shapes[1]  = require 'entities.shapes.porcupine'
 player.shapes[2]  = require 'entities.shapes.armadillo'
+player.shapes[3]  = require 'entities.shapes.cat'
+
 player.shape =  player.shapes[1]
 player.locked_update = nil
 player.locked_draw = nil

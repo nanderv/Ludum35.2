@@ -46,6 +46,7 @@ local function update(quill,dt)
 	end
 local function draw(quill)
 	love.graphics.print("*",quill.x,quill.y)
+	love.graphics.rectangle("fill",quill.x,quill.y,10,10)
 end
 function new_quill(xx,yy,dx, dy,deadly)
 	local quill={isQuill=true,x=xx,y=yy,width=1,height=1}
