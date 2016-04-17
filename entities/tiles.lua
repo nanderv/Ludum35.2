@@ -14,7 +14,8 @@ local function load_armadillo_gates(map)
         if layer == nil then
         return
       end
-    
+        for y = 1, map.height do
+
         for x = 1, map.width do
 
           if layer.data[y][x] then
@@ -25,6 +26,7 @@ local function load_armadillo_gates(map)
         
           end
         end
+end
 end
 local function load_armadillo_walls(map)
   local layer = map.layers["armadillo_burrow"]  
