@@ -6,7 +6,6 @@ local function get_col(self, other)
 	if other == game.player then
 		return
 	end
-	print("HOI") 
 	game.world:remove(other)
 	 game.enemies[other.id] = nil
 	self.delete = true

@@ -4,10 +4,10 @@ require 'entities.enemy'
 --template
 -- patrol points = { (x,y)}
 -- if no patrol give empty list
-function getNewArcher(patrolpoints)
+function getNewArcher(x,y,patrolpoints)
 	local enemy = {}
-	enemy.x = 59
-	enemy.y = 600
+	enemy.x = x
+	enemy.y = y
 	enemy.height = 32
 	enemy.width = 32
 	enemy.aggroRange = 100
@@ -56,7 +56,9 @@ function getNewArcher(patrolpoints)
 			end
 			-- precheck to avoid pathfinding when possible
 			local rawdist = math.sqrt((math.abs(game.player.col.x-enemy.col.x)^2)+(math.abs(game.player.col.y-enemy.col.y)^2))
-
+			if rawdist > 100000 then
+				return
+			end
 			if(enemy.aggro or rawdist<=enemy.aggroRange) then
 
 				-- find dat path
