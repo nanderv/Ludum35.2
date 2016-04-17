@@ -3,8 +3,14 @@ local function ignore_col(self,other)
 	return "cross"
 end
 local function get_col(self, other)
+	if other.isQuill then
+		self.delete = true
+		other.delete = true
+		return "touch"
+
+	end
 	if self.delete then
-		return "cross"
+		return "touch"
 	end
 	if self.timeout > 0 then
 		return "cross"
@@ -22,8 +28,9 @@ local function get_col(self, other)
 		if other.isEnemy then
 			game.enemy_ids_to_delete[#game.enemy_ids_to_delete+1] = other
 		end
-		print("KILL")
 		self.delete = true
+		return "touch"
+
 	end
 	return "cross"
 end

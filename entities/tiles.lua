@@ -8,7 +8,6 @@ local function addBlock(x,y,w,h,game,isPorcupine, isCatWater)
     block.isWall = true
   else
       block.isCatWater = true
-      print(block.isCatWater)
     end
   block.isPorcupine = isPorcupine
   game.blocks["a"..game.n_blocks] = block
@@ -26,7 +25,9 @@ local function load_objects(map)
   for _, v in pairs(o) do
     if  v then
     --  if v.properties.type =="line" then
-    
+      for k, w in pairs(v) do
+          print(w)
+      end
       if v.properties.type == "start" then
           print(v.x, v.y)
       end
