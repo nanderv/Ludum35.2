@@ -31,10 +31,10 @@ function getNewEnemy()
     enemy.col = game.world:add(enemy,enemy.x,enemy.y,32,32)
 	enemy.update = function(dt) 
 		-- ai en shit
-
+		enemy.y = enemy.col.y
+		enemy.x = enemy.col.x
 		if (enemy.currentanimationToLive == -1) then
-			enemy.y = enemy.col.y
-			enemy.x = enemy.col.x
+
 			--denken
 			-- eerst goal bepalen!
 			local gx, gy = math.floor(.5+game.player.col.x/32),math.floor(.5+game.player.col.y/32) --prolly just player pos

@@ -1,4 +1,5 @@
-local function regularmove(item, other)
+return function ()
+	local function regularmove(item, other)
 	 if other.isPorcupine then
 	 	return "cross"
 	 end
@@ -57,9 +58,10 @@ function player.update(dt)
 			dx = dx  - dt*player.shape.speed
 		end
 		if love.mouse.isDown(1) then
-			player.shape.A()
+			player.shape.A(dt)
 			return
 		end
+
 	else
 		print(core.gamepad)
 	end
@@ -117,3 +119,5 @@ function player.update(dt)
 	player.shape.update(dt)
 end
 return player
+
+end

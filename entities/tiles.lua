@@ -1,7 +1,5 @@
 tile_width =32
 tile_height=32
-game.n_blocks = 0
-game.blocks = {}
 local function addBlock(x,y,w,h,game,isPorcupine)
   local block = {x=x,y=y,w=w,h=h,ctype="aa"}
   game.n_blocks =game.n_blocks +1
@@ -48,8 +46,8 @@ local function load_armadillo_walls(map)
 end
 end
   
-game.abstractmap={}
-game.loadMap=function(filename)
+
+core.loadMap=function(filename)
   game.map = sti.new(filename)
 
 

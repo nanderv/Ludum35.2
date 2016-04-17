@@ -1,14 +1,17 @@
 local music = {}
 music.layers = {}
 function music.create_layer(filename, tags)
+	if core.music.layers[#core.music.layers+1] ~=  nil then
 	local dat = love.sound.newSoundData(filename)
 	core.music.sampleCount = dat:getSampleCount()
 	core.music.sampleRate = dat:getSampleRate()
 	print(core.music.sampleRate, core.music.sampleCount)
-	local lay = love.audio.newSource( dat,"static" )
+	
 	lay:setLooping(true)
 	core.music.layers[#core.music.layers+1]=lay
-	print(lay:seek(0, "samples"))
+	
+
+	end
 	return lay
 end
 function music.add_layer(filename, tags)

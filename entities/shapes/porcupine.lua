@@ -1,4 +1,6 @@
+require 'entities.quill'
 local porcupine = {}
+
 porcupine.images = {}
 porcupine.images.down =love.graphics.newImage('entities/porcupine/porcupine_walk_0_Sheet.png')
 porcupine.images.downright =love.graphics.newImage('entities/porcupine/porcupine_walk_1_Sheet.png')
@@ -15,6 +17,7 @@ porcupine.speed = 100
 porcupine.grids.walk = core.anim8.newGrid(porcupine.images.current:getWidth()/8, 96, porcupine.images.current:getWidth(), porcupine.images.current:getHeight())
 porcupine.animations.walk = core.anim8.newAnimation(porcupine.grids.walk('1-8',1), 0.06)
 porcupine.animations.current = porcupine.animations.walk
+
 porcupine.images_B = {}
 porcupine.images_B.down =love.graphics.newImage('entities/porcupine/porcupine_attack_b_0_Sheet.png')
 porcupine.images_B.downright =love.graphics.newImage('entities/porcupine/porcupine_attack_b_0_Sheet.png')
@@ -24,7 +27,6 @@ porcupine.images_B.up =love.graphics.newImage('entities/porcupine/porcupine_atta
 porcupine.images_B.upleft =love.graphics.newImage('entities/porcupine/porcupine_attack_b_4.png')
 porcupine.images_B.left =love.graphics.newImage('entities/porcupine/porcupine_attack_b_6_Sheet.png')
 porcupine.images_B.downleft =love.graphics.newImage('entities/porcupine/porcupine_attack_b_6_Sheet.png')
-
 
 
 porcupine.images_idle = {}
@@ -41,10 +43,11 @@ porcupine.images_idle.downleft =love.graphics.newImage('entities/porcupine/porcu
 porcupine.grids.B = core.anim8.newGrid(porcupine.images.current:getWidth()/8, 96, porcupine.images.current:getWidth(), porcupine.images.current:getHeight())
 porcupine.animations.B = core.anim8.newAnimation(porcupine.grids.B('1-8',1), 0.02,  'pauseAtEnd')
 
-porcupine.A = function()
+porcupine.A = function(dt)
 		game.player.locked_update = porcupine.updateA
 		game.player.locked_draw = porcupine.drawA
 		porcupine.timeout = 1
+		new_quill(game.player.x,game.player.y,300, 300)
 end
 porcupine.B = function()
 		game.player.locked_update = porcupine.updateB
@@ -57,7 +60,7 @@ function porcupine.update(dt)
   porcupine.animations.current:update(dt)
 end
 function porcupine.draw()
-	porcupine.animations.current:draw(porcupine.images.current,game.player.col.x-37,game.player.col.y-37)
+	porcupine.animations.current:draw(porcupine.images.current,game.player.col.x-34,game.player.col.y-37)
 
 end
 function porcupine.updateA(dt)
