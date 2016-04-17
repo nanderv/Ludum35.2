@@ -52,6 +52,9 @@ armadillo.A = function(dx,dy)
 
 
 end
+function armadillo.damage(hit, status)
+	
+end	
 armadillo.B = function()
 		game.player.locked_update = armadillo.updateB
 		game.player.locked_draw = armadillo.drawB

@@ -24,8 +24,9 @@ player.x = 100
 player.y = 200
 player.width = 28
 player.height = 28
-	player.health = 4
-	player.invisible = false
+player.health = 4
+player.max_health = 4
+player.invisible = false
 
 	function player.update_player(dt,handle_mouse,is_armadillo_move)
 		local sto_arma =false
@@ -158,8 +159,8 @@ player.speed = 80
 function player.load()
 	game.player.col = game.world:add(game.player, game.player.x, game.player.x, game.player.width, game.player.height) 
 end
-function player.draw()
-	if player.locked_draw then
+function player.draw(a )
+	if player.locked_draw  and not a then
 		player.locked_draw()
 		return
 	end

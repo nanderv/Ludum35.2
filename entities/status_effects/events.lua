@@ -1,0 +1,23 @@
+core.status_effects = {}
+core.status_effects.stun = function(t, obj)
+		local st = {}
+		st.t = t
+		st.obj = obj
+		obj.status_code = "stun"
+		function st.draw()
+			if st.t*8 % 2 > 1 then
+				love.graphics.setColor( 255,255,255,128)
+			end
+			obj.draw(true)
+			love.graphics.setColor( 255,255,255,255)
+
+		end
+		function st.update(dt)
+			st.t = st.t - dt
+			if st.t < 0 then
+				obj.locked_update = nil
+				obj.locked_draw = nil
+			end
+		end
+		return st
+	end

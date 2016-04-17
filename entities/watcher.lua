@@ -29,7 +29,7 @@ function getNewWatcher(x,y,patrolpoints, conelength)
 	enemy.orientation = "BOT"
 	enemy.attackrange = 50
 	enemy.testcounter = 0
-
+	enemy.isEnemy=true
 
 	enemy.path = nil
 	--animations
@@ -98,7 +98,10 @@ function getNewWatcher(x,y,patrolpoints, conelength)
 				local rawdist = math.sqrt((math.abs(game.player.col.x-enemy.col.x)^2)+(math.abs(game.player.col.y-enemy.col.y)^2))
 				if(rawdist <= enemy.attackrange) then 
 					--aanvallen!
-					print("Ik BEN TELEURGESTELD")
+				     local s = core.status_effects.stun(1,game.player)
+				     game.player.locked_update = s.update
+				     game.player.locked_draw = s.draw
+
 					enemy.currentanimationToLive = 2
 
 				end
