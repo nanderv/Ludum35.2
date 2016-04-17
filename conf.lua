@@ -8,7 +8,16 @@ love.conf = function(t)
   t.window.vsync = false
 end
 CONTROLS = {}
+
 CONTROLS.UP = "w"
 CONTROLS.DOWN = "s"
 CONTROLS.RIGHT = "d"
 CONTROLS.LEFT = "a"
+
+CONTROLS.ONE = "t"
+CONTROLS.TWO = "g"
+CONTROLS.THREE = "f"
+CONTROLS.FOUR = "r"
+
+CONTROLS.ALL = {'UP', 'DOWN', 'RIGHT', 'LEFT', 'ONE', 'TWO', 'THREE', 'FOUR'}
+
