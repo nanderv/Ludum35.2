@@ -63,19 +63,16 @@ function porcupine.damage(hit, status, enemy)
 			end
 
 			-- Modifier
-			hit = hit * 1.5
+			hit = hit * 1
 			hit = math.floor(hit)
 			if hit <1 then
 				hit = 1
 			end
 			if enemy and enemy.health and game.player.locked_update == porcupine.updateB then
 				enemy.health = enemy.health - 2*hit
-
-			end
-			-- Apply condition
-			if status and status.draw then
-				game.player.locked_draw = status.draw
-				game.player.locked_update = status.update
+				if enemy.health <= 0 then
+					game.enemy_ids_to_delete[#game.enemy_ids_to_delete+1] = enemy
+				end
 			end
 
 			-- Apply damage
@@ -88,7 +85,7 @@ function porcupine.damage(hit, status, enemy)
 				return
 			end
 
-	 		game.player.invincibility = 2
+	 		game.player.invincibility = 1
 		
 end	
 function porcupine.update(dt)

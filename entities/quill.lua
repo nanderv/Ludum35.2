@@ -19,7 +19,7 @@ local function get_col(self, other)
 	if self.deadly then
 
 		if other == game.player then
-	     local s = core.status_effects.knockback(1,game.player,self.dx*100, self.dy*100)
+	     local s = core.status_effects.knockback(0.5,game.player,self.dx*100, self.dy*100)
 
 			game.player.shape.damage(1,s)
 				self.delete = true
@@ -29,7 +29,11 @@ local function get_col(self, other)
 			return "cross"
 		end
 		if other.isEnemy then
-			game.enemy_ids_to_delete[#game.enemy_ids_to_delete+1] = other
+			if other.health then
+				other.health = other.health - 2
+			else
+					game.enemy_ids_to_delete[#game.enemy_ids_to_delete+1] = other
+			end
 		end
 		self.delete = true
 		return "touch"

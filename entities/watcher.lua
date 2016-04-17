@@ -30,6 +30,7 @@ function getNewWatcher(x,y,patrolpoints, conelength)
 	enemy.orientation = "BOT"
 	enemy.attackrange = 23
 	enemy.testcounter = 0
+	enemy.health = 5
 	enemy.dy = 0
 	enemy.dx = 0
 	enemy.isEnemy=true
@@ -103,7 +104,7 @@ function getNewWatcher(x,y,patrolpoints, conelength)
 					--aanvallen!
 
 					 s = core.status_effects.knockback(1,game.player,enemy.dx*100, enemy.dy*100)
-				     game.player.shape.damage(2,s)
+				     game.player.shape.damage(2,s, enemy)
 
 					enemy.currentanimationToLive = 2
 
