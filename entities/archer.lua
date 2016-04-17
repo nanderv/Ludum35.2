@@ -1,4 +1,3 @@
-
 local function regularmove(item, other)
 		 if other.isPorcupine then
 		 	return "cross"
@@ -30,10 +29,8 @@ function getNewArcher(x,y,patrolpoints)
 	enemy.aggro = false
 	enemy.speed = 60
 	enemy.patrolindex = 1
-
+	enemy.isEnemy=true
 	enemy.patrol = patrolpoints
-
-
 	enemy.path = nil
 	--animations
 	enemy.imageIdle = love.graphics.newImage("assets/ugly_sprite.png")
@@ -107,6 +104,11 @@ function getNewArcher(x,y,patrolpoints)
 						if(items[2] == game.player) then
 							--aanvallen want player in los
 							enemy.currentanimationToLive = 1
+    					    local hyp = math.sqrt((enemy.x-game.player.x)*(enemy.x-game.player.x)+ (enemy.y-game.player.y)*(enemy.y-game.player.y))
+						    local x,y = (-enemy.x+game.player.x)/hyp, (-enemy.y+game.player.y)/hyp
+						    print(x,y)
+							new_quill(enemy.x+16,enemy.y+16, x,y, true)
+
 							print("Ik BEN TELEURGESTELD")
 							if(not enemy.aggro)then
 								enemy.aggro =true
@@ -128,9 +130,7 @@ function getNewArcher(x,y,patrolpoints)
 					local dy = 0
 					if(dest.x < enemy.x)then
 						dx = dx - dt*enemy.speed
-						
-
-						if(dest.y < enemy.y)then
+					if(dest.y < enemy.y)then
 							dy = dy - dt*enemy.speed
 							
 							--TODO activate animation
@@ -192,10 +192,6 @@ function getNewArcher(x,y,patrolpoints)
 					end
 					dest.x = enemy.patrol[enemy.patrolindex+1].x
 					dest.y = enemy.patrol[enemy.patrolindex+1].y
-
-
-
-
 				end
 				local dx = 0
 				local dy = 0
@@ -249,7 +245,6 @@ function getNewArcher(x,y,patrolpoints)
 					if enemy.y + dy > dest.y and dy > 0 then
 							dy = dest.y - enemy.y
 					end
-
 					enemy.col.x,enemy.col.y = game.world:move(enemy,enemy.col.x+dx,enemy.col.y+dy,regularmove)				
 			end --anders nog bezig, dus mag niks
 		end
@@ -273,6 +268,4 @@ function getNewArcher(x,y,patrolpoints)
 		enemy.currentanimation:draw(enemy.imageIdle,enemy.x,enemy.y)
 	end
 	return enemy
-
-
 end
