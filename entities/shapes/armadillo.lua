@@ -31,18 +31,30 @@ armadillo.images_B.downleft =love.graphics.newImage('entities/porcupine/porcupin
 
 
 armadillo.images_idle = {}
-armadillo.images_idle.down =love.graphics.newImage('entities/porcupine/porcupine_idle_0_Sheet.png')
-armadillo.images_idle.downright =love.graphics.newImage('entities/porcupine/porcupine_idle_1_Sheet.png')
-armadillo.images_idle.right =love.graphics.newImage('entities/porcupine/porcupine_idle_2_Sheet.png')
-armadillo.images_idle.upright =love.graphics.newImage('entities/porcupine/porcupine_idle_3_Sheet.png')
-armadillo.images_idle.up =love.graphics.newImage('entities/porcupine/porcupine_idle_4_Sheet.png')
-armadillo.images_idle.upleft =love.graphics.newImage('entities/porcupine/porcupine_idle_5_Sheet.png')
-armadillo.images_idle.left =love.graphics.newImage('entities/porcupine/porcupine_idle_6_Sheet.png')
-armadillo.images_idle.downleft =love.graphics.newImage('entities/porcupine/porcupine_idle_7_Sheet.png')
+armadillo.images_idle.down =love.graphics.newImage('entities/armadillo/armadillo_walking_0_Sheet.png')
+armadillo.images_idle.downright =love.graphics.newImage('entities/armadillo/armadillo_walking_1_Sheet.png')
+armadillo.images_idle.right =love.graphics.newImage('entities/armadillo/armadillo_walking_2_Sheet.png')
+armadillo.images_idle.upright =love.graphics.newImage('entities/armadillo/armadillo_walking_3_Sheet.png')
+armadillo.images_idle.up =love.graphics.newImage('entities/armadillo/armadillo_walking_4_Sheet.png')
+armadillo.images_idle.upleft =love.graphics.newImage('entities/armadillo/armadillo_walking_5_Sheet.png')
+armadillo.images_idle.left =love.graphics.newImage('entities/armadillo/armadillo_walking_6_Sheet.png')
+armadillo.images_idle.downleft =love.graphics.newImage('entities/armadillo/armadillo_walking_7_Sheet.png')
+
+armadillo.images_A = {}
+armadillo.images_A.down =love.graphics.newImage('entities/armadillo/armadillo_attack_A_0_Sheet.png')
+armadillo.images_A.up =love.graphics.newImage('entities/armadillo/armadillo_attack_A_0_Sheet.png')
+armadillo.images_A.left =love.graphics.newImage('entities/armadillo/armadillo_attack_A_0_Sheet.png')
+armadillo.images_A.right =love.graphics.newImage('entities/armadillo/armadillo_attack_A_0_Sheet.png')
+armadillo.images_A.upleft =love.graphics.newImage('entities/armadillo/armadillo_attack_A_0_Sheet.png')
+armadillo.images_A.upright =love.graphics.newImage('entities/armadillo/armadillo_attack_A_0_Sheet.png')
+armadillo.images_A.downleft =love.graphics.newImage('entities/armadillo/armadillo_attack_A_0_Sheet.png')
+armadillo.images_A.downright =love.graphics.newImage('entities/armadillo/armadillo_attack_A_0_Sheet.png')
 
 
 armadillo.grids.B = core.anim8.newGrid(armadillo.images.current:getWidth()/8, 96, armadillo.images.current:getWidth(), armadillo.images.current:getHeight())
 armadillo.animations.B = core.anim8.newAnimation(armadillo.grids.B('1-8',1), 0.02,  'pauseAtEnd')
+armadillo.grids.A = core.anim8.newGrid(armadillo.images_A.down:getWidth()/8, 96, armadillo.images_A.down:getWidth(), armadillo.images_A.down:getHeight())
+armadillo.animations.A = core.anim8.newAnimation(armadillo.grids.A('1-8',1), 0.06)
 
 armadillo.A = function(dx,dy)
 		game.player.locked_update = armadillo.updateA
@@ -88,10 +100,9 @@ function armadillo.draw()
 end
 function armadillo.updateA(dt)
 	local x,y = 0,0
-
 	if core.gamepad == nil then
 
-			 x,y = game.camera:worldCoords(love.mouse.getPosition())
+			x,y = game.camera:worldCoords(love.mouse.getPosition())
 		    local hyp = math.sqrt((x-game.player.x)*(x-game.player.x)+ (y-game.player.y)*(y-game.player.y))
 		    x,y = (x-game.player.x)/hyp*dt,(y-game.player.y)/hyp*dt
     		if not love.mouse.isDown(1) then
@@ -100,16 +111,47 @@ function armadillo.updateA(dt)
 			return
 		end
 	end
-
+	local tanfix = 0
+	if x < 0 then
+		tanfix = math.pi
+	end
+	game.player.angle = math.atan(y/x)-0.5*math.pi+tanfix
 	game.player.col.x,game.player.col.y =game.world:move(game.player,x*armadillo.secret_speed+(game.player.x),game.player.y+y*armadillo.secret_speed )
 	armadillo.secret_speed = armadillo.secret_speed + 60*dt
 	if armadillo.secret_speed > 300 then
 		armadillo.secret_speed = 300
 	end
-	armadillo.i  = armadillo.i+dt
+	armadillo.animations.current:update(dt*armadillo.secret_speed/100)
 end
 function armadillo.drawA()
-	armadillo.animations.current:draw(armadillo.images.current,game.player.col.x+14,game.player.col.y+17,armadillo.i*armadillo.secret_speed/10,1,1,48,48)
+	
+	armadillo.images.current=armadillo.images_A.left
+	local angle = 0
+	if game.player.orientation == "up" then
+		angle=180*math.pi/180
+	end
+	if game.player.orientation == "left" then
+		angle=90*math.pi/180
+	end
+	if game.player.orientation == "right" then
+		angle=-90*math.pi/180
+	end
+
+	if game.player.orientation == "upright" then
+		angle=-135*math.pi/180
+	end
+	if game.player.orientation == "downright" then
+		angle=-45*math.pi/180
+	end
+	if game.player.orientation == "upleft" then
+		angle=135*math.pi/180
+	end
+	if game.player.orientation == "downleft" then
+		angle=45*math.pi/180
+	end
+
+	print(game.player.angle)
+	armadillo.animations.current:draw(armadillo.images.current,game.player.col.x+14,game.player.col.y+17,game.player.angle,1,1,48,48)
 
 end
 function armadillo.updateB(dt)
