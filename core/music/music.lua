@@ -5,7 +5,6 @@ function music.create_layer(filename, tags)
 	local dat = love.sound.newSoundData(filename)
 	core.music.sampleCount = dat:getSampleCount()
 	core.music.sampleRate = dat:getSampleRate()
-	print(core.music.sampleRate, core.music.sampleCount)
 	
 	lay:setLooping(true)
 	core.music.layers[#core.music.layers+1]=lay

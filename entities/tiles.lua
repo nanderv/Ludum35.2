@@ -1,14 +1,18 @@
 require 'entities.objects'
 tile_width =32
 tile_height=32
-local function addBlock(x,y,w,h,game,isPorcupine, isCatWater)
+local function addBlock(x,y,w,h,game,isPorcupine, isCatWater, isExit)
   local block = {x=x,y=y,w=w,h=h,ctype="aa"}
   game.n_blocks =game.n_blocks +1
+  if not isExit then
   if not isCatWater  then
     block.isWall = true
   else
       block.isCatWater = true
     end
+  else
+      block.isExit = true
+  end
   block.isPorcupine = isPorcupine
   game.blocks["a"..game.n_blocks] = block
   game.world:add(block, x,y,w,h)
@@ -17,8 +21,8 @@ end
 function load_objects()
   local layer = game.map.layers["objects"]  
         if layer == nil then
-
         return
+
       end
   local map = game.map
 
@@ -44,16 +48,12 @@ function load_objects()
         game.enemies[#game.enemies].id =   #game.enemies
       end
       if v.type == "heart" then
-        print(v.x, v.y)
       end
       if v.type == "health" then
-          print(v.x, v.y)
       end
       if v.type == "key" then
-        print(v.x, v.y)
       end
       if v.type == "target" then
-        print(v.x, v.y)
       end
 
     end
@@ -82,25 +82,6 @@ local function load_cat_water(map)
 end
 end
 
-
-local function load_armadillo_gates(map)
-  local layer = map.layers["armadillo_gates"]  
-        if layer == nil then
-        return
-      end
-        for y = 1, map.height do
-
-        for x = 1, map.width do
-
-          if layer.data[y][x] then
-      addBlock((x-1)*tile_width,(y-1)*tile_height,tile_width,tile_height,game,false)
-
-
-        
-          end
-        end
-end
-end
 local function load_armadillo_walls(map)
   local layer = map.layers["armadillo_burrow"]  
         if layer == nil then
@@ -121,6 +102,32 @@ local function load_armadillo_walls(map)
 end
 end
   
+
+
+local function load_exit_walls(map)
+  local layer = map.layers["exit"]  
+        if layer == nil then
+        return
+      end
+        for y = 1, map.height do
+
+        for x = 1, map.width do
+
+          if layer.data[y][x] then
+            
+             addBlock((x-1)*tile_width,(y-1)*tile_height,tile_width,tile_height,game,false,false,true)
+
+
+        
+          end
+        end
+end
+end
+  
+
+
+
+
 
 core.loadMap=function(filename)
   game.map = sti.new(filename)
@@ -167,7 +174,6 @@ core.loadMap=function(filename)
     end
   end
     load_armadillo_walls(map)
-    load_armadillo_gates(map)
     load_cat_water(map)
-
+    load_exit_walls(map)
 end

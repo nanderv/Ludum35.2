@@ -106,7 +106,6 @@ function getNewArcher(x,y,patrolpoints)
 							enemy.currentanimationToLive = 1
     					    local hyp = math.sqrt((enemy.x-game.player.x)*(enemy.x-game.player.x)+ (enemy.y-game.player.y)*(enemy.y-game.player.y))
 						    local x,y = (-enemy.x+game.player.x)/hyp, (-enemy.y+game.player.y)/hyp
-						    print(x,y)
 							new_quill(enemy.x+16,enemy.y+16, x,y, true)
 
 							print("Ik BEN TELEURGESTELD")

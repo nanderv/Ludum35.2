@@ -101,7 +101,9 @@ function getNewWatcher(x,y,patrolpoints, conelength)
 				local rawdist = math.sqrt((math.abs(game.player.col.x-enemy.col.x)^2)+(math.abs(game.player.col.y-enemy.col.y)^2))
 				if(rawdist <= enemy.attackrange) then 
 					--aanvallen!
-				     game.player.shape.damage(1,"stun")
+
+					 s = core.status_effects.knockback(1,game.player,enemy.dx*100, enemy.dy*100)
+				     game.player.shape.damage(1,s)
 
 					enemy.currentanimationToLive = 2
 
