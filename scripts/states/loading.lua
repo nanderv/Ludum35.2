@@ -1,32 +1,59 @@
 local loading = {}
 loading.loaded = 1
+loading.first = true
 -- Loading screen phases, split up loading code among these phases
 loading.phases = {
     function()
-        game.world = core.bump.newWorld()
+
+    require 'assets.music.script1'.load()
+
     end,
     function()
-    require 'assets.music.script1'.load()
         end,
         function()
+                    game.world = core.bump.newWorld()
+        game.objects = {}
+        game.blocks = {}
+    game.n_blocks = 0
+    game.projectiles = {}
     game.loadMap("assets/maps/bestmap.lua")
 
     end,
     function()
-    game.player = require 'entities.player'
+   game.player = require 'entities.player'()
     game.player.load()
+    print("LP")
     game.camera = core.camera(0,0,2)
-    print(game.camera)
     end,
     function()
-        core.enemy = require ("entities.archer")
+        require ("entities.watcher")
+        require ("entities.archer")
         game.enemies={}
-        game.enemies[1]= getNewArcher({{x=59, y=127},{x=59, y=400}})
-    end
+        game.enemies_in_range = {}
+        game.enemies_out_of_range = {}
+        game.reload_enemies = {}
 
+        game.enemies[1]= getNewArcher(10,100,{{x=59, y=127},{x=59, y=400}})
+        game.enemies[1].id = 1
+        game.enemies[2]= getNewWatcher(10,100,{{x=59, y=127},{x=59, y=400}},100)
+        game.enemies[2].id = 2
+    end
 }
+
 function loading:enter(from)
      print("LOADING")
+     game = nil
+
+     game = {}
+     game.abstractmap={}
+     game.loadMap = core.loadMap
+   collectgarbage("collect") 
+    if loading.first then
+     loading.loaded = 1
+    else
+    loading.loaded=2
+    end
+
 end
 -- Leave loading screen
 function loading:leave(from)

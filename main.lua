@@ -5,12 +5,13 @@ game = {}
 GS  = require "lib.hump.gamestate"
 sti = require 'lib.sti'
 -- load main core library
-require 'entities.tiles'
 core = require 'core.main'
 core.anim8 = require 'lib.anim8.anim8'
 core.bump = require 'lib.bump.bump'
 core.camera = require 'lib.hump.camera'
 core.states = require 'scripts.gamestates'
+require 'entities.tiles'
+
 core.gamepad = nil
 
 function love.load()
@@ -34,6 +35,9 @@ function love.keypressed(key)
     end
     if DEBUG and DEBUG.print then
         print(key)
+    end
+    if key =="r"  then
+                GS.push(core.states.loading)
     end
 end
 function love.gamepadpressed( joystick, button )

@@ -5,10 +5,18 @@ function ctx:enter(dt)
     print("LOADING")
 end
 function ctx:update(dt)
+
     core.events.exec(dt)
     core.music.script.update(dt)
-    for _,enemy in pairs(game.enemies) do
-        enemy.update(dt)
+    for z,enemy in pairs(game.enemies) do
+        if not enemy.update(dt) then
+               
+
+        end
+    end
+
+    for _,obj in pairs(game.projectiles) do
+        obj:update(dt)
     end
     game.player.update(dt)
 end
@@ -25,6 +33,11 @@ function ctx:draw()
         enemy.draw()
     end
     game.player.draw()
+for _,obj in pairs(game.projectiles) do
+        obj:draw()
+    end
+    local x,y = game.camera:worldCoords(love.mouse.getPosition())
+    love.graphics.line(game.player.x+16,game.player.y+16,x,y)
     game.camera:detach()
 
       love.graphics.print(love.timer.getFPS(), 400, 20 )

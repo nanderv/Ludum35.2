@@ -338,6 +338,7 @@ if (...) then
 	-- @usage local path = myFinder:getPath(1,1,5,5)
   function Pathfinder:getPath(startX, startY, endX, endY, clearance)
 		self:reset()
+    pathLengthRandomVariable = 0
     local startNode = self._grid:getNodeAt(startX, startY)
     local endNode = self._grid:getNodeAt(endX, endY)
     assert(startNode, ('Invalid location [%d, %d]'):format(startX, startY))

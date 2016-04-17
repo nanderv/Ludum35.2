@@ -251,8 +251,14 @@ end
     toClear[startNode] = true
 
     local node
+    local hax = 0 
     while not openList:empty() do
       -- Pops the lowest F-cost node, moves it in the closed list
+
+      hax = hax + 1
+      if hax > 10 then
+        return nil
+      end
       node = openList:pop()
       node._closed = true
         -- If the popped node is the endNode, return it
