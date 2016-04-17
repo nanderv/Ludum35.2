@@ -18,17 +18,25 @@ cat.images.upright =love.graphics.newImage('entities/cat/cat_walking_0_Sheet.png
 cat.images.downleft =love.graphics.newImage('entities/cat/cat_walking_0_Sheet.png')
 cat.images.downright =love.graphics.newImage('entities/cat/cat_walking_0_Sheet.png')
 
+cat.images_A = {}
+cat.images_A.down =love.graphics.newImage('entities/cat/cat_attack_A_0_Sheet.png')
+cat.images_A.up =love.graphics.newImage('entities/cat/cat_attack_A_0_Sheet.png')
+cat.images_A.left =love.graphics.newImage('entities/cat/cat_attack_A_0_Sheet.png')
+cat.images_A.right =love.graphics.newImage('entities/cat/cat_attack_A_0_Sheet.png')
+cat.images_A.upleft =love.graphics.newImage('entities/cat/cat_attack_A_0_Sheet.png')
+cat.images_A.upright =love.graphics.newImage('entities/cat/cat_attack_A_0_Sheet.png')
+cat.images_A.downleft =love.graphics.newImage('entities/cat/cat_attack_A_0_Sheet.png')
+cat.images_A.downright =love.graphics.newImage('entities/cat/cat_attack_A_0_Sheet.png')
+
 cat.images.current = cat.images.down
 cat.animations = {}
 cat.grids = {}
 cat.speed = 200
 cat.grids.walk = core.anim8.newGrid(cat.images.current:getWidth()/8, 96, cat.images.current:getWidth(), cat.images.current:getHeight())
 cat.animations.walk = core.anim8.newAnimation(cat.grids.walk('1-8',1), 0.06)
+cat.grids.A = core.anim8.newGrid(cat.images_A.down:getWidth()/8, 96, cat.images_A.down:getWidth(), cat.images_A.down:getHeight())
+cat.animations.walk = core.anim8.newAnimation(cat.grids.A('1-8',1), 0.06)
 cat.animations.current = cat.animations.walk
-
-
-
-cat.images_A =love.graphics.newImage('entities/cat/cat_attack_A_0_Sheet.png')
 
 
 cat.images_B =love.graphics.newImage('entities/cat/cat_dodge_0_Sheet.png')
@@ -47,6 +55,7 @@ cat.A = function(dx,dy)
 		game.player.locked_update = cat.updateA
 		game.player.locked_draw = cat.drawA
 		cat.timeout = 0.3
+		game.player.invincibility = 0.3
 		local ddx = 0
 		local ddy = 0
 		if game.player.orientation == "up" then
@@ -129,20 +138,35 @@ cat.B = function()
 		cat.animations.current = cat.animations.B:clone()
 		cat.images.current = cat.images_B
 end
-function cat.damage(hit, status)
+function cat.damage(hit, status, enemy)
 			if game.player.invincibility > 0 then
 				return
 			end
 
-			game.player.health = game.player.health - hit
-			print("HIT")
+			-- Modifier
+			hit = hit * 1.5
+			hit = math.floor(hit)
+			if hit <1 then
+				hit = 1
+			end
 
+			-- Apply condition
+			if status and status.draw then
+				game.player.locked_draw = status.draw
+				game.player.locked_update = status.update
+			end
+
+			-- Apply damage
+			game.player.health = game.player.health - hit
+
+			-- Check death
 			if game.player.health <= 0 then
 				print("DEAD")
 				GS.push(core.states.death )
 				return
 			end
-	 game.player.invincibility = 2
+
+	 		game.player.invincibility = 2
 		
 end	
 function cat.update(dt)
@@ -189,9 +213,10 @@ function cat.updateA(dt)
 		game.player.locked_update = nil
 		game.player.locked_draw = nil
 	end
+	cat.animations.current:update(dt)
 end
 function cat.drawA()
-	cat.images.current=cat.images.left
+	cat.images.current=cat.images_A.left
 	local angle = 0
 	if game.player.orientation == "up" then
 		angle=180*math.pi/180

@@ -1,4 +1,6 @@
 local menu = GS.new()
+local settingsmenu = require 'settings'
+
 function menu:enter(from)
     self.from = from -- record previous state
 end
@@ -15,8 +17,9 @@ end
 
 function menu:keypressed(key)
 	if key =="return" then
-		print("ROADING")
 		GS.switch(core.states.main)
-	end
+	elseif key == 'escape' then
+                GS.push(settingsmenu)
+        end
 end
 return menu
