@@ -38,6 +38,7 @@ local function load_armadillo_walls(map)
         for x = 1, map.width do
 
           if layer.data[y][x] then
+            print("HOI")
              collidable_tiles[#collidable_tiles] = addBlock((x-1)*tile_width,(y-1)*tile_height,tile_width,tile_height,game,true)
 
 

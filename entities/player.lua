@@ -1,20 +1,143 @@
+		local function armadillo_move(item, other)
+			return "cross"
+		
+	end
+
+		local function regularmove(item, other)
+		 if other.isPorcupine then
+		 	return "cross"
+		 end
+		 if other.isWall then
+		 	return "slide"
+		 end
+		 return "cross"
+	end
 return function ()
-	local function regularmove(item, other)
-	 if other.isPorcupine then
-	 	return "cross"
-	 end
-	 if other.isWall then
-	 	return "slide"
-	 end
-	 return "slide"
-end
+
 local player = {}
 player.image = love.graphics.newImage( "assets/ugly_sprite.png")
 player.x = 100
 player.y = 200
 player.width = 28
 player.height = 28
-player.shape = require 'entities.shapes.armadillo'
+
+	function player.update_player(dt,handle_mouse,is_armadillo_move)
+		local sto_arma =false
+
+		local dx = 0
+		local dy = 0
+		 if core.gamepad == nil then
+			if  love.keyboard.isDown(CONTROLS.UP) then
+			 	dy = dy  - dt*player.shape.speed
+			end
+			if  love.keyboard.isDown(CONTROLS.DOWN) then
+				dy = dy + dt*player.shape.speed
+			end
+			if  love.keyboard.isDown(CONTROLS.RIGHT) then
+				dx = dx + dt*player.shape.speed
+			end
+			if  love.keyboard.isDown(CONTROLS.LEFT) then
+				dx = dx  - dt*player.shape.speed
+			end
+			if handle_mouse then
+				if love.mouse.isDown(1) then
+				    local x,y = game.camera:worldCoords(love.mouse.getPosition())
+				    local hyp = math.sqrt((x-game.player.x)*(x-game.player.x)+ (y-game.player.y)*(y-game.player.y))
+
+					player.shape.A((x-game.player.x)/hyp,(y-game.player.y)/hyp)
+					return
+
+				end
+				if love.mouse.isDown(2) then
+					player.shape.B()
+
+					return
+				end
+			end
+			if is_armadillo_move and not love.mouse.isDown(2) then
+					sto_arma = true
+			else
+					sto_arma = false
+			end
+			if love.keyboard.isDown("t") then
+				player.shape =  player.shapes[1]
+
+			end
+			if love.keyboard.isDown("g") then
+				player.shape =  player.shapes[2]
+
+			end
+
+		else
+			print(core.gamepad)
+		end
+
+		if dx > 0 then
+			-- right
+				player.orientation="right"
+
+			if dy > 0 then
+				-- top right
+				player.orientation="downright"
+
+			elseif dy < 0 then
+				-- bottom right
+				player.orientation="upright"
+			end
+		elseif dx < 0 then
+			-- left
+				player.orientation="left"
+			if dy > 0 then
+				-- top left
+				player.orientation="downleft"
+			end
+			if dy < 0 then
+				player.orientation="upleft"
+				-- bottom left
+			end
+		else
+			if dy > 0 then
+				-- down	
+				player.orientation="down"
+			end
+			if dy < 0 then
+				-- up
+				player.orientation="up"
+			end
+		end
+		if dx ==  0 and dy == 0 then
+				game.player.shape.images.current = game.player.shape.images_idle[player.orientation]
+		else
+				game.player.shape.images.current = game.player.shape.images[player.orientation]
+	
+		end
+
+	--porcupine.images.down =love.graphics.newImage('entities/porcupine/porcupine_walk_0-Sheet.png')
+	--porcupine.images.downright =love.graphics.newImage('entities/porcupine/porcupine_walk_1-Sheet.png')
+	--porcupine.images.right =love.graphics.newImage('entities/porcupine/porcupine_walk_2-Sheet.png')
+	--porcupine.images.upright =love.graphics.newImage('entities/porcupine/porcupine_walk_3-Sheet.png')
+	--porcupine.images.up =love.
+		if not is_armadillo_move then
+			game.player.col.x , game.player.col.y, cols, len =game.world:move(game.player,game.player.col.x+dx,game.player.col.y+dy,regularmove)
+		else
+			 if sto_arma then
+				local  cols, len =game.world:queryRect(game.player.col.x,game.player.col.y,game.player.col.width,game.player.col.height)
+				 	if len == 1 then
+					player.locked_draw = nil
+		 			player.locked_update = nil
+				 	end 
+			end
+
+			game.player.col.x , game.player.col.y, cols, len =game.world:move(game.player,game.player.col.x+dx,game.player.col.y+dy,armadillo_move)
+			
+		end
+		game.player.shape.update(dt)
+	end
+
+player.shapes = {}
+player.shapes[1]  = require 'entities.shapes.porcupine'
+player.shapes[2]  = require 'entities.shapes.armadillo'
+player.shape =  player.shapes[1]
 player.locked_update = nil
 player.locked_draw = nil
 player.orientation= "left"
@@ -37,89 +160,13 @@ end
 function player.update(dt)
 	player.x = player.col.x
 	player.y = player.col.y
+		 game.camera:lookAt(math.floor(game.player.col.x),math.floor(game.player.col.y))
+
 	if player.locked_update then
 		player.locked_update(dt)
 		return
 	end
-	local dx = 0
-	local dy = 0
-	 game.camera:lookAt(math.floor(game.player.col.x),math.floor(game.player.col.y))
-	 if core.gamepad == nil then
-		if  love.keyboard.isDown(CONTROLS.UP) then
-		 dy = dy  - dt*player.shape.speed
-	end
-		if  love.keyboard.isDown(CONTROLS.DOWN) then
-			dy = dy + dt*player.shape.speed
-		end
-		if  love.keyboard.isDown(CONTROLS.RIGHT) then
-			dx = dx + dt*player.shape.speed
-		end
-		if  love.keyboard.isDown(CONTROLS.LEFT) then
-			dx = dx  - dt*player.shape.speed
-		end
-		if love.mouse.isDown(1) then
-		    local x,y = game.camera:worldCoords(love.mouse.getPosition())
-		    local hyp = math.sqrt((x-game.player.x)*(x-game.player.x)+ (y-game.player.y)*(y-game.player.y))
-
-			player.shape.A((x-game.player.x)/hyp,(y-game.player.y)/hyp)
-			return
-		end
-
-	else
-		print(core.gamepad)
-	end
-	if love.mouse.isDown(2) then
-		player.shape.B()
-		return
-	end
-
-	if dx > 0 then
-		-- right
-			player.orientation="right"
-
-		if dy > 0 then
-			-- top right
-			player.orientation="downright"
-
-		elseif dy < 0 then
-			-- bottom right
-			player.orientation="upright"
-		end
-	elseif dx < 0 then
-		-- left
-			player.orientation="left"
-		if dy > 0 then
-			-- top left
-			player.orientation="downleft"
-		end
-		if dy < 0 then
-			player.orientation="upleft"
-			-- bottom left
-		end
-	else
-		if dy > 0 then
-			-- down	
-			player.orientation="down"
-		end
-		if dy < 0 then
-			-- up
-			player.orientation="up"
-		end
-	end
-	if dx ==  0 and dy == 0 then
-			game.player.shape.images.current = game.player.shape.images_idle[player.orientation]
-	else
-			game.player.shape.images.current = game.player.shape.images[player.orientation]
-		end
-
---porcupine.images.down =love.graphics.newImage('entities/porcupine/porcupine_walk_0-Sheet.png')
---porcupine.images.downright =love.graphics.newImage('entities/porcupine/porcupine_walk_1-Sheet.png')
---porcupine.images.right =love.graphics.newImage('entities/porcupine/porcupine_walk_2-Sheet.png')
---porcupine.images.upright =love.graphics.newImage('entities/porcupine/porcupine_walk_3-Sheet.png')
---porcupine.images.up =love.
-
-	game.player.col.x , game.player.col.y, cols, len =game.world:move(game.player,game.player.col.x+dx,game.player.col.y+dy,regularmove)
-	player.shape.update(dt)
+	player.update_player(dt,true)
 end
 return player
 
