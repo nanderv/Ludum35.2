@@ -87,7 +87,7 @@ function getNewMrT(x,y)
 							buildwall(randx,randy,randx2,randy2)
 						end
 					end
-				elseif(rawdistance<mrt.biterange and mrt.bitecd<=0)
+				elseif(rawdistance<mrt.biterange and mrt.bitecd<=0) then
 					--TODO bite him
 				else
 					-- meh mag niet aanvallen dan maar lopen

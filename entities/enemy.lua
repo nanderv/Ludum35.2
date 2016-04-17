@@ -7,6 +7,11 @@ local function regularmove(item, other)
 		 end
 		 return "cross"
 end
+
+
+
+
+
 -- Library setup
 Grid = require ("lib.jumper.jumper.grid") -- The grid class
 Pathfinder = require ("lib.jumper.jumper.pathfinder") -- The pathfinder lass

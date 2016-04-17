@@ -20,7 +20,7 @@ loading.phases = {
         game.blocks = {}
     game.n_blocks = 0
     game.projectiles = {}
-    game.loadMap(current_level_name)
+    game.loadMap("assets/maps/bestmap.lua")
 
     end,
     function()
@@ -32,6 +32,8 @@ loading.phases = {
     function()
         require ("entities.watcher")
         require ("entities.archer")
+        require ("entities.enemy")
+
         game.enemies={}
         game.enemies_in_range = {}
         game.enemies_out_of_range = {}

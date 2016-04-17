@@ -46,7 +46,7 @@ porcupine.animations.B = core.anim8.newAnimation(porcupine.grids.B('1-8',1), 0.0
 porcupine.A = function(dx,dy)
 		game.player.locked_update = porcupine.updateA
 		game.player.locked_draw = porcupine.drawA
-		porcupine.timeout = 1
+		porcupine.timeout = 0.8
 
 		new_quill(game.player.x,game.player.y,dx,dy)
 end
