@@ -1,4 +1,19 @@
 
+local function regularmove(item, other)
+		 if other.isPorcupine then
+		 	return "cross"
+		 end
+		 if other.isWall then
+		 	return "slide"
+		 end
+		 return "cross"
+end
+local function found_shot(item)
+	if item.isPorcupine then
+		return false
+	end
+	return true
+end
 require 'entities.enemy'
 --items, length = game.world:querysegment(x1,y1,x2,y2)
 --template
@@ -10,8 +25,8 @@ function getNewArcher(x,y,patrolpoints)
 	enemy.y = y
 	enemy.height = 32
 	enemy.width = 32
-	enemy.aggroRange = 100
-	enemy.attackRange = 50
+	enemy.aggroRange = 200
+	enemy.attackRange = 200
 	enemy.aggro = false
 	enemy.speed = 60
 	enemy.patrolindex = 1
@@ -33,7 +48,6 @@ function getNewArcher(x,y,patrolpoints)
 	enemy.update = function(dt) 
 		-- ai en shit
 		local dest = {}
-
 
 		if (enemy.currentanimationToLive == -1) then
 			enemy.y = enemy.col.y
@@ -57,20 +71,26 @@ function getNewArcher(x,y,patrolpoints)
 			-- precheck to avoid pathfinding when possible
 			local rawdist = math.sqrt((math.abs(game.player.col.x-enemy.col.x)^2)+(math.abs(game.player.col.y-enemy.col.y)^2))
 			if rawdist > 100000 then
-				return
+				return true
 			end
 			if(enemy.aggro or rawdist<=enemy.aggroRange) then
 
 				-- find dat path
-				local path, length = pathFinder:getPath(tx,ty,gx,gy)
+				local path, length = nil,nil
+				if not game.player.invisible then
+				path,length = pathFinder:getPath(tx,ty,gx,gy)
+
 				if path == nil then
+
 				 	path, length = pathFinder:getPath(tx,ty,gx+1,gy+1)
 
 				end
+				end
+				
 				if path == nil then
 					path = enemy.path 
 					if enemy.path == nil then
-						return
+						return false
 					end
 				else
 					enemy.path = path
@@ -83,22 +103,22 @@ function getNewArcher(x,y,patrolpoints)
 						-- aanvallen!
 
 						local x1,y1,x2,y2 = enemy.x+16, enemy.y+16, game.player.col.x+16, game.player.col.y+16
-						local items, length = game.world:querySegment(x1,y1,x2,y2)
+						local items, length = game.world:querySegment(x1,y1,x2,y2,found_shot)
 						if(items[2] == game.player) then
 							--aanvallen want player in los
-							enemy.currentanimationToLive = 5
+							enemy.currentanimationToLive = 1
 							print("Ik BEN TELEURGESTELD")
 							if(not enemy.aggro)then
 								enemy.aggro =true
 							end
-							return
+							return true
 						end
 					end
 			
 					--else move in direction of player to get in los
 					--TODO add animations
 					if not path._nodes[2] then
-						return
+						return true
 					end
 					dest.x =   path._nodes[2]._x 
 					dest.y =   path._nodes[2]._y 
@@ -157,7 +177,7 @@ function getNewArcher(x,y,patrolpoints)
 							dy = dest.y - enemy.y
 					end
 
-					enemy.col.x,enemy.col.y = game.world:move(enemy,enemy.col.x+dx,enemy.col.y+dy)
+					enemy.col.x,enemy.col.y = game.world:move(enemy,enemy.col.x+dx,enemy.col.y+dy,regularmove)
 					-- now aggroed
 					if(not enemy.aggro)then
 						enemy.aggro =true
@@ -230,7 +250,7 @@ function getNewArcher(x,y,patrolpoints)
 							dy = dest.y - enemy.y
 					end
 
-					enemy.col.x,enemy.col.y = game.world:move(enemy,enemy.col.x+dx,enemy.col.y+dy)				
+					enemy.col.x,enemy.col.y = game.world:move(enemy,enemy.col.x+dx,enemy.col.y+dy,regularmove)				
 			end --anders nog bezig, dus mag niks
 		end
 			--animation updates
@@ -246,6 +266,7 @@ function getNewArcher(x,y,patrolpoints)
 			enemy.currentanimationToLive = -1
 			enemy.currentanimation:update(dt)
 		end
+		return true
 	end
 
 	enemy.draw = function()

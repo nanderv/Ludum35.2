@@ -1,4 +1,13 @@
 
+local function regularmove(item, other)
+		 if other.isPorcupine then
+		 	return "cross"
+		 end
+		 if other.isWall then
+		 	return "slide"
+		 end
+		 return "cross"
+end
 require 'entities.enemy'
 --items, length = game.world:querysegment(x1,y1,x2,y2)
 --template
@@ -62,23 +71,24 @@ function getNewWatcher(x,y,patrolpoints, conelength)
 
 			if(inCone)then
 				enemy.aggro = enemy.aggrotimer
-				print("nu zie ik je!")
 			end
 
 			--only follow if in aggro mode
 
 			if(enemy.aggro > 0) then
-
 				-- find dat path
-				local path, length = pathFinder:getPath(tx,ty,gx,gy)
+				local path, length = nil,nil
+				if not game.player.invisible then
+				path,length = pathFinder:getPath(tx,ty,gx,gy)
 				if path == nil then
 				 	path, length = pathFinder:getPath(tx,ty,gx+1,gy+1)
 
 				end
+				end
 				if path == nil then
 					path = enemy.path 
 					if enemy.path == nil then
-						return
+						return false
 					end
 				else
 					enemy.path = path
@@ -130,6 +140,7 @@ function getNewWatcher(x,y,patrolpoints, conelength)
 			enemy.currentanimationToLive = -1
 			enemy.currentanimation:update(dt)
 		end
+		return true
 	end
 
 	enemy.draw = function()
@@ -274,7 +285,7 @@ function copyPastaKiller(dest, enemy, dt)
 	end
 	else
 		--lekker moven
-		enemy.col.x,enemy.col.y = game.world:move(enemy,enemy.col.x+dx,enemy.col.y+dy)
+		enemy.col.x,enemy.col.y = game.world:move(enemy,enemy.col.x+dx,enemy.col.y+dy,regularmove)
 	end	
 end
 
@@ -288,7 +299,7 @@ function playerInCone(conelength, orientation, enemy)
 	rbool = false
 
 	-- not too far?
-	if(math.sqrt(relx^2+rely^2)<conelength)then
+	if(math.sqrt(relx^2+rely^2)<enemy.conelength)then
 		local x1,y1,x2,y2 = enemy.x+16, enemy.y+16, game.player.col.x+16, game.player.col.y+16
 		local items, length = game.world:querySegment(x1,y1,x2,y2)
 		-- can i see it?

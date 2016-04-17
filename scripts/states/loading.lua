@@ -29,21 +29,14 @@ loading.phases = {
         require ("entities.watcher")
         require ("entities.archer")
         game.enemies={}
+        game.enemies_in_range = {}
+        game.enemies_out_of_range = {}
+        game.reload_enemies = {}
 
         game.enemies[1]= getNewArcher(10,100,{{x=59, y=127},{x=59, y=400}})
         game.enemies[1].id = 1
-        for i=2,5 do
-            game.enemies[i]= getNewArcher(10,300*i,{{x=59, y=127},{x=59, y=400}})
-            game.enemies[i].id = i
-            
-        end
-
-
-        game.enemies[1]= getNewWatcher(10,10,{{x=59, y=127},{x=59, y=400}},200)
-
-        
-        game.enemies[1].id = 1
-
+        game.enemies[2]= getNewWatcher(10,100,{{x=59, y=127},{x=59, y=400}},100)
+        game.enemies[2].id = 2
     end
 }
 

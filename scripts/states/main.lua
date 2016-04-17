@@ -8,9 +8,13 @@ function ctx:update(dt)
 
     core.events.exec(dt)
     core.music.script.update(dt)
-    for _,enemy in pairs(game.enemies) do
-        enemy.update(dt)
+    for z,enemy in pairs(game.enemies) do
+        if not enemy.update(dt) then
+               
+
+        end
     end
+
     for _,obj in pairs(game.projectiles) do
         obj:update(dt)
     end

@@ -1,4 +1,13 @@
 
+local function regularmove(item, other)
+		 if other.isPorcupine then
+		 	return "cross"
+		 end
+		 if other.isWall then
+		 	return "slide"
+		 end
+		 return "cross"
+end
 -- Library setup
 Grid = require ("lib.jumper.jumper.grid") -- The grid class
 Pathfinder = require ("lib.jumper.jumper.pathfinder") -- The pathfinder lass
@@ -31,6 +40,7 @@ function getNewEnemy()
     enemy.col = game.world:add(enemy,enemy.x,enemy.y,32,32)
 	enemy.update = function(dt) 
 		-- ai en shit
+		
 		enemy.y = enemy.col.y
 		enemy.x = enemy.col.x
 		if (enemy.currentanimationToLive == -1) then
@@ -55,15 +65,18 @@ function getNewEnemy()
 			local rawdist = math.sqrt((math.abs(game.player.col.x-enemy.col.x)^2)+(math.abs(game.player.col.y-enemy.col.y)^2))
 			if(enemy.aggro or rawdist<enemy.aggroRange) then
 				-- find dat path
-				local path, length = pathFinder:getPath(tx,ty,gx,gy)
+				local path, length = nil,nil
+				if not game.player.invisible then
+				path,length = pathFinder:getPath(tx,ty,gx,gy)
 				if path == nil then
 				 	path, length = pathFinder:getPath(tx,ty,gx+1,gy+1)
 
 				end
+				end
 				if path == nil then
 					path = enemy.path 
 					if enemy.path == nil then
-						return
+						return false
 					end
 				else
 					enemy.path = path
@@ -140,7 +153,7 @@ function getNewEnemy()
 								dy = dest.y - enemy.y
 						end
 
-						enemy.col.x,enemy.col.y = game.world:move(enemy,enemy.col.x+dx,enemy.col.y+dy)
+						enemy.col.x,enemy.col.y = game.world:move(enemy,enemy.col.x+dx,enemy.col.y+dy,regularmove)
 						-- now aggroed
 						if(not enemy.aggro)then
 							enemy.aggro =true
@@ -156,6 +169,7 @@ function getNewEnemy()
 
 
 			end
+			return true
 		end --anders nog bezig, dus mag niks
 
 

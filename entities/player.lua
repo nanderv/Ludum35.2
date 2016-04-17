@@ -1,4 +1,8 @@
 		local function armadillo_move(item, other)
+		 if other.isPorcupine then
+
+		 	return "slide"
+		 end
 			return "cross"
 		
 	end
@@ -20,6 +24,8 @@ player.x = 100
 player.y = 200
 player.width = 28
 player.height = 28
+	player.health = 4
+	player.invisible = false
 
 	function player.update_player(dt,handle_mouse,is_armadillo_move)
 		local sto_arma =false
@@ -107,10 +113,13 @@ player.height = 28
 		end
 		if dx ==  0 and dy == 0 then
 				game.player.shape.images.current = game.player.shape.images_idle[player.orientation]
+				game.player.idle = true
 		else
 				game.player.shape.images.current = game.player.shape.images[player.orientation]
+				game.player.idle = false
 	
 		end
+
 
 	--porcupine.images.down =love.graphics.newImage('entities/porcupine/porcupine_walk_0-Sheet.png')
 	--porcupine.images.downright =love.graphics.newImage('entities/porcupine/porcupine_walk_1-Sheet.png')
@@ -119,7 +128,10 @@ player.height = 28
 	--porcupine.images.up =love.
 		if not is_armadillo_move then
 			game.player.col.x , game.player.col.y, cols, len =game.world:move(game.player,game.player.col.x+dx,game.player.col.y+dy,regularmove)
+
+			player.invisible=false
 		else
+			player.invisible=true
 			 if sto_arma then
 				local  cols, len =game.world:queryRect(game.player.col.x,game.player.col.y,game.player.col.width,game.player.col.height)
 				 	if len == 1 then
