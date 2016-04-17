@@ -166,7 +166,6 @@ player.invincibility = 0.5
 			game.player.col.x , game.player.col.y, cols, len =game.world:move(game.player,game.player.col.x+dx,game.player.col.y+dy,armadillo_move)
 			
 		end
-		print(player)
 		player.shape.update(dt)
 	end
 
