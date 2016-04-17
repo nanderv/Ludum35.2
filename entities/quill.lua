@@ -39,7 +39,9 @@ local function get_col(self, other)
 end
 local function update(quill,dt)
 		quill.timeout = quill.timeout - dt
-
+		if not game.world:hasItem(quill) then
+			return
+		end
 		quill.x, quill.y, a, b = game.world:move(quill, quill.x+quill.dx*dt*250, quill.y+quill.dy*dt*250, get_col)
 
 		if quill.delete then
