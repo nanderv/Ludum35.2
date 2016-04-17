@@ -6,7 +6,7 @@ armadillo.images.down =love.graphics.newImage('entities/armadillo/armadillo_walk
 armadillo.images.downright =love.graphics.newImage('entities/armadillo/armadillo_walking_1_Sheet.png')
 armadillo.images.right =love.graphics.newImage('entities/armadillo/armadillo_walking_2_Sheet.png')
 armadillo.images.upright =love.graphics.newImage('entities/armadillo/armadillo_walking_3_Sheet.png')
-armadillo.images.up =love.graphics.newImage('entities/armadillo/armadillo_walking_3_Sheet.png')
+armadillo.images.up =love.graphics.newImage('entities/armadillo/armadillo_walking_4_Sheet.png')
 armadillo.images.upleft =love.graphics.newImage('entities/armadillo/armadillo_walking_5_Sheet.png')
 armadillo.images.left =love.graphics.newImage('entities/armadillo/armadillo_walking_6_Sheet.png')
 armadillo.images.downleft =love.graphics.newImage('entities/armadillo/armadillo_walking_7_Sheet.png')
@@ -14,6 +14,7 @@ armadillo.images.current = armadillo.images.right
 armadillo.animations = {}
 armadillo.grids = {}
 armadillo.speed = 100
+armadillo.secret_speed =100
 armadillo.grids.walk = core.anim8.newGrid(armadillo.images.current:getWidth()/8, 96, armadillo.images.current:getWidth(), armadillo.images.current:getHeight())
 armadillo.animations.walk = core.anim8.newAnimation(armadillo.grids.walk('1-8',1), 0.06)
 armadillo.animations.current = armadillo.animations.walk
@@ -46,16 +47,14 @@ armadillo.animations.B = core.anim8.newAnimation(armadillo.grids.B('1-8',1), 0.0
 armadillo.A = function(dx,dy)
 		game.player.locked_update = armadillo.updateA
 		game.player.locked_draw = armadillo.drawA
-		armadillo.timeout = 1
+		armadillo.i = 0
+	armadillo.secret_speed =armadillo.speed
 
-		new_quill(game.player.x,game.player.y,dx,dy)
+
 end
 armadillo.B = function()
 		game.player.locked_update = armadillo.updateB
 		game.player.locked_draw = armadillo.drawB
-		armadillo.timeout = 0.5
-		armadillo.animations.current = armadillo.animations.B:clone()
-		armadillo.images.current = armadillo.images_B[game.player.orientation]
 end
 function armadillo.update(dt)
   armadillo.animations.current:update(dt)
@@ -65,33 +64,38 @@ function armadillo.draw()
 
 end
 function armadillo.updateA(dt)
-	armadillo.timeout = armadillo.timeout-dt
-	if armadillo.timeout < 0 then
-		game.player.locked_update = nil
-		game.player.locked_draw = nil
+	local x,y = 0,0
+
+	if core.gamepad == nil then
+
+			 x,y = game.camera:worldCoords(love.mouse.getPosition())
+		    local hyp = math.sqrt((x-game.player.x)*(x-game.player.x)+ (y-game.player.y)*(y-game.player.y))
+		    x,y = (x-game.player.x)/hyp*dt,(y-game.player.y)/hyp*dt
+    		if not love.mouse.isDown(1) then
+	    			game.player.locked_update = nil
+					game.player.locked_draw = nil
+			return
+		end
 	end
+
+	game.player.col.x,game.player.col.y =game.world:move(game.player,x*armadillo.secret_speed+(game.player.x),game.player.y+y*armadillo.secret_speed )
+	armadillo.secret_speed = armadillo.secret_speed + 60*dt
+	if armadillo.secret_speed > 300 then
+		armadillo.secret_speed = 300
+	end
+	armadillo.i  = armadillo.i+dt
 end
 function armadillo.drawA()
-	armadillo.animations.current:draw(armadillo.images.current,game.player.col.x-37,game.player.col.y-37)
+	armadillo.animations.current:draw(armadillo.images.current,game.player.col.x+14,game.player.col.y+17,armadillo.i*armadillo.secret_speed/10,1,1,48,48)
 
 end
 function armadillo.updateB(dt)
-	armadillo.timeout = armadillo.timeout-dt
-	if love.mouse.isDown(2) then
-		armadillo.animations.current:update(dt)
-	else
-	if armadillo.timeout < 0 then
-		game.player.locked_update = nil
-		game.player.locked_draw = nil
-		armadillo.animations.current = armadillo.animations.walk
-
-	end
-	end
-
+	game.player.update_player(dt,false,true)
+	
 end
 function armadillo.drawB()
-	armadillo.animations.current:draw(armadillo.images.current,game.player.col.x-37,game.player.col.y-37)
-	
-
+	love.graphics.setColor( 255,255,255,128)
+	armadillo.draw()
+	love.graphics.setColor( 255,255,255,255)
 end
 return armadillo
