@@ -14,8 +14,8 @@ local function addBlock(x,y,w,h,game,isPorcupine, isCatWater)
   game.world:add(block, x,y,w,h)
   return block
 end
-local function load_objects(map)
-  local layer = map.layers["objects"]  
+function load_objects()
+  local layer = game.map.layers["objects"]  
         if layer == nil then
 
         return
@@ -166,6 +166,5 @@ core.loadMap=function(filename)
     load_armadillo_walls(map)
     load_armadillo_gates(map)
     load_cat_water(map)
-    load_objects(map)
 
 end
