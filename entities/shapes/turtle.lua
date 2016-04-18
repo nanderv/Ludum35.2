@@ -1,4 +1,12 @@
 local function turtle_col_handler(self, other)
+	if other.isEnemy and self.shape.lungecooldown == false then
+		other.health = other.health - 3
+		other.aggro = 5
+		if other.health <= 0 then
+			game.enemy_ids_to_delete[#game.enemy_ids_to_delete+1] = other
+		end	
+		self.shape.lungecooldown = true
+	end
 	return "slide"
 end
 
@@ -41,19 +49,18 @@ turtle.animations.current = turtle.animations.walk
 turtle.images_idle = {}
 turtle.images_idle.down =love.graphics.newImage('entities/turtle/turtle_walking_0_Sheet.png')
 
-
 turtle.A = function(dx,dy)
 
 		game.player.locked_update = turtle.updateA
 		game.player.locked_draw = turtle.drawA
-		turtle.timeout = 0.3
+		turtle.timeout = 0.5
 		local ddx = 0
 		local ddy = 0
 		if game.player.orientation == "up" then
-			ddy = 1
+			ddy = -1
 		end
 		if game.player.orientation == "down" then
-			ddy = -1
+			ddy = 1
 		end
 		if game.player.orientation == "right" then
 			ddx = 1
@@ -81,16 +88,26 @@ turtle.A = function(dx,dy)
 		game.player.ddx = ddx
 		game.player.ddy = ddy
 
+		local others, others_len = game.world:queryPoint(game.player.x+game.player.width/2+ddx*24,game.player.y+game.player.height/2+ddy*24,function (obj) return obj.isEnemy end)
+		if others_len > 0 then
+			others[1].health = others[1].health - 2
+			others[1].aggro = 5
+			if others[1].health <= 0 then
+				game.enemy_ids_to_delete[#game.enemy_ids_to_delete+1] = others[1]
+			end	
+		end
+
+
 end
 
 turtle.B = function()
 	if 	game.player.shape.attack_B_pause and game.player.shape.attack_B_pause > 0 then
 		return true
 	end
-	
+		turtle.lungecooldown = false
 		game.player.locked_update = turtle.updateB
 		game.player.locked_draw = turtle.drawB
-		turtle.timeout = 0.3
+		turtle.timeout = 0.15
 		local ddx = 0
 		local ddy = 0
 		if game.player.orientation == "up" then
@@ -193,7 +210,7 @@ function turtle.draw()
 		angle=45*math.pi/180
 	end
 
-	turtle.animations.current:draw(turtle.images.current,game.player.col.x+14,game.player.col.y+17,angle,1,1,48,48)
+	turtle.animations.current:draw(turtle.images.current,game.player.col.x+14+game.player.offx,game.player.col.y+17+game.player.offy,angle,1,1,48,48)
 end
 
 function turtle.updateA(dt)
@@ -202,6 +219,7 @@ function turtle.updateA(dt)
 		game.player.locked_update = nil
 		game.player.locked_draw = nil
 	end
+
 	turtle.animations.current:update(dt)
 end
 
@@ -230,14 +248,15 @@ function turtle.drawA()
 	if game.player.orientation == "downleft" then
 		angle=45*math.pi/180
 	end
-
-	turtle.animations.current:draw(turtle.images.current,game.player.col.x+14,game.player.col.y+17,angle,1,1,48,48)
+	
+	turtle.animations.current:draw(turtle.images.current,game.player.col.x+14+game.player.offx,game.player.col.y+17+game.player.offy,angle,1,1,48,48)
+	--commented line draws a line from point of attack outwards
+	--love.graphics.line(game.player.x+game.player.width/2+game.player.ddx*24,game.player.y+game.player.height/2+game.player.ddy*24,game.player.x+game.player.width/2+game.player.ddx*64,game.player.y+game.player.height/2+game.player.ddy*64)
 end
 
 function turtle.updateB(dt)
 	turtle.timeout = turtle.timeout-dt
-	game.player.col.x , game.player.col.y, cols, len = game.world:move(game.player,game.player.col.x+game.player.ddx*dt*400,game.player.y+game.player.ddy*dt*400,turtle_col_handler)
-
+	game.player.col.x , game.player.col.y, cols, len = game.world:move(game.player,game.player.col.x+game.player.ddx*dt*450,game.player.y+game.player.ddy*dt*450,turtle_col_handler)
 
 	if love.mouse.isDown(2) then
 		turtle.animations.current:update(dt)
@@ -246,7 +265,7 @@ function turtle.updateB(dt)
 		game.player.locked_update = nil
 		game.player.locked_draw = nil
 		turtle.animations.current = turtle.animations.walk
-		game.player.shape.attack_B_pause=1.2
+		game.player.shape.attack_B_pause=1
 	
 	end
 end
@@ -278,7 +297,7 @@ function turtle.drawB()
 	end
 
 	turtle.images.current = turtle.images_B.left
-	turtle.animations.current:draw(turtle.images.current,game.player.col.x+14,game.player.col.y+17,angle,1,1,48,48)	
+	turtle.animations.current:draw(turtle.images.current,game.player.col.x+14+game.player.offx,game.player.col.y+17+game.player.offy,angle,1,1,48,48)	
 
 end
 return turtle

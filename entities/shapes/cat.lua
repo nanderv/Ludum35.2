@@ -1,5 +1,5 @@
 local function cat_col_handler(self, other)
-	if other.isWall or other.isEnemy then
+		 if other.isWall or (other.isGate and not game.hasKey) or other.isEnemy then
 		return "slide"
 	end
 	return "cross"
@@ -59,10 +59,10 @@ cat.A = function(dx,dy)
 		local ddx = 0
 		local ddy = 0
 		if game.player.orientation == "up" then
-			ddy = 1
+			ddy = -1
 		end
 		if game.player.orientation == "down" then
-			ddy = -1
+			ddy = 1
 		end
 		if game.player.orientation == "right" then
 			ddx = 1
@@ -89,6 +89,15 @@ cat.A = function(dx,dy)
 		end
 		game.player.ddx = ddx
 		game.player.ddy = ddy
+
+		local others, others_len = game.world:queryPoint(game.player.x+game.player.width/2+ddx*24,game.player.y+game.player.height/2+ddy*24,function (obj) return obj.isEnemy end)
+		if others_len > 0 then
+			others[1].health = others[1].health - 1
+			others[1].aggro = 5
+			if others[1].health <= 0 then
+				game.enemy_ids_to_delete[#game.enemy_ids_to_delete+1] = others[1]
+			end	
+		end
 
 
 		
@@ -204,7 +213,7 @@ if game.player.orientation == "upright" then
 
 
 		
-	cat.animations.current:draw(cat.images.current,game.player.col.x+14,game.player.col.y+17,angle,1,1,48,48)
+	cat.animations.current:draw(cat.images.current,game.player.col.x+14+game.player.offx,game.player.col.y+17+game.player.offy,angle,1,1,48,48)
 
 end
 function cat.updateA(dt)
@@ -241,10 +250,10 @@ if game.player.orientation == "upright" then
 		angle=45*math.pi/180
 	end
 
+	--debug output, line from point of attack outwards
+	--love.graphics.line(game.player.x+game.player.width/2+game.player.ddx*24,game.player.y+game.player.height/2+game.player.ddy*24,game.player.x+game.player.width/2+game.player.ddx*64,game.player.y+game.player.height/2+game.player.ddy*64)
 
-
-
-	cat.animations.current:draw(cat.images.current,game.player.col.x+14,game.player.col.y+17,angle,1,1,48,48)
+	cat.animations.current:draw(cat.images.current,game.player.col.x+14+game.player.offx,game.player.col.y+17+game.player.offy,angle,1,1,48,48)
 end
 function cat.updateB(dt)
 	cat.timeout = cat.timeout-dt
@@ -292,7 +301,7 @@ if game.player.orientation == "upright" then
 
 
 cat.images.current = cat.images_B
-	cat.animations.current:draw(cat.images.current,game.player.col.x+14,game.player.col.y+17,angle,1,1,48,48)	
+	cat.animations.current:draw(cat.images.current,game.player.col.x+14+game.player.offx,game.player.col.y+17+game.player.offy,angle,1,1,48,48)	
 
 end
 return cat

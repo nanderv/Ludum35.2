@@ -48,7 +48,7 @@ porcupine.A = function(dx,dy)
 		game.player.locked_draw = porcupine.drawA
 		porcupine.timeout = 0.8
 
-		new_quill(game.player.x,game.player.y,dx,dy)
+		new_quill(game.player.x+game.player.width/2,game.player.y+game.player.height/2,dx,dy)
 end
 porcupine.B = function()
 		game.player.locked_update = porcupine.updateB

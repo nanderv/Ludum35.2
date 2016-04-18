@@ -2,7 +2,7 @@ local function regularmove(item, other)
 		 if other.isPorcupine then
 		 	return "cross"
 		 end
-		 if other.isWall or other.isCatWater then
+		 if other.isWall or other.isCatWater or other== game.player or other.isEnemy then
 		 	return "slide"
 		 end
 		 return "cross"
@@ -249,7 +249,7 @@ function getNewEnemy(x,y,patrolpoints)
 
 	enemy.draw = function()
 		if(enemy.currentanimation == enemy.animationAttack)then
-			print("hank")
+			--print("hank")
 		end
 		local ding
 		if(enemy.dy == 0) then 

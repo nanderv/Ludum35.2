@@ -1,5 +1,5 @@
 		local function armadillo_move(item, other)
-		 if other.isPorcupine then
+		 if other.isPorcupine or other.isCatWater or (other.isGate and not game.hasKey) then
 
 		 	return "slide"
 		 end
@@ -8,20 +8,26 @@
 	end
 
 	local function regularmove(item, other)
+		if other.isHeart then
+			game.player.max_health = game.player.max_health + 1
+			game.player.health = game.player.max_health
+		end
 		if other.isExit then
 			
-			print("AAAAA")
+			
 			if not to_load then
 				current_level = current_level + 1
 				GS.push(core.states.loading)
+				to_load = true
+				return
 			end
-			to_load = true
-			return
+			
+			
 		end
 		 if other.isEnemy then
 		 	return "slide"
 		 end
-		 if other.isWall or other.isCatWater then
+		 if other.isWall or other.isCatWater or (other.isGate and not game.hasKey) or other.isEnemy then
 		 	
 		 	return "slide"
 		 end
@@ -33,11 +39,14 @@ local player = {}
 player.image = love.graphics.newImage( "assets/ugly_sprite.png")
 player.x = game.startX
 player.y = game.startY
-player.width = 16
-player.height = 16
-player.health = 4
-player.offx = 6
-player.offy = 5
+player.offx = 4
+player.offy = 0
+player.width = 20
+player.height = 20
+player.health = 40000
+player.offcx = 4
+player.offcy = 4
+
 player.max_health = 4
 player.invisible = false
 player.invincibility = 0.5
@@ -75,21 +84,46 @@ player.invincibility = 0.5
 						return
 					end
 				end
-
+			-- porcupine
 			if love.keyboard.isDown(CONTROLS.ONE) then
 				player.shape =  player.shapes[1]
-
+				game.player.offx = 4
+				game.player.offy = 0
+				game.player.width = 20
+				game.player.height = 20
+				game.world:remove(player)
+				player.load()
 			end
+			-- armadillo 
 		if love.keyboard.isDown(CONTROLS.TWO) then
 				player.shape =  player.shapes[2]
-
+				game.player.offx = -6
+				game.player.offy = -2
+				game.player.width = 16
+				game.player.height = 16
+				game.world:remove(player)
+				player.load()
 			end	
-	if love.keyboard.isDown(CONTROLS.THREE) then
-				player.shape =  player.shapes[3]
+			-- cat
+			if love.keyboard.isDown(CONTROLS.THREE) then
 
+				game.player.offx = -8
+				game.player.offy = -10
+				game.player.width = 12
+				game.player.height = 12
+				player.shape =  player.shapes[3]
+				game.world:remove(player)
+				player.load()
 			end
+			-- turtle
 			if love.keyboard.isDown(CONTROLS.FOUR) then
+				game.player.offx = -3
+				game.player.offy = -6
+				game.player.width = 22
+				game.player.height = 22
 				player.shape = player.shapes[4]
+				game.world:remove(player)
+				player.load()
 			end
 			end
 			if is_armadillo_move and not love.mouse.isDown(2) then
@@ -187,7 +221,7 @@ player.speed = 80
 function player.load()
 	
 
-	game.player.col = game.world:add(game.player, game.player.x, game.player.y, game.player.width, game.player.height) 
+	game.player.col = game.world:add(game.player, game.player.x+player.offcx, game.player.y+player.offcy, game.player.width, game.player.height) 
 end
 function player.draw(a )
 	
