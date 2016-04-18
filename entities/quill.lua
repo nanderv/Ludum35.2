@@ -4,6 +4,14 @@ local function ignore_col(self,other)
 	return "cross"
 end
 local function get_col(self, other)
+	if other.isCatWater then
+			return "cross"
+		end
+		if other.isTarget then
+			game.hasKey = true
+			game.map.layers['gate_closed'].visible = false
+			game.map.layers['gate_open'].visible  = true
+		end
 	if other.isQuill then
 		self.delete = true
 		other.delete = true
@@ -40,6 +48,7 @@ local function get_col(self, other)
 			end
 		end
 		self.delete = true
+
 		return "touch"
 
 	end
