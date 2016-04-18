@@ -25,6 +25,8 @@ function getNewMrT(x,y)
 	mrt.p3 = 150
 	mrt.actp = 1
 
+	mrt.entities = {}
+
 	mrt.currentanimationToLive = -1
 
 	mrt.globalcd = 0
@@ -104,10 +106,15 @@ function getNewMrT(x,y)
     mrt.col = game.world:add(mrt,mrt.x,mrt.y,mrt.width,mrt.height)
 
 	mrt.update = function(dt)
+		--handle ents
+		for a, entity in pairs(mrt.entities)do
+			entity.update(dt,mrt,a)
+		end
+
 		--nuke handler
 		if(mrt.nuclearstrikesleft > 0 and mrt.nuclearstriketimer<=0)then
 			--FIRE NUKE
-			createNuke(game.player.x-((44-game.player.width)/2),game.player.y -((44-game.player.height)/2))
+			table.nsert(mrt.entities,createNuke(game.player.x-((44-game.player.width)/2),game.player.y -((44-game.player.height)/2)))
 			mrt.nuclearstrikesleft = mrt.nuclearstrikesleft -1
 			mrt.nuclearstriketimeribt = 0.2
 		end
@@ -379,6 +386,9 @@ function getNewMrT(x,y)
 			mrt.currentanimation:draw(mrt.currentimage,mrt.col.x+19,mrt.col.y+15,angle,1,1,48,48)
 			--TODO laser tekenen
 		end
+		for _, entity in pairs(mrt.entities)do
+			entity.draw()
+		end
 	end
 
 	mrt.hit = function(dmge)
@@ -509,13 +519,15 @@ function createNuke(tarx, tary)
 	nuke.explttl = 0.3
 	nuke.dim = 44
 
-	nuke.update = function ( dt )
+	nuke.update = function ( dt, mrt, a )
 		if(nuke.ttl < 0)then
 			--deal dmge to player if in range
 			if((nuke.x>player.x) and (player.x<(nuke.x+nuke.dim))and (player.y>nuke.y) and (player.y<(nuke.y+nuke.dim)))then
 				--do dmge
 				game.player.shape.damage(2)
 			end
+			nuke.explttl = nuke.explttl -1
+			table.remove(mrt.entities,a)
 			nuke.explosionani:update(dt)
 		else
 			nuke.ttl = nuke.ttl - dt
