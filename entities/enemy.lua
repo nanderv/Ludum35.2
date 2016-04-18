@@ -249,7 +249,7 @@ function getNewEnemy(x,y,patrolpoints)
 
 	enemy.draw = function()
 		if(enemy.currentanimation == enemy.animationAttack)then
-			print("hank")
+			--print("hank")
 		end
 		local ding
 		if(enemy.dy == 0) then 

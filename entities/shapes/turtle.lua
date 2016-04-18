@@ -57,10 +57,10 @@ turtle.A = function(dx,dy)
 		local ddx = 0
 		local ddy = 0
 		if game.player.orientation == "up" then
-			ddy = 1
+			ddy = -1
 		end
 		if game.player.orientation == "down" then
-			ddy = -1
+			ddy = 1
 		end
 		if game.player.orientation == "right" then
 			ddx = 1
@@ -88,8 +88,7 @@ turtle.A = function(dx,dy)
 		game.player.ddx = ddx
 		game.player.ddy = ddy
 
-		local others, others_len = game.world:queryPoint(game.player.x+ddx*32,game.player.y+ddy*32,function (obj) return obj.isEnemy end)
-		print(others)
+		local others, others_len = game.world:queryPoint(game.player.x+ddx*24,game.player.y+ddy*24,function (obj) return obj.isEnemy end)
 		if others_len > 0 then
 			others[1].health = others[1].health - 2
 			others[1].aggro = 5
@@ -220,6 +219,7 @@ function turtle.updateA(dt)
 		game.player.locked_update = nil
 		game.player.locked_draw = nil
 	end
+
 	turtle.animations.current:update(dt)
 end
 
@@ -248,8 +248,8 @@ function turtle.drawA()
 	if game.player.orientation == "downleft" then
 		angle=45*math.pi/180
 	end
-
 	turtle.animations.current:draw(turtle.images.current,game.player.col.x+14,game.player.col.y+17,angle,1,1,48,48)
+	love.graphics.line(game.player.x+game.player.ddx*24,game.player.y+game.player.ddy*24,game.player.x+game.player.ddx*64,game.player.y+game.player.ddy*64)
 end
 
 function turtle.updateB(dt)
