@@ -11,7 +11,6 @@ end
 function ctx:update(dt)
 
     core.events.exec(dt)
-    core.music.script.update(dt)
     local no_enemies = true
     for z,enemy in pairs(game.enemies) do
         no_enemies = false

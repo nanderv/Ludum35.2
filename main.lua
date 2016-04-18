@@ -16,6 +16,8 @@ require 'entities.status_effects.events'
 require 'entities.tiles'
 require 'cutscene.cutscene'
 
+core.sounds = require 'sounds'
+
 core.gamepad = nil
 
 function love.load()
