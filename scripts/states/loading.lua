@@ -1,3 +1,4 @@
+
 levels  = {"assets/maps/bestmap.lua","assets/maps/testmap.lua","assets/maps/bestmap.lua"}
 level_gates_open_when_no_enemies = {true,false,false}
 
