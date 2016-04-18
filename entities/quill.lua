@@ -66,6 +66,7 @@ local function update(quill,dt)
 		if other.isEnemy then
 			if other.health then
 				other.health = other.health - 1
+				other.aggro = 5
 				print(other.health)
 					if other.health <= 0 then
 						game.enemy_ids_to_delete[#game.enemy_ids_to_delete+1] = other
