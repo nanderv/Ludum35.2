@@ -2,9 +2,10 @@ require 'entities.objects'
 tile_width =32
 tile_height=32
 local function addBlock(x,y,w,h,game,type)
-  local block = {x=x,y=y,w=w,h=h,ctype="aa"}
+  local block = {x=x,y=y,w=w,h=h,ctype=type}
   game.n_blocks =game.n_blocks +1
   block[type] = true
+  
 
   game.blocks["a"..game.n_blocks] = block
   game.world:add(block, x,y,w,h)
@@ -13,12 +14,14 @@ end
 
 local function addObject(x,y,type)
   local w,h = 32,32
-  local block = {x=x,y=y,w=w,h=h,ctype="aa"}
+  x,y = x,y-32
+  local block = {x=x,y=y,w=w,h=h,ctype=type}
   game.n_blocks =game.n_blocks +1
   block[type] = type
-  block.isPorcupine = isPorcupine
   game.blocks["a"..game.n_blocks] = block
   game.world:add(block, x,y,w,h)
+  block.af = love.math.random(1,#core.objects[type])
+  game.objects[#game.objects+1] = block
   return block
 end
 

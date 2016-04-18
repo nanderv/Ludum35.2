@@ -8,6 +8,10 @@
 	end
 
 	local function regularmove(item, other)
+		if other.isHeart then
+			game.player.max_health = game.player.max_health + 1
+			game.player.health = game.player.max_health
+		end
 		if other.isExit then
 			
 			print("AAAAA")
@@ -75,21 +79,30 @@ player.invincibility = 0.5
 						return
 					end
 				end
-
+			-- porcupine
 			if love.keyboard.isDown(CONTROLS.ONE) then
 				player.shape =  player.shapes[1]
-
+				game.world:remove(player)
+				player.load()
 			end
+			-- armadillo 
 		if love.keyboard.isDown(CONTROLS.TWO) then
 				player.shape =  player.shapes[2]
 
+				game.world:remove(player)
+				player.load()
 			end	
-	if love.keyboard.isDown(CONTROLS.THREE) then
+			-- cat
+			if love.keyboard.isDown(CONTROLS.THREE) then
 				player.shape =  player.shapes[3]
-
+				game.world:remove(player)
+				player.load()
 			end
+			-- turtle
 			if love.keyboard.isDown(CONTROLS.FOUR) then
 				player.shape = player.shapes[4]
+				game.world:remove(player)
+				player.load()
 			end
 			end
 			if is_armadillo_move and not love.mouse.isDown(2) then
