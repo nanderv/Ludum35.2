@@ -14,13 +14,16 @@ function ctx:update(dt)
 
     core.events.exec(dt)
     core.music.script.update(dt)
+    local no_enemies = true
     for z,enemy in pairs(game.enemies) do
-       
+        no_enemies = false
         if not enemy.update(dt) then
-               
-
         end
-        
+    end
+    if no_enemies and level_gates_open_when_no_enemies[current_level] then
+        current_level = current_level + 1
+        GS.push(core.states.loading)
+        return
     end
 
     for _,obj in pairs(game.projectiles) do

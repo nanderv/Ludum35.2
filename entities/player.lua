@@ -8,6 +8,10 @@
 	end
 
 	local function regularmove(item, other)
+		if other.isHeart then
+			game.player.max_health = game.player.max_health + 1
+			game.player.health = game.player.max_health
+		end
 		if other.isExit then
 			
 			print("AAAAA")
