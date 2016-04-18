@@ -3,10 +3,10 @@ local function regularmove(item, other)
 		 if other.isPorcupine then
 		 	return "cross"
 		 end
-		 if other.isWall or other.isCatWater then
+		 if other.isWall or other.isCatWater or other== game.player or other.isEnemy then
 		 	return "slide"
 		 end
-		 return "cross"
+		 
 end
 require 'entities.enemy'
 
@@ -150,10 +150,6 @@ function getNewWatcher(x,y,patrolpoints, conelength)
 	end
 
 	enemy.draw = function()
-
-	love.graphics.line(enemy.col.x,enemy.col.y,enemy.x+enemy.width,enemy.col.y+enemy.col.height)
-
-	love.graphics.line(enemy.col.x+enemy.width,enemy.col.y,enemy.col.x,enemy.col.y+enemy.height)
 		if(enemy.orientation == "TOP")then
 			enemy.animation:draw(enemy.image,enemy.col.x+19,enemy.col.y+15,(180*math.pi/180),1,1,48,48)
 		elseif(enemy.orientation == "TOPRIGHT")then

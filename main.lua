@@ -28,7 +28,7 @@ end
 -- This one will only be used for debugging purposes, love.keyDown is used in most other cases
 function love.keypressed(key)
     core.gamepad = nil
-    if GS.current() ~= core.states.menu  and key == 'p' then
+    if GS.current() ~= core.states.menu  and key == CONTROLS.PAUSE then
     	if  GS.current() ~= core.states.pause then
         	GS.push(core.states.pause)
         else
@@ -38,14 +38,18 @@ function love.keypressed(key)
     --if DEBUG and DEBUG.print then
      --   print(key)
     --end
-    if key =="r"  then
+    if key == CONTROLS.RESET  then
                 GS.push(core.states.loading)
     end
-    if key == "q"then
+    if key == "q" then
      local s = core.status_effects.knockback(1,game.player,100,100)
      game.player.locked_update = s.update
      game.player.locked_draw = s.draw
     end
+    if key == "1" then
+        print(game.player.x,game.player.y)
+    end
+
 end
 function love.gamepadpressed( joystick, button )
     print("HOI")

@@ -2,7 +2,7 @@ local function regularmove(item, other)
 		 if other.isPorcupine then
 		 	return "cross"
 		 end
-		 if other.isWall or other.isCatWater then
+		 if other.isWall or other.isCatWater or other== game.player or other.isEnemy then
 		 	return "slide"
 		 end
 		 return "cross"
@@ -37,6 +37,8 @@ function getNewArcher(x,y,patrolpoints)
 	enemy.angle = 0
 	enemy.aimx = 0
 	enemy.aimy = 0
+	enemy.health = 2
+	enemy.isEnemy = true
 	enemy.shootbool = false
 
 	--animations
@@ -115,7 +117,6 @@ function getNewArcher(x,y,patrolpoints)
 						-- aanvallen!
 						local x1,y1,x2,y2 = enemy.x+0.5*enemy.width, enemy.y+0.5*enemy.height, game.player.col.x+0.5*game.player.width, game.player.col.y+0.5*game.player.height
 						local items, length = game.world:querySegment(x1,y1,x2,y2,found_shot)
-						beun1,beun2,beun3,beun4=x1,y1,x2,y2
 						if(items[1]==game.player or items[2] == game.player) then
 							--aanvallen want player in los
 
@@ -253,9 +254,6 @@ function getNewArcher(x,y,patrolpoints)
 
 
 	enemy.draw = function()
-		love.graphics.line(enemy.col.x,enemy.col.y,enemy.x+enemy.width,enemy.col.y+enemy.col.height)
-		love.graphics.line(enemy.col.x+enemy.width,enemy.col.y,enemy.col.x,enemy.col.y+enemy.height)
-		love.graphics.line(beun1,beun2,beun3,beun4)
 		local ding
 		if(enemy.dy == 0) then 
 			ding = math.abs(enemy.dx)/0.001

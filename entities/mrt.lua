@@ -1,4 +1,7 @@
 --SWAG
+
+---offset = 14,20
+-- size = 68, 81
 require "entities.watcher"
 function getNewMrT(x,y)
 	mrt.x = x
@@ -26,10 +29,9 @@ function getNewMrT(x,y)
 	mrt.nuclearstriketimer = -5
 	mrt.nuclearstrikeradius = 44
 
-	mrt.biterange = 100
+	mrt.biterange = 40
 	mrt.bitecd = {2,1,1,1}
 	mrt.bitetimer = 0
-	mrt.biteprogress = 0
 	mrt.biteactive = false
 
 	mrt.wallcd = {-5,-5,10,10}
@@ -49,15 +51,57 @@ function getNewMrT(x,y)
 	mrt.lasereyesactive = false
 
 	--TODO add all animations
+	mrt.imageIdle1 = love.graphics.newImage("entities/mrt/mr.t_0.png")
+	local g = core.anim8.newGrid(96, 128, enemy.imageIdle1:getWidth(), enemy.imageIdle1:getHeight())
+    enemy.animationIdle1 = core.anim8.newAnimation(g('1-1',1), 0.1)
+
+    mrt.imageIdle2 = love.graphics.newImage("entities/mrt/mr.t_0.png")
+	g = core.anim8.newGrid(96, 128, enemy.imageIdle2:getWidth(), enemy.imageIdle2:getHeight())
+    enemy.animationIdle2 = core.anim8.newAnimation(g('1-1',1), 0.1)
+
+    enemy.imageTail1 = love.graphics.newImage("entities/mrt/muricalligator_attack_B_0_Sheet.png")
+	g = core.anim8.newGrid(96, 128, enemy.imageTail1:getWidth(), enemy.imageTail1:getHeight())
+    enemy.animationTail1 = core.anim8.newAnimation(g('1-8',1), 0.1) 
+
+    enemy.imageTail2 = love.graphics.newImage("entities/mrt/muricalligator_phase4_attack_B_0_Sheet.png")
+	g = core.anim8.newGrid(96, 128, enemy.imageTail2:getWidth(), enemy.imageTail2:getHeight())
+    enemy.animationTail2 = core.anim8.newAnimation(g('1-8',1), 0.1) 
+
+    enemy.imageWalk1 = love.graphics.newImage("entities/mrt/muricalligator_walking_0_Sheet.png")
+	g= core.anim8.newGrid(96, 128, enemy.imageWalk1:getWidth(), enemy.imageWalk1:getHeight())
+    enemy.animationWalk1 = core.anim8.newAnimation(g('1-8',1), 0.1) 
+
+    enemy.imageWalk2 = love.graphics.newImage("entities/mrt/muricalligator_phase4_walking_0_Sheet.png")
+	g= core.anim8.newGrid(96, 128, enemy.imageWalk2:getWidth(), enemy.imageWalk2:getHeight())
+    enemy.animationWalk2 = core.anim8.newAnimation(g('1-8',1), 0.1) 
+
+    enemy.imageBite1 = love.graphics.newImage("entities/mrt/muricalligator_attack_A_0_Sheet.png")
+	g= core.anim8.newGrid(96, 128, enemy.imageBite1:getWidth(), enemy.imageBite1:getHeight())
+    enemy.animationBite1 = core.anim8.newAnimation(g('1-8',1), 0.1) 
+
+    enemy.imageBite2 = love.graphics.newImage("entities/mrt/muricalligator_phase4_attack_A_0_Sheet.png")
+	g= core.anim8.newGrid(96, 128, enemy.imageBite2:getWidth(), enemy.imageBite2:getHeight())
+    enemy.animationBite2 = core.anim8.newAnimation(g('1-8',1), 0.1) 
+
+    enemy.imagelasor = love.graphics.newImage("entities/mrt/muricalligator_phase4_attack_A_0_Sheet.png")
+	g= core.anim8.newGrid(96, 128, enemy.imagelasor:getWidth(), enemy.imagelasor:getHeight())
+    enemy.animationlasor = core.anim8.newAnimation(g('1-8',1), 0.2) 
+
+
+    mrt.currentanimation = mrt.animationIdle1
+    mrt.currentimage = mrt.imageIdle1
+    mrt.currentanimationToLive = -1
+
+    mrt.col = game.world:add(mrt,mrt.x,mrt.y,mrt.with,mrt.height)
 
 	update = function(dt)
 		--attackpatterns
-		if(mrt.globalcd<=0 and not mrt.lasereyesactive and not mrt.tailattackactive and not mrt.biteactive)then
+		if(mrt.globalcd<=0 and not mrt.lasereyesactive and not mrt.tailattackactive and not mrt.biteactive and mrt.currentanimationToLive < 0)then
 			rawdistance = math.sqrt((math.abs(game.player.col.x-mrt.col.x)^2)+(math.abs(game.player.col.y-mrt.col.y)^2))
 			if(mrt.nuclearstriketimer<0 and mrt.nuclearstriketimer ~= -5)then
 				nuclearstrike()
 				mrt.nuclearstriketimer = mrt.nuclearstrikecd[mrt.actp]
-			elseif(mrt.orientation == "BOT" and lasereyestimer<=0 and lasereyestimer~=-5)then
+			elseif((mrt.orientation == "BOT" or mrt.orientation == "RIGHT" or mrt.orientation == "LEFT" or mrt.orientation == "BOT") and lasereyestimer<=0 and lasereyestimer~=-5)then
 				startlasereyes()
 			elseif(mrt.facingPlayer(false))then
 				if(mrt.walltimer<=0 and mrt.walltimer ~= -5)then
@@ -88,26 +132,60 @@ function getNewMrT(x,y)
 						end
 					end
 				elseif(rawdistance<mrt.biterange and mrt.bitecd<=0) then
-					--TODO bite him
+					if(mrt.actp == 4)then
+						mrt.currentanimation = mrt.animationBite2
+						mrt.currentimage = mrt.imageBite2
+					else
+						mrt.currentanimation = mrt.imageBite1
+						mrt.currentimage = mrt.imageBite1
+					end
+					mrt.currentanimationToLive = 0.8
+					mr.biteactive = true
 				else
 					-- meh mag niet aanvallen dan maar lopen
 					copyPastaKiller(dest, mrt, dt, mrt.turn[mrt.actp], true)
+					if(mrt.actp == 4)then
+						mrt.currentanimation = mrt.animationWalk2
+						mrt.currentimage = mrt.imageWalk2
+					else
+						mrt.currentanimation = mrt.animationWalk1
+						mrt.currentimage = mrt.imageWalk1
+					end
 				end
 			elseif(mrt.tailattacktimer<=0 and mrt.tailattacktimer ~= -5 and rawdistance<tailattackrange and facingPlayer(true))then
 				tailattack(mrt)
 			else
 				--turn to player and move towards it
 				copyPastaKiller(dest, mrt, dt, mrt.turn[mrt.actp], true)
+				if(mrt.actp == 4)then
+					mrt.currentanimation = mrt.animationWalk2
+					mrt.currentimage = mrt.imageWalk2
+				else
+					mrt.currentanimation = mrt.animationWalk1
+					mrt.currentimage = mrt.imageWalk1
+				end
 			end
 		elseif(mrt.lasereyesactive)then
 			-- TODO handle the las0r 3y3s
 		elseif(mrt.tailattackactive)then
 			-- TODO handle tailattack
 		elseif(mrt.biteactive)then
+			if(mrt.currentanimationToLive < 0 )then
+				mrt.biteactive = false
+			else
+
 			-- TODO handle biteactive
+			end
 		else
-			--only moving left to do
+			--only moving left to do, yes i can move during animations
 			copyPastaKiller(dest, mrt, dt, mrt.turn[mrt.actp], true)
+			if(mrt.actp == 4)then
+				mrt.currentanimation = mrt.animationWalk2
+				mrt.currentimage = mrt.imageWalk2
+			else
+				mrt.currentanimation = mrt.animationWalk1
+				mrt.currentimage = mrt.imageWalk1
+			end
 		end
 		--timerhandling
 		if(mrt.nuclearstriketimer>0)then
@@ -131,19 +209,37 @@ function getNewMrT(x,y)
 		if(mrt.globalcd>0)then
 			mrt.globalcd = mrt.globalcd-dt
 		end
+		if(currentanimationToLive>0)then
+			mrt.currentanimationToLive = mrt.currentanimationToLive -dt
+		end
+		--update dat animation
+		mrt.currentanimation:update(dt)
 	end
 
 	draw = function()
-		if(mrt.lasereyesactive)then
-			-- TODO show correct part of the lasereyes
-		elseif(mrt.tailattackactive)then
-			-- TODO show correct part of tail attack
-		elseif(mrt.biteactive)then
-			-- TODO show correct part of the biteattack
-		elseif((mrt.dy+mrt.dx)>)then
-			-- TODO show correct movement
+		if(not mrt.lasereyesactive)then
+			if(mrt.orientation == "TOP")then
+				mrt.currentanimation:draw(mrt.currentimage,mrt.col.x+19,mrt.col.y+15,(180*math.pi/180),1,1,48,48)
+			elseif(mrt.orientation == "TOPRIGHT")then
+				mrt.currentanimation:draw(mrt.currentimage,mrt.col.x+19,mrt.col.y+15,(225*math.pi/180),1,1,48,48)
+			elseif(mrt.orientation == "TOPLEFT")then
+				mrt.currentanimation:draw(mrt.currentimage,mrt.col.x+19,mrt.col.y+15,(135*math.pi/180),1,1,48,48)
+			elseif(mrt.orientation == "RIGHT")then
+				mrt.currentanimation:draw(mrt.currentimage,mrt.col.x+19,mrt.col.y+15,(270*math.pi/180),1,1,48,48)
+			elseif(mrt.orientation == "LEFT")then
+				mrt.currentanimation:draw(mrt.currentimage,mrt.col.x+19,mrt.col.y+15,(90*math.pi/180),1,1,48,48)
+			elseif(mrt.orientation == "BOT")then
+				mrt.currentanimation:draw(mrt.currentimage,mrt.col.x-28,mrt.col.y-28)
+			elseif(mrt.orientation =="BOTRIGHT")then
+				mrt.currentanimation:draw(mrt.currentimage,mrt.col.x+19,mrt.col.y+15,(315*math.pi/180),1,1,48,48)
+			elseif(mrt.orientation == "BOTLEFT")then
+				mrt.currentanimation:draw(mrt.currentimage,mrt.col.x+19,mrt.col.y+15,(45*math.pi/180),1,1,48,48)
+			end
 		else
-			-- TODO show idle
+			--TODO current angle bepalen aan de hand van de lasereyes progress
+			local angle = 0;
+			mrt.currentanimation:draw(mrt.currentimage,mrt.col.x+19,mrt.col.y+15,angle,1,1,48,48)
+			--TODO laser tekenen
 		end
 	end
 
@@ -233,8 +329,8 @@ tailhitdimension = 30
 function tailattack(mrt)
 	magicdegreefix = 0.785398 --45graden
 	--top first, calculate others from there
-	local xje = mrt.x + 0.5*mrt.width - 0.5*tailhitdimension --hack because initially middle
-	local ytje = mrt.y
+	local xje = mrt.x + 0.5*mrt.width  --hack because initially middle
+	local ytje = mrt.y + 0.5*tailhitdimension
 	--get hitbox left up
 	if(mrt.orientation == "TOP")then
 		-- niks, is al goed

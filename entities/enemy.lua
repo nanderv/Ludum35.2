@@ -2,7 +2,7 @@ local function regularmove(item, other)
 		 if other.isPorcupine then
 		 	return "cross"
 		 end
-		 if other.isWall or other.isCatWater then
+		 if other.isWall or other.isCatWater or other== game.player or other.isEnemy then
 		 	return "slide"
 		 end
 		 return "cross"
@@ -20,14 +20,14 @@ walkable = 0 -- which nodes are walkable?
 pathFinder = Pathfinder(collisionGrid, 'JPS', walkable)
 function math.round(n, deci) deci = 10^(deci or 0) return math.floor(n*deci+.5)/deci end
 --template
-function getNewEnemy(x,y, patrolpoints)
+function getNewEnemy(x,y,patrolpoints)
 	local enemy = {}
 	enemy.x = x
 	enemy.y = y
 	enemy.height = 40
 	enemy.width = 30
 	enemy.aggroRange = 300
-	enemy.attackRange = 35
+	enemy.attackRange = 30
 	enemy.aggro = false
 	enemy.speed = 80
 	enemy.patrolindex = 1
@@ -38,6 +38,8 @@ function getNewEnemy(x,y, patrolpoints)
 	enemy.dy = 0
 	enemy.attframe = 0
 	enemy.attbool = false
+	enemy.health = 3
+	enemy.isEnemy = true
 
 	--animations
 	enemy.imageIdle = love.graphics.newImage("entities/enemy/scorpion_0.png")
@@ -60,19 +62,16 @@ function getNewEnemy(x,y, patrolpoints)
 		local rawdist = math.sqrt((math.abs(game.player.col.x-enemy.col.x)^2)+(math.abs(game.player.col.y-enemy.col.y)^2))
 		-- ai en shit
 		local dest = {}
-		if(enemy.attbool and enemy.currentanimationToLive < 0)then
+		if(enemy.attbool and enemy.attframe>0)then
 			--ATTACK
-			if(rawdist<attackRange)then
+			if(rawdist<enemy.attackRange)then
 			    game.player.shape.damage(1,s)
 			end
-			if(attbool == 1)then
+			enemy.attframe = enemy.attframe-dt
+			if(enemy.attframe<0)then
 				enemy.currentanimation = enemy.animationIdle
 				enemy.currentimage = enemy.imageIdle
-				enemy.currentanimationToLive = 1
-				attbool = false
-				attframe = 0
-			else
-				attfarme = attframe +1
+				enemy.currentanimationToLive = 0.2
 			end
 		elseif (enemy.currentanimationToLive == -1) then
 			enemy.y = enemy.col.y
@@ -120,10 +119,11 @@ function getNewEnemy(x,y, patrolpoints)
 				if((math.abs(gx-tx) < 3 or math.abs(gy-ty)<3) or enemy.aggro) then
 					if(rawdist < enemy.attackRange) then 
 						-- aanvallen!
-						enemy.currentanimationToLive = 0.5
+						enemy.currentanimationToLive = 0.3
 						enemy.currentanimation = enemy.animationAttack
 						enemy.currentimage = enemy.imageAttack
 						enemy.attbool = true
+						enemy.attframe = 0.7
 						if(not enemy.aggro)then
 							enemy.aggro =true
 						end
@@ -248,9 +248,9 @@ function getNewEnemy(x,y, patrolpoints)
 
 
 	enemy.draw = function()
-		love.graphics.line(enemy.col.x,enemy.col.y,enemy.x+enemy.width,enemy.col.y+enemy.col.height)
-		love.graphics.line(enemy.col.x+enemy.width,enemy.col.y,enemy.col.x,enemy.col.y+enemy.height)
-		love.graphics.line(beun1,beun2,beun3,beun4)
+		if(enemy.currentanimation == enemy.animationAttack)then
+			--print("hank")
+		end
 		local ding
 		if(enemy.dy == 0) then 
 			ding = math.abs(enemy.dx)/0.001
