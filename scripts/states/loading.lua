@@ -1,8 +1,8 @@
-levels  = {"assets/maps/Map_Boss_1.lua","assets/maps/bestmap.lua","assets/maps/testmap.lua","assets/maps/bestmap.lua"}
+levels  = {"assets/maps/Map_Z_1.lua","assets/maps/bestmap.lua","assets/maps/testmap.lua","assets/maps/bestmap.lua"}
 
 level_gates_open_when_no_enemies = {true,false,false}
-
-current_level = 1
+shapes = {2,2,4,4}
+current_level = 2
 to_load = false
 true_mode = false
 local loading = {}
@@ -11,6 +11,26 @@ loading.first = true
 
 -- Loading screen phases, split up loading code among these phases
 loading.phases = {
+function()
+         print("LOADING")
+
+        if game and game.player and game.player.health and game.player.health > 0 then
+            loading.health = game.player.health
+            loading.max_health = game.player.max_health
+        else
+            if not  loading.health  then
+                 loading.health = starting_health
+                loading.max_health =starting_health
+            end
+        end
+     game = nil
+
+     game = {}
+     game.shape_count = shapes[current_level]
+     game.abstractmap={}
+     game.loadMap = core.loadMap
+   collectgarbage("collect") 
+    end,
     function()
         require 'entities.objects'
     end,
@@ -29,6 +49,7 @@ loading.phases = {
         game.enemy_ids_to_delete = {}
         game.world = core.bump.newWorld()
         game.objects = {}
+
         game.blocks = {}
         game.n_blocks = 0
         game.projectiles = {}
@@ -64,23 +85,7 @@ loading.phases = {
 }
 
 function loading:enter(from)
-     print("LOADING")
 
-        if game and game.player and game.player.health and game.player.health > 0 then
-            loading.health = game.player.health
-            loading.max_health = game.player.max_health
-        else
-            if not  loading.health  then
-                 loading.health = starting_health
-                loading.max_health =starting_health
-            end
-        end
-     game = nil
-
-     game = {}
-     game.abstractmap={}
-     game.loadMap = core.loadMap
-   collectgarbage("collect") 
     if loading.first then
      loading.loaded = 1
     else
