@@ -1,8 +1,9 @@
 levels  = {"assets/maps/Map_Boss_1.lua","assets/maps/Map_Z_1.lua","assets/maps/bestmap.lua","assets/maps/testmap.lua","assets/maps/bestmap.lua"}
 
 level_gates_open_when_no_enemies = {true,false,false}
-shapes = {2,2,4,4}
-current_level = 1
+
+shapes = {1,1,4,4}
+current_level = 2
 to_load = false
 true_mode = false
 local loading = {}
@@ -83,7 +84,7 @@ function()
 
     end,
     function()
-        game.levelscript = get_level(filename)
+        game.levelscript = get_level(levels[current_level])
     end
 }
 
