@@ -1,7 +1,8 @@
 local ctx = GS.new()
 function ctx:enter(dt)
     GS.push(core.states.loading)
-
+    print('entering')
+    love.mouse.setGrabbed(true)
 end
 function ctx:update(dt)
 
@@ -55,5 +56,9 @@ for _,obj in pairs(game.projectiles) do
       love.graphics.print(love.timer.getFPS(), 400, 20 )
       love.graphics.print(game.player.health, 400, 30 )
 
+end
+function ctx:leave()
+    love.mouse.setGrabbed(false)
+    print('leaving')
 end
 return ctx

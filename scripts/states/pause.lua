@@ -4,11 +4,13 @@ local pause = GS.new()
 function pause:enter(from)
     self.from = from -- record previous state
     core.music.pause()
+    love.mouse.setGrabbed(false)
     print("Game Paused")
 end
 -- Leave pause screen
 function pause:leave(from)
     core.music.resume()
+    love.mouse.setGrabbed(true)
     print("Game Resuming")
 end
 

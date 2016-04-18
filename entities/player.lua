@@ -76,15 +76,15 @@ player.invincibility = 0.5
 					end
 				end
 
-			if love.keyboard.isDown("t") then
+			if love.keyboard.isDown(CONTROLS.ONE) then
 				player.shape =  player.shapes[1]
 
 			end
-		if love.keyboard.isDown("g") then
+		if love.keyboard.isDown(CONTROLS.TWO) then
 				player.shape =  player.shapes[2]
 
 			end	
-	if love.keyboard.isDown("f") then
+	if love.keyboard.isDown(CONTROLS.THREE) then
 				player.shape =  player.shapes[3]
 
 			end
