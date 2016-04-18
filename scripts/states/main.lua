@@ -54,12 +54,12 @@ function ctx:draw()
         --DEBUG.bump_debug.draw(game.world)
       --end
 
+    game.player.draw()
 
 
     for _,enemy in pairs(game.enemies) do
         enemy.draw()
     end
-    game.player.draw()
 for _,obj in pairs(game.projectiles) do
         obj:draw()
     end
@@ -68,7 +68,7 @@ for _,obj in pairs(game.projectiles) do
     end
         local x,y = game.camera:worldCoords(love.mouse.getPosition())
         love.graphics.line(game.player.x+game.player.height/2,game.player.y+game.player.height/2,x,y)
-        drawBlocks()
+        --drawBlocks()
         game.levelscript()
     game.camera:detach()
 

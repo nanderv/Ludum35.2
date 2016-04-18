@@ -75,6 +75,7 @@ function porcupine.damage(hit, status, enemy)
 			if hit <1 then
 				hit = 1
 			end
+
 			if enemy and enemy.health and game.player.locked_update == porcupine.updateB then
 				enemy.health = enemy.health - 2*hit
 				if enemy.health <= 0 then

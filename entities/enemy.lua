@@ -27,7 +27,7 @@ function getNewEnemy(x,y,patrolpoints)
 	enemy.height = 40
 	enemy.width = 30
 	enemy.aggroRange = 300
-	enemy.attackRange = 30
+	enemy.attackRange = 35
 	enemy.aggro = false
 	enemy.speed = 80
 	enemy.patrolindex = 1
@@ -65,7 +65,7 @@ function getNewEnemy(x,y,patrolpoints)
 		if(enemy.attbool and enemy.attframe>0)then
 			--ATTACK
 			if(rawdist<enemy.attackRange)then
-			    game.player.shape.damage(1,s,enemy)
+			    game.player.shape.damage(1,s, enemy)
 			end
 			enemy.attframe = enemy.attframe-dt
 			if(enemy.attframe<0)then
