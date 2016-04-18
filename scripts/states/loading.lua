@@ -56,7 +56,7 @@ loading.phases = {
 
     game.player.load()
     
-    game.camera = core.camera(0,0,1)
+    game.camera = core.camera(0,0,2)
     end,
     function()
             game.map.layers['gate_closed'].visible = true

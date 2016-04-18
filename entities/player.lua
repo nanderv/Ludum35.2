@@ -11,6 +11,10 @@
 		if other.isHeart then
 			game.player.max_health = game.player.max_health + 1
 			game.player.health = game.player.max_health
+			return "slide"
+		end
+		if other.isTarget then
+			return "slide"
 		end
 		if other.isExit then
 			
@@ -231,7 +235,6 @@ function player.draw(a )
 	end
 
 	
-	love.graphics.rectangle("fill",player.col.x,player.col.y,player.col.width,player.col.height)
 	player.shape.draw()
 
 end
