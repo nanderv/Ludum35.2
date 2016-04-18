@@ -4,6 +4,7 @@
 -- size = 68, 81
 require "entities.watcher"
 function getNewMrT(x,y)
+	local mrt = {}
 	mrt.x = x
 	mrt.y = y
 	mrt.height = 124
@@ -13,6 +14,8 @@ function getNewMrT(x,y)
 	mrt.turn = {0.5,0.33,0.25,0.15}
 	mrt.dy = 0
 	mrt.dx = 0
+	mrt.path = nil
+	mrt.isEnemy = true
 
 	mrt.hp = 600
 	mrt.p1 = 450
@@ -52,49 +55,49 @@ function getNewMrT(x,y)
 
 	--TODO add all animations
 	mrt.imageIdle1 = love.graphics.newImage("entities/mrt/mr.t_0.png")
-	local g = core.anim8.newGrid(96, 128, enemy.imageIdle1:getWidth(), enemy.imageIdle1:getHeight())
-    enemy.animationIdle1 = core.anim8.newAnimation(g('1-1',1), 0.1)
+	local g = core.anim8.newGrid(96, 128, mrt.imageIdle1:getWidth(), mrt.imageIdle1:getHeight())
+    mrt.animationIdle1 = core.anim8.newAnimation(g('1-1',1), 0.1)
 
     mrt.imageIdle2 = love.graphics.newImage("entities/mrt/mr.t_0.png")
-	g = core.anim8.newGrid(96, 128, enemy.imageIdle2:getWidth(), enemy.imageIdle2:getHeight())
-    enemy.animationIdle2 = core.anim8.newAnimation(g('1-1',1), 0.1)
+	g = core.anim8.newGrid(96, 128, mrt.imageIdle2:getWidth(), mrt.imageIdle2:getHeight())
+    mrt.animationIdle2 = core.anim8.newAnimation(g('1-1',1), 0.1)
 
-    enemy.imageTail1 = love.graphics.newImage("entities/mrt/muricalligator_attack_B_0_Sheet.png")
-	g = core.anim8.newGrid(96, 128, enemy.imageTail1:getWidth(), enemy.imageTail1:getHeight())
-    enemy.animationTail1 = core.anim8.newAnimation(g('1-8',1), 0.1) 
+    mrt.imageTail1 = love.graphics.newImage("entities/mrt/muricalligator_attack_B_0_Sheet.png")
+	g = core.anim8.newGrid(96, 128, mrt.imageTail1:getWidth(), mrt.imageTail1:getHeight())
+    mrt.animationTail1 = core.anim8.newAnimation(g('1-8',1), 0.1) 
 
-    enemy.imageTail2 = love.graphics.newImage("entities/mrt/muricalligator_phase4_attack_B_0_Sheet.png")
-	g = core.anim8.newGrid(96, 128, enemy.imageTail2:getWidth(), enemy.imageTail2:getHeight())
-    enemy.animationTail2 = core.anim8.newAnimation(g('1-8',1), 0.1) 
+    mrt.imageTail2 = love.graphics.newImage("entities/mrt/muricalligator_phase4_attack_B_0_Sheet.png")
+	g = core.anim8.newGrid(96, 128, mrt.imageTail2:getWidth(), mrt.imageTail2:getHeight())
+    mrt.animationTail2 = core.anim8.newAnimation(g('1-8',1), 0.1) 
 
-    enemy.imageWalk1 = love.graphics.newImage("entities/mrt/muricalligator_walking_0_Sheet.png")
-	g= core.anim8.newGrid(96, 128, enemy.imageWalk1:getWidth(), enemy.imageWalk1:getHeight())
-    enemy.animationWalk1 = core.anim8.newAnimation(g('1-8',1), 0.1) 
+    mrt.imageWalk1 = love.graphics.newImage("entities/mrt/muricalligator_walking_0_Sheet.png")
+	g= core.anim8.newGrid(96, 128, mrt.imageWalk1:getWidth(), mrt.imageWalk1:getHeight())
+    mrt.animationWalk1 = core.anim8.newAnimation(g('1-8',1), 0.1) 
 
-    enemy.imageWalk2 = love.graphics.newImage("entities/mrt/muricalligator_phase4_walking_0_Sheet.png")
-	g= core.anim8.newGrid(96, 128, enemy.imageWalk2:getWidth(), enemy.imageWalk2:getHeight())
-    enemy.animationWalk2 = core.anim8.newAnimation(g('1-8',1), 0.1) 
+    mrt.imageWalk2 = love.graphics.newImage("entities/mrt/muricalligator_phase4_walking_0_Sheet.png")
+	g= core.anim8.newGrid(96, 128, mrt.imageWalk2:getWidth(), mrt.imageWalk2:getHeight())
+    mrt.animationWalk2 = core.anim8.newAnimation(g('1-8',1), 0.1) 
 
-    enemy.imageBite1 = love.graphics.newImage("entities/mrt/muricalligator_attack_A_0_Sheet.png")
-	g= core.anim8.newGrid(96, 128, enemy.imageBite1:getWidth(), enemy.imageBite1:getHeight())
-    enemy.animationBite1 = core.anim8.newAnimation(g('1-8',1), 0.1) 
+    mrt.imageBite1 = love.graphics.newImage("entities/mrt/muricalligator_attack_A_0_Sheet.png")
+	g= core.anim8.newGrid(96, 128, mrt.imageBite1:getWidth(), mrt.imageBite1:getHeight())
+    mrt.animationBite1 = core.anim8.newAnimation(g('1-8',1), 0.1) 
 
-    enemy.imageBite2 = love.graphics.newImage("entities/mrt/muricalligator_phase4_attack_A_0_Sheet.png")
-	g= core.anim8.newGrid(96, 128, enemy.imageBite2:getWidth(), enemy.imageBite2:getHeight())
-    enemy.animationBite2 = core.anim8.newAnimation(g('1-8',1), 0.1) 
+    mrt.imageBite2 = love.graphics.newImage("entities/mrt/muricalligator_phase4_attack_A_0_Sheet.png")
+	g= core.anim8.newGrid(96, 128, mrt.imageBite2:getWidth(), mrt.imageBite2:getHeight())
+    mrt.animationBite2 = core.anim8.newAnimation(g('1-8',1), 0.1) 
 
-    enemy.imagelasor = love.graphics.newImage("entities/mrt/muricalligator_phase4_attack_A_0_Sheet.png")
-	g= core.anim8.newGrid(96, 128, enemy.imagelasor:getWidth(), enemy.imagelasor:getHeight())
-    enemy.animationlasor = core.anim8.newAnimation(g('1-8',1), 0.2) 
+    mrt.imagelasor = love.graphics.newImage("entities/mrt/muricalligator_phase4_attack_A_0_Sheet.png")
+	g= core.anim8.newGrid(96, 128, mrt.imagelasor:getWidth(), mrt.imagelasor:getHeight())
+    mrt.animationlasor = core.anim8.newAnimation(g('1-8',1), 0.2) 
 
 
     mrt.currentanimation = mrt.animationIdle1
     mrt.currentimage = mrt.imageIdle1
     mrt.currentanimationToLive = -1
 
-    mrt.col = game.world:add(mrt,mrt.x,mrt.y,mrt.with,mrt.height)
+    mrt.col = game.world:add(mrt,mrt.x,mrt.y,mrt.width,mrt.height)
 
-	update = function(dt)
+	mrt.update = function(dt)
 		--attackpatterns
 		if(mrt.globalcd<=0 and not mrt.lasereyesactive and not mrt.tailattackactive and not mrt.biteactive and mrt.currentanimationToLive < 0)then
 			rawdistance = math.sqrt((math.abs(game.player.col.x-mrt.col.x)^2)+(math.abs(game.player.col.y-mrt.col.y)^2))
@@ -143,6 +146,10 @@ function getNewMrT(x,y)
 					mr.biteactive = true
 				else
 					-- meh mag niet aanvallen dan maar lopen
+					local dest = destMAKER(mrt)
+					if(dest == {} or dest.x == nil or dest.y ==nil)then
+						return false
+					end
 					copyPastaKiller(dest, mrt, dt, mrt.turn[mrt.actp], true)
 					if(mrt.actp == 4)then
 						mrt.currentanimation = mrt.animationWalk2
@@ -156,6 +163,10 @@ function getNewMrT(x,y)
 				tailattack(mrt)
 			else
 				--turn to player and move towards it
+				local dest = destMAKER(mrt)	
+				if(dest == {} or dest.x == nil or dest.y ==nil)then
+					return false
+				end
 				copyPastaKiller(dest, mrt, dt, mrt.turn[mrt.actp], true)
 				if(mrt.actp == 4)then
 					mrt.currentanimation = mrt.animationWalk2
@@ -178,7 +189,13 @@ function getNewMrT(x,y)
 			end
 		else
 			--only moving left to do, yes i can move during animations
+			local dest = destMAKER(mrt)
+			if(dest == {} or dest.x == nil or dest.y ==nil)then
+				return false
+
+			else
 			copyPastaKiller(dest, mrt, dt, mrt.turn[mrt.actp], true)
+			end
 			if(mrt.actp == 4)then
 				mrt.currentanimation = mrt.animationWalk2
 				mrt.currentimage = mrt.imageWalk2
@@ -209,14 +226,16 @@ function getNewMrT(x,y)
 		if(mrt.globalcd>0)then
 			mrt.globalcd = mrt.globalcd-dt
 		end
-		if(currentanimationToLive>0)then
+		if(mrt.currentanimationToLive>0)then
 			mrt.currentanimationToLive = mrt.currentanimationToLive -dt
 		end
 		--update dat animation
 		mrt.currentanimation:update(dt)
+		print("saldkfjsl")
+		return true;
 	end
 
-	draw = function()
+	mrt.draw = function()
 		if(not mrt.lasereyesactive)then
 			if(mrt.orientation == "TOP")then
 				mrt.currentanimation:draw(mrt.currentimage,mrt.col.x+19,mrt.col.y+15,(180*math.pi/180),1,1,48,48)
@@ -243,7 +262,7 @@ function getNewMrT(x,y)
 		end
 	end
 
-	hit = function(dmge)
+	mrt.hit = function(dmge)
 		mrt.hp = mrt.hp - dmge
 		if(mrt.hp<mrt.p3)then
 			mrt.actp = 4
@@ -263,7 +282,7 @@ function getNewMrT(x,y)
 		end	
 	end
 
-	facingPlayer = function(booltail)
+	mrt.facingPlayer = function(booltail)
 		local relx = game.player.col.x - mrt.x
 		local rely = game.player.col.y - mrt.y
 		local absx = math.abs(relx)
@@ -359,3 +378,46 @@ function tailattack(mrt)
 	--TODO animation + hitbox op xje,ytje
 end
 
+
+function destMAKER (mrt)
+	local gx, gy = math.floor(.5+game.player.col.x/32),math.floor(.5+game.player.col.y/32) --prolly just player pos
+	local tx, ty = math.floor(0.5+mrt.x/32),math.floor(.5+mrt.y/32) --prolly just player pos
+	if tx < 1 then
+		tx = 1
+	end
+	if ty < 1 then
+		ty = 1
+	end
+	if gx < 1 then
+		gx = 1
+	end
+	if gy < 1 then
+		gy = 1
+	end
+	local path, length = nil,nil
+	local dest = {}
+	if not game.player.invisible then
+	path,length = pathFinder:getPath(tx,ty,gx,gy)
+	if path == nil then
+	 	path, length = pathFinder:getPath(tx,ty,gx+1,gy+1)
+
+	end
+	end
+	if path == nil then
+		path = mrt.path 
+		if mrt.path == nil then
+			return {}
+		end
+	else
+		mrt.path = path
+	end
+	local len = #path
+	if not path._nodes[2] then
+		return {}
+	end
+	dest.x =   path._nodes[2]._x 
+	dest.y =   path._nodes[2]._y 
+	dest.x = dest.x * 32
+	dest.y = dest.y * 32
+	return dest
+end

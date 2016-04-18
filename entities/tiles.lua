@@ -58,7 +58,8 @@ function load_objects()
         print("ENEMY")
       end
       if v.type == "boss" then
-        game.enemies[#game.enemies + 1]= getNewMrT(v.x,v.y,{{x=v.x, y=v.y},{x=v.x, y=v.y+10}})
+        require "entities.mrt"
+        game.enemies[#game.enemies + 1]= getNewMrT(v.x,v.y)
         game.enemies[#game.enemies].id =   #game.enemies
         
       end

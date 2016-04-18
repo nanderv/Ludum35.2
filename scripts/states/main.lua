@@ -15,6 +15,7 @@ function ctx:update(dt)
     local no_enemies = true
     for z,enemy in pairs(game.enemies) do
         no_enemies = false
+        print(enemy)
         if not enemy.update(dt) then
         end
     end
