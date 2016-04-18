@@ -112,9 +112,9 @@ function getNewMrT(x,y)
 		end
 
 		--nuke handler
-		if(mrt.nuclearstrikesleft > 0 and mrt.nuclearstriketimer<=0)then
+		if(mrt.nuclearstrikesleft > 0 and mrt.nuclearstriketimeribt<=0)then
 			--FIRE NUKE
-			table.nsert(mrt.entities,createNuke(game.player.x-((44-game.player.width)/2),game.player.y -((44-game.player.height)/2)))
+			table.insert(mrt.entities,createNuke(game.player.x-((32-game.player.width)/2),game.player.y -((32-game.player.height)/2)))
 			mrt.nuclearstrikesleft = mrt.nuclearstrikesleft -1
 			mrt.nuclearstriketimeribt = 0.2
 		end
@@ -510,34 +510,43 @@ end
 function createNuke(tarx, tary)
 	local nuke = {}
 	nuke.explosion = love.graphics.newImage("entities/explosion/explosion1-sheet.png")
-	local g = core.anim8.newGrid(44, 44, nuke.explosion:getWidth(), nuke.explosion:getHeight())
-    nuke.explosionani = core.anim8.newAnimation(g('1-6',1), 0.05)
+	local g = core.anim8.newGrid(32, 32, nuke.explosion:getWidth(), nuke.explosion:getHeight())
+    nuke.explosionani = core.anim8.newAnimation(g('1-6',1), 0.1)
     nuke.crosshair = love.graphics.newImage("entities/explosion/crosshairs.png")
 	nuke.x = tarx
 	nuke.y = tary
 	nuke.ttl = 0.5
-	nuke.explttl = 0.3
+	nuke.explttl = 0.6
 	nuke.dim = 44
 
-	nuke.update = function ( dt, mrt, a )
+	nuke.update = function ( dt, mrt, a )	
+
 		if(nuke.ttl < 0)then
 			--deal dmge to player if in range
-			if((nuke.x>player.x) and (player.x<(nuke.x+nuke.dim))and (player.y>nuke.y) and (player.y<(nuke.y+nuke.dim)))then
+			local midx = nuke.x + 0.5*nuke.dim
+			local midy = nuke.y + 0.5*nuke.dim
+			local playx = game.player.x + 0.5 * game.player.width
+			local playy = game.player.y + 0.5 * game.player.height
+			local dist = math.sqrt((midx-playx)^2 + (midy-playy)^2)
+			if(dist<=16)then
 				--do dmge
-				game.player.shape.damage(2)
+				game.player.shape.damage(1)
 			end
-			nuke.explttl = nuke.explttl -1
-			table.remove(mrt.entities,a)
+			nuke.explttl = nuke.explttl -dt
+			if(nuke.explttl<0)then
+				table.remove(mrt.entities,a)
+			end
 			nuke.explosionani:update(dt)
 		else
 			nuke.ttl = nuke.ttl - dt
 		end
 	end
 	nuke.draw = function()
+		love.graphics.line(nuke.x,nuke.y,nuke.x,nuke.y)
 		if(nuke.ttl>=0)then
-			love.graphics.draw(nuke.crosshair,nuke.x,nuke.y)
+			love.graphics.draw(nuke.crosshair,nuke.x-32,nuke.y-32)
 		else
-			nuke.explosionani:draw(nuke.explosion,nuke.x+6,nuke.y+6)
+			nuke.explosionani:draw(nuke.explosion,nuke.x,nuke.y)
 		end
 	end
 	return nuke
