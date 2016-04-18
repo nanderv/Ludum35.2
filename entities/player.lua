@@ -105,7 +105,7 @@ player.invincibility = 0.5
 				game.world:update(player,game.player.x,game.player.y,game.player.width,game.player.height)
 			end
 			-- armadillo 
-		if love.keyboard.isDown(CONTROLS.TWO) then
+		if love.keyboard.isDown(CONTROLS.TWO) and game.shape_count  >= 2 then
 				player.shape =  player.shapes[2]
 				game.player.offx = -6
 				game.player.offy = -2
@@ -115,7 +115,7 @@ player.invincibility = 0.5
 				
 			end	
 			-- cat
-			if love.keyboard.isDown(CONTROLS.THREE) then
+			if love.keyboard.isDown(CONTROLS.THREE)  and game.shape_count  >= 3 then
 
 				game.player.offx = -8
 				game.player.offy = -10
@@ -126,7 +126,7 @@ player.invincibility = 0.5
 				
 			end
 			-- turtle
-			if love.keyboard.isDown(CONTROLS.FOUR) then
+			if love.keyboard.isDown(CONTROLS.FOUR)  and game.shape_count  >= 4 then
 				game.player.offx = -3
 				game.player.offy = -6
 				game.player.width = 22
