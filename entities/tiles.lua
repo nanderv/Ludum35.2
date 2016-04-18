@@ -13,7 +13,12 @@ local function addBlock(x,y,w,h,game,type)
 end
 
 local function addObject(x,y,type)
+
   local w,h = 16,16
+  if type =="isTarget" then
+       w,h = 32,32
+     end
+
   local block = {x=x,y=y,ctype=type}
   game.n_blocks =game.n_blocks +1
   block[type] = type
@@ -74,7 +79,7 @@ function load_objects()
         addObject(v.x,v.y,"isKey")
       end
       if v.type == "target" then
-        addObject(v.x,v.y,"isTarget")
+        addObject(v.x,v.y-32,"isTarget")
       end
 
     end

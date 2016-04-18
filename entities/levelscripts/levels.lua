@@ -1,6 +1,6 @@
 local error = false
 function get_level(filename)
-	if filename == "assets/maps/bestmap.lua" then
+	if filename == "assets/maps/1.lua" then
 		return require 'entities.levelscripts.1'
 	end
 	return {func=function()

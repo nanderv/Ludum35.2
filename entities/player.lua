@@ -20,6 +20,7 @@
 			game.objects_to_del[#game.objects_to_del+1] = other
 
 		end
+		
 		if other.isTarget then
 			return "slide"
 		end

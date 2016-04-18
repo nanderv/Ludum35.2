@@ -1,15 +1,16 @@
 local script = {}
+
+script.source = love.audio.newSource('assets/music/main1_2.ogg')
+
 function script.load()
-	core.music.create_layer("assets/music/Track_1_V0-1.mp3", {"test1","music"} )
-	script.running=false
-	core.music.script = script
-	script.t = 0
+     script.source:setLooping(true)
+     script.source:play()
 end
-function script.update(dt)
-	if not core.music.script.running then
-		core.music.script.running=true
-		core.music.play()
-	end
-	core.music.script.t = (core.music.script.t + dt )% 2
+
+function script.pause()
+     if script.source:isPaused() then script.source:play() else script.source:pause() end
 end
+
+core.music.script = script
+
 return script

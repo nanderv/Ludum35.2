@@ -56,10 +56,17 @@ function getNewArcher(x,y,patrolpoints)
     enemy.currentanimation = enemy.animationIdle
     enemy.currentimage = enemy.imageIdle
     enemy.currentanimationToLive = -1
-
+    enemy.countdown = 0
     enemy.col = game.world:add(enemy,enemy.x+32,enemy.y+30,enemy.width,enemy.height)
 	enemy.update = function(dt) 
 		-- ai en shit
+		if enemy.countdown >= 0 then
+			enemy.countdown = enemy.countdown - dt
+		end
+		if enemy.prev_health ~= enemy.health then
+			enemy.countdown = 0.3
+		end
+		enemy.prev_health = enemy.health
 		local dest = {}
 		if(enemy.shootbool and enemy.currentanimationToLive < 0)then
 			--FIRE!!!!
@@ -254,6 +261,9 @@ function getNewArcher(x,y,patrolpoints)
 
 
 	enemy.draw = function()
+		if enemy.countdown > 0 then
+			love.graphics.setColor(255,255,255,128)
+			end
 		local ding
 		if(enemy.dy == 0) then 
 			ding = math.abs(enemy.dx)/0.001
@@ -287,6 +297,8 @@ function getNewArcher(x,y,patrolpoints)
 				end
 			end
 		end
+		love.graphics.setColor(255,255,255,255)
+
 	end
 	return enemy
 end

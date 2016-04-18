@@ -256,7 +256,7 @@ end
       -- Pops the lowest F-cost node, moves it in the closed list
 
       hax = hax + 1
-      if hax > 10 then
+      if hax > 20 then
         print("library hack activated")
         return nil
       end
@@ -273,5 +273,4 @@ end
     -- No path found, return nil
     return nil
   end
-
 end
