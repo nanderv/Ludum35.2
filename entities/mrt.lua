@@ -3,6 +3,7 @@
 ---offset = 14,20
 -- size = 68, 81
 --12,23,84,92
+
 require "entities.watcher"
 function getNewMrT(x,y)
 	local mrt = {}
@@ -99,6 +100,8 @@ function getNewMrT(x,y)
     mrt.col = game.world:add(mrt,mrt.x,mrt.y,mrt.width,mrt.height)
 
 	mrt.update = function(dt)
+		mrt.x = mrt.col.x
+		mrt.y = mrt.col.y
 		--attackpatterns
 		if(mrt.globalcd<=0 and not mrt.lasereyesactive and not mrt.tailattackactive and not mrt.biteactive and mrt.currentanimationToLive < 0)then
 			rawdistance = math.sqrt((math.abs(game.player.col.x-mrt.col.x)^2)+(math.abs(game.player.col.y-mrt.col.y)^2))
@@ -381,8 +384,8 @@ end
 
 
 function destMAKER (mrt)
-	local gx, gy = math.floor(.5+game.player.col.x/32),math.floor(.5+game.player.col.y/32) --prolly just player pos
-	local tx, ty = math.floor(.5+(mrt.col.x/32),math.floor(.5+mrt.col.y/32) --prolly just player pos
+	local gx, gy = math.floor(game.player.col.x/32),math.floor(game.player.col.y/32) --prolly just player pos
+	local tx, ty = math.floor(0.5+mrt.col.x/32),math.floor(0.5+mrt.col.y/32) --prolly just player pos
 	if tx < 1 then
 		tx = 1
 	end
@@ -397,8 +400,10 @@ function destMAKER (mrt)
 	end
 	local path, length = nil,nil
 	local dest = {}
+
 	if not game.player.invisible then
 	path,length = pathFinder:getPath(tx,ty,gx,gy)
+		print(gx,gy,tx,ty)
 	if path == nil then
 	 	path, length = pathFinder:getPath(tx,ty,gx+1,gy+1)
 
@@ -416,6 +421,7 @@ function destMAKER (mrt)
 	if not path._nodes[2] then
 		return {}
 	end
+
 	dest.x =   path._nodes[2]._x 
 	dest.y =   path._nodes[2]._y 
 	dest.x = dest.x * 32
