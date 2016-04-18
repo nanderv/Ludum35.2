@@ -88,6 +88,9 @@ player.invincibility = 0.5
 				player.shape =  player.shapes[3]
 
 			end
+			if love.keyboard.isDown(CONTROLS.FOUR) then
+				player.shape = player.shapes[4]
+			end
 			end
 			if is_armadillo_move and not love.mouse.isDown(2) then
 					sto_arma = true
@@ -173,6 +176,7 @@ player.shapes = {}
 player.shapes[1]  = require 'entities.shapes.porcupine'
 player.shapes[2]  = require 'entities.shapes.armadillo'
 player.shapes[3]  = require 'entities.shapes.cat'
+player.shapes[4]  = require 'entities.shapes.turtle'
 
 player.shape =  player.shapes[1]
 player.locked_update = nil
