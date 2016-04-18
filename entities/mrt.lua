@@ -2,14 +2,15 @@
 
 ---offset = 14,20
 -- size = 68, 81
+--12,23,84,92
 require "entities.watcher"
 function getNewMrT(x,y)
 	local mrt = {}
 	mrt.x = x
 	mrt.y = y
-	mrt.height = 124
-	mrt.width = 96
-	mrt.orientation = "DOWN"
+	mrt.height = 64
+	mrt.width = 64
+	mrt.orientation = "BOT"
 	mrt.speed = 60
 	mrt.turn = {0.5,0.33,0.25,0.15}
 	mrt.dy = 0
@@ -237,21 +238,21 @@ function getNewMrT(x,y)
 	mrt.draw = function()
 		if(not mrt.lasereyesactive)then
 			if(mrt.orientation == "TOP")then
-				mrt.currentanimation:draw(mrt.currentimage,mrt.col.x+19,mrt.col.y+15,(180*math.pi/180),1,1,48,48)
+				mrt.currentanimation:draw(mrt.currentimage,mrt.col.x+32,mrt.col.y+40,(180*math.pi/180),1,1,48,48)
 			elseif(mrt.orientation == "TOPRIGHT")then
-				mrt.currentanimation:draw(mrt.currentimage,mrt.col.x+19,mrt.col.y+15,(225*math.pi/180),1,1,48,48)
+				mrt.currentanimation:draw(mrt.currentimage,mrt.col.x+28,mrt.col.y+38,(225*math.pi/180),1,1,48,48)
 			elseif(mrt.orientation == "TOPLEFT")then
-				mrt.currentanimation:draw(mrt.currentimage,mrt.col.x+19,mrt.col.y+15,(135*math.pi/180),1,1,48,48)
+				mrt.currentanimation:draw(mrt.currentimage,mrt.col.x+38,mrt.col.y+40,(135*math.pi/180),1,1,48,48)
 			elseif(mrt.orientation == "RIGHT")then
-				mrt.currentanimation:draw(mrt.currentimage,mrt.col.x+19,mrt.col.y+15,(270*math.pi/180),1,1,48,48)
+				mrt.currentanimation:draw(mrt.currentimage,mrt.col.x+24,mrt.col.y+32,(270*math.pi/180),1,1,48,48)
 			elseif(mrt.orientation == "LEFT")then
-				mrt.currentanimation:draw(mrt.currentimage,mrt.col.x+19,mrt.col.y+15,(90*math.pi/180),1,1,48,48)
+				mrt.currentanimation:draw(mrt.currentimage,mrt.col.x+42,mrt.col.y+32,(90*math.pi/180),1,1,48,48)
 			elseif(mrt.orientation == "BOT")then
-				mrt.currentanimation:draw(mrt.currentimage,mrt.col.x-28,mrt.col.y-28)
+				mrt.currentanimation:draw(mrt.currentimage,mrt.col.x-16,mrt.col.y-25)
 			elseif(mrt.orientation =="BOTRIGHT")then
-				mrt.currentanimation:draw(mrt.currentimage,mrt.col.x+19,mrt.col.y+15,(315*math.pi/180),1,1,48,48)
+				mrt.currentanimation:draw(mrt.currentimage,mrt.col.x+27,mrt.col.y+27,(315*math.pi/180),1,1,48,48)
 			elseif(mrt.orientation == "BOTLEFT")then
-				mrt.currentanimation:draw(mrt.currentimage,mrt.col.x+19,mrt.col.y+15,(45*math.pi/180),1,1,48,48)
+				mrt.currentanimation:draw(mrt.currentimage,mrt.col.x+38,mrt.col.y+25,(45*math.pi/180),1,1,48,48)
 			end
 		else
 			--TODO current angle bepalen aan de hand van de lasereyes progress
@@ -381,7 +382,7 @@ end
 
 function destMAKER (mrt)
 	local gx, gy = math.floor(.5+game.player.col.x/32),math.floor(.5+game.player.col.y/32) --prolly just player pos
-	local tx, ty = math.floor(0.5+mrt.x/32),math.floor(.5+mrt.y/32) --prolly just player pos
+	local tx, ty = math.floor(.5+(mrt.col.x/32),math.floor(.5+mrt.col.y/32) --prolly just player pos
 	if tx < 1 then
 		tx = 1
 	end
