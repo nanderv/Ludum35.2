@@ -179,7 +179,7 @@ end
 
 function turtle.update(dt)
   turtle.animations.current:update(dt)
-  if game.player.shape.attack_B_pause ~= nil then
+  if game.player ~= nil and game.player.shape.attack_B_pause ~= nil then
   	game.player.shape.attack_B_pause = game.player.shape.attack_B_pause - dt
   end
 end

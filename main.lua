@@ -1,6 +1,7 @@
 -- remove the next line to disable console
 -- require("lib.debug.debug")
 game = {}
+starting_health = 4
 
 GS  = require "lib.hump.gamestate"
 sti = require 'lib.sti'
@@ -46,6 +47,10 @@ function love.keypressed(key)
      game.player.locked_update = s.update
      game.player.locked_draw = s.draw
     end
+    if key == "1" then
+        print(game.player.x,game.player.y)
+    end
+
 end
 function love.gamepadpressed( joystick, button )
     print("HOI")

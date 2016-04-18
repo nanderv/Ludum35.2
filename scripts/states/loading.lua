@@ -1,5 +1,5 @@
-
 levels  = {"assets/maps/Map_Boss_1.lua","assets/maps/bestmap.lua","assets/maps/testmap.lua","assets/maps/bestmap.lua"}
+
 level_gates_open_when_no_enemies = {true,false,false}
 
 current_level = 1
@@ -18,10 +18,6 @@ loading.phases = {
         game.objects = {}
         game.objects_to_del = {}
 
-        if game and game.player and game.player.health then
-            loading.health = game.player.health
-            loading.max_health = game.player.max_health
-        end
 
     require 'assets.music.script1'.load()
 
@@ -53,10 +49,12 @@ loading.phases = {
             load_objects(map)
 
    game.player = require 'entities.player'()
+   game.player.health= loading.health
+   game.player.max_health = loading.max_health
 
     game.player.load()
     
-    game.camera = core.camera(0,0,1)
+    game.camera = core.camera(0,0,2)
     end,
     function()
             game.map.layers['gate_closed'].visible = true
@@ -67,6 +65,16 @@ loading.phases = {
 
 function loading:enter(from)
      print("LOADING")
+
+        if game and game.player and game.player.health and game.player.health > 0 then
+            loading.health = game.player.health
+            loading.max_health = game.player.max_health
+        else
+            if not  loading.health  then
+                 loading.health = starting_health
+                loading.max_health =starting_health
+            end
+        end
      game = nil
 
      game = {}
