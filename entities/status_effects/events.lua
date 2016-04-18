@@ -47,7 +47,7 @@ core.status_effects.knockback = function(t, obj,dx,dy)
 				obj.locked_update = nil
 				obj.locked_draw = nil
 			end
-			obj.x,obj.y = game.world:move(obj, obj.x+ dx * dt , obj.y + dy * dt)
+			obj.x,obj.y = game.world:move(obj, obj.x+ dx * dt /10, obj.y + dy * dt/10)
 			if st.t < 0 then
 				obj.locked_update = nil
 				obj.locked_draw = nil

@@ -19,12 +19,13 @@ local function update(quill,dt)
 			quill.timeout = 0
 				game.projectiles[quill.id] = nil
 				game.world:remove(quill)
-
+			print("1HOË DAN")
 				return
 		end
 		if quill.delete then
 			game.projectiles[quill.id] = nil
 			game.world:remove(quill)
+			print("2HOË DAN")
 			return
 		end
 		
@@ -33,11 +34,11 @@ local function update(quill,dt)
 		for k,other in pairs(objs) do
 				
 		if other.isCatWater then
-
+			print("3HOË DAN")
 				break
 		end
 		if other.isTarget then
-
+			print("4HOË DAN")
 			game.hasKey = true
 			game.map.layers['gate_closed'].visible = false
 			game.map.layers['gate_open'].visible  = true
@@ -45,13 +46,15 @@ local function update(quill,dt)
 				game.world:remove(quill)
 				return
 		end
-	if other.isQuill then
+	if other.isQuill and other.deadly ~= self.deadly then
+		print("5HOË DAN")
 		game.projectiles[quill.id] = nil
 		game.world:remove(quill)
 		other.delete = true
 		return 
 			end
 	if other.isWall then
+		print("HOË DAN")
 		game.projectiles[quill.id] = nil
 		game.world:remove(quill)
 
@@ -75,9 +78,8 @@ local function update(quill,dt)
 		
 			end
 	else
-		print("IA")
 		if other.isEnemy then
-
+			print("HOË DAN")
 			if other.health then
 				other.health = other.health - 1
 				other.aggro = 5
