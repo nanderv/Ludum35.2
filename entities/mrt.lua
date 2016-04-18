@@ -1,4 +1,7 @@
 --SWAG
+
+---offset = 14,20
+-- size = 68, 81
 require "entities.watcher"
 function getNewMrT(x,y)
 	mrt.x = x
@@ -26,10 +29,9 @@ function getNewMrT(x,y)
 	mrt.nuclearstriketimer = -5
 	mrt.nuclearstrikeradius = 44
 
-	mrt.biterange = 100
+	mrt.biterange = 40
 	mrt.bitecd = {2,1,1,1}
 	mrt.bitetimer = 0
-	mrt.biteprogress = 0
 	mrt.biteactive = false
 
 	mrt.wallcd = {-5,-5,10,10}
@@ -81,6 +83,11 @@ function getNewMrT(x,y)
 	g= core.anim8.newGrid(96, 128, enemy.imageBite2:getWidth(), enemy.imageBite2:getHeight())
     enemy.animationBite2 = core.anim8.newAnimation(g('1-8',1), 0.1) 
 
+    enemy.imagelasor = love.graphics.newImage("entities/mrt/muricalligator_phase4_attack_A_0_Sheet.png")
+	g= core.anim8.newGrid(96, 128, enemy.imagelasor:getWidth(), enemy.imagelasor:getHeight())
+    enemy.animationlasor = core.anim8.newAnimation(g('1-8',1), 0.2) 
+
+
     mrt.currentanimation = mrt.animationIdle1
     mrt.currentimage = mrt.imageIdle1
     mrt.currentanimationToLive = -1
@@ -125,7 +132,15 @@ function getNewMrT(x,y)
 						end
 					end
 				elseif(rawdistance<mrt.biterange and mrt.bitecd<=0) then
-					--TODO bite him
+					if(mrt.actp == 4)then
+						mrt.currentanimation = mrt.animationBite2
+						mrt.currentimage = mrt.imageBite2
+					else
+						mrt.currentanimation = mrt.imageBite1
+						mrt.currentimage = mrt.imageBite1
+					end
+					mrt.currentanimationToLive = 0.8
+					mr.biteactive = true
 				else
 					-- meh mag niet aanvallen dan maar lopen
 					copyPastaKiller(dest, mrt, dt, mrt.turn[mrt.actp], true)
@@ -136,7 +151,6 @@ function getNewMrT(x,y)
 						mrt.currentanimation = mrt.animationWalk1
 						mrt.currentimage = mrt.imageWalk1
 					end
-					mrt.currentanimationToLive = -1
 				end
 			elseif(mrt.tailattacktimer<=0 and mrt.tailattacktimer ~= -5 and rawdistance<tailattackrange and facingPlayer(true))then
 				tailattack(mrt)
@@ -150,14 +164,18 @@ function getNewMrT(x,y)
 					mrt.currentanimation = mrt.animationWalk1
 					mrt.currentimage = mrt.imageWalk1
 				end
-				mrt.currentanimationToLive = -1
 			end
 		elseif(mrt.lasereyesactive)then
 			-- TODO handle the las0r 3y3s
 		elseif(mrt.tailattackactive)then
 			-- TODO handle tailattack
 		elseif(mrt.biteactive)then
+			if(mrt.currentanimationToLive < 0 )then
+				mrt.biteactive = false
+			else
+
 			-- TODO handle biteactive
+			end
 		else
 			--only moving left to do, yes i can move during animations
 			copyPastaKiller(dest, mrt, dt, mrt.turn[mrt.actp], true)
@@ -168,7 +186,6 @@ function getNewMrT(x,y)
 				mrt.currentanimation = mrt.animationWalk1
 				mrt.currentimage = mrt.imageWalk1
 			end
-			mrt.currentanimationToLive = -1
 		end
 		--timerhandling
 		if(mrt.nuclearstriketimer>0)then
@@ -212,7 +229,7 @@ function getNewMrT(x,y)
 			elseif(mrt.orientation == "LEFT")then
 				mrt.currentanimation:draw(mrt.currentimage,mrt.col.x+19,mrt.col.y+15,(90*math.pi/180),1,1,48,48)
 			elseif(mrt.orientation == "BOT")then
-				mrt.currentanimation:draw(mrt.currentimage,mrt.col.x-mrt.offx,mrt.col.y-mrt.offy)
+				mrt.currentanimation:draw(mrt.currentimage,mrt.col.x-28,mrt.col.y-28)
 			elseif(mrt.orientation =="BOTRIGHT")then
 				mrt.currentanimation:draw(mrt.currentimage,mrt.col.x+19,mrt.col.y+15,(315*math.pi/180),1,1,48,48)
 			elseif(mrt.orientation == "BOTLEFT")then
@@ -312,8 +329,8 @@ tailhitdimension = 30
 function tailattack(mrt)
 	magicdegreefix = 0.785398 --45graden
 	--top first, calculate others from there
-	local xje = mrt.x + 0.5*mrt.width - 0.5*tailhitdimension --hack because initially middle
-	local ytje = mrt.y
+	local xje = mrt.x + 0.5*mrt.width  --hack because initially middle
+	local ytje = mrt.y + 0.5*tailhitdimension
 	--get hitbox left up
 	if(mrt.orientation == "TOP")then
 		-- niks, is al goed
