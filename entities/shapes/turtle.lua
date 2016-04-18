@@ -1,6 +1,6 @@
 local function turtle_col_handler(self, other)
 	if other.isEnemy and self.shape.lungecooldown == false then
-		other.health = other.health - 2
+		other.health = other.health - 3
 		other.aggro = 5
 		if other.health <= 0 then
 			game.enemy_ids_to_delete[#game.enemy_ids_to_delete+1] = other
@@ -88,7 +88,16 @@ turtle.A = function(dx,dy)
 		game.player.ddx = ddx
 		game.player.ddy = ddy
 
-		--queryPoint(x+ddx*32,y+ddy*32)
+		local others, others_len = game.world:queryPoint(game.player.x+ddx*32,game.player.y+ddy*32,function (obj) return obj.isEnemy end)
+		print(others)
+		if others_len > 0 then
+			others[1].health = others[1].health - 2
+			others[1].aggro = 5
+			if others[1].health <= 0 then
+				game.enemy_ids_to_delete[#game.enemy_ids_to_delete+1] = others[1]
+			end	
+		end
+
 
 end
 
