@@ -1,5 +1,5 @@
 		local function armadillo_move(item, other)
-		 if other.isPorcupine then
+		 if other.isPorcupine or other.isCatWater or (other.isGate and not game.hasKey) then
 
 		 	return "slide"
 		 end
@@ -21,7 +21,7 @@
 		 if other.isEnemy then
 		 	return "slide"
 		 end
-		 if other.isWall or other.isCatWater then
+		 if other.isWall or other.isCatWater or (other.isGate and not game.hasKey) then
 		 	
 		 	return "slide"
 		 end

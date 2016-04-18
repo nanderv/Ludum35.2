@@ -35,7 +35,7 @@ function controls:draw()
     love.graphics.rectangle('fill', 0,0, W,H)
     love.graphics.setColor(255,255,255)
     love.graphics.printf('Controls', 0, H/2+60, W, 'center')
-    love.graphics.printf('press ESC to exit', 0, H/2+80, W, 'center')
+    love.graphics.printf('press ESC to return', 0, H/2+80, W, 'center')
     
     for i, name in ipairs(CONTROLS.ALL) do
         love.graphics.printf(name .. " : ", 0, H/2 + 100 + i*20, W / 2, 'right')
