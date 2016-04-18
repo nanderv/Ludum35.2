@@ -13,7 +13,7 @@ function getNewMrT(x,y)
 	mrt.width = 64
 	mrt.orientation = "BOT"
 	mrt.speed = 60
-	mrt.turn = {0.5,0.33,0.25,0.15}
+	mrt.turn = {1,0.75,0.5,0.25}
 	mrt.dy = 0
 	mrt.dx = 0
 	mrt.path = nil
@@ -34,11 +34,10 @@ function getNewMrT(x,y)
 	mrt.nuclearstriketimer = -5
 	mrt.nuclearstrikeradius = 44
 
-	mrt.biterange = 40
+	mrt.biterange = 20
 	mrt.bitecd = {2,1,1,1}
 	mrt.bitetimer = 0
 	mrt.biteactive = false
-	mrt.bitedamaged = false
 	mrt.bitedamage = 2
 
 	mrt.wallcd = {-5,-5,10,10}
@@ -46,10 +45,11 @@ function getNewMrT(x,y)
 	mrt.wallsize = 5*32
 
 	mrt.tailattackcd = {8,8,8,8}
-	mrt.tailattacktimer = -5
-	mrt.tailattackrange = {100,100}
+	mrt.tailattacktimer = 0
+	mrt.tailattackrange = 23
 	mrt.tailattackprogress = 0
 	mrt.tailattackactive = false
+	mrt.tailattackdamage = 1
 
 	mrt.lasereyescd = {-5,-5,-5, 10}
 	mrt.lasereyesrange = 2000
@@ -109,15 +109,12 @@ function getNewMrT(x,y)
 			rawdistance = math.sqrt(((game.player.col.x-mrt.col.x)^2)+((game.player.col.y-mrt.col.y)^2))
 			print(rawdistance,mrt.biterange)
 			if(mrt.nuclearstriketimer<0 and mrt.nuclearstriketimer ~= -5)then
-				print("set nuke")
 				nuclearstrike()
 				mrt.nuclearstriketimer = mrt.nuclearstrikecd[mrt.actp]
 			elseif((mrt.orientation == "BOT" or mrt.orientation == "RIGHT" or mrt.orientation == "LEFT" or mrt.orientation == "BOT") and mrt.lasereyestimer<=0 and mrt.lasereyestimer~=-5)then
 				startlasereyes()
-				print("set laser")
 			elseif(mrt.facingPlayer(false))then
 				if(mrt.walltimer<=0 and mrt.walltimer ~= -5)then
-					print("set wall")
 					--get target coordinates
 					--get randoms for randomness
 					local bool = true
@@ -144,8 +141,7 @@ function getNewMrT(x,y)
 							buildwall(randx,randy,randx2,randy2)
 						end
 					end
-				elseif(rawdistance<mrt.biterange and mrt.bitetimer<=0) then
-					print("set biteactive")
+				elseif (rawdistance <= mrt.biterange + game.player.height*0.67 and mrt.facingPlayer(false) and mrt.bitetimer<=0) then
 					-- bite
 					if(mrt.actp == 4)then
 						mrt.currentanimation = mrt.animationBite2
@@ -158,7 +154,6 @@ function getNewMrT(x,y)
 					mrt.currentanimationToLive = 0.8
 					mrt.biteactive = true
 				else
-					print("walking")
 					-- meh mag niet aanvallen dan maar lopen
 					local dest = destMAKER(mrt)
 					if(dest == {} or dest.x == nil or dest.y ==nil)then
@@ -173,8 +168,17 @@ function getNewMrT(x,y)
 						mrt.currentimage = mrt.imageWalk1
 					end
 				end
-			elseif(mrt.tailattacktimer<=0 and mrt.tailattacktimer ~= -5 and rawdistance<tailattackrange and facingPlayer(true))then
-				tailattack(mrt)
+			elseif(mrt.tailattacktimer<=0 and rawdistance<mrt.tailattackrange + game.player.height*0.67 and mrt.facingPlayer(true))then
+				if(mrt.actp == 4)then
+						mrt.currentanimation = mrt.animationTail2
+						mrt.currentimage = mrt.imageTail2
+					else
+						mrt.currentanimation = mrt.animationTail1
+						mrt.currentimage = mrt.imageTail1
+					end
+					mrt.tailattacktimer = mrt.tailattackcd[mrt.actp]
+					mrt.currentanimationToLive = 0.8
+					mrt.tailattackactive = true
 			else
 				--turn to player and move towards it
 				local dest = destMAKER(mrt)	
@@ -193,12 +197,57 @@ function getNewMrT(x,y)
 		elseif(mrt.lasereyesactive)then
 			-- TODO handle the las0r 3y3s
 		elseif(mrt.tailattackactive)then
-			-- TODO handle tailattack
+			if(mrt.currentanimationToLive < 0 )then
+				mrt.tailattackactive = false
+				if mrt.actp == 4 then
+					mrt.currentanimation = mrt.animationWalk2
+					mrt.currentimage = mrt.imageWalk2
+				else
+					mrt.currentanimation = mrt.animationWalk1
+					mrt.currentimage = mrt.imageWalk1
+				end
+			else
+				local ddx = 0
+				local ddy = 0
+				if mrt.orientation == "TOP" then
+					ddy = 1
+				end
+				if mrt.orientation == "BOT" then
+					ddy = -1
+				end
+				if mrt.orientation == "RIGHT" then
+					ddx = -1
+				end
+				if mrt.orientation == "LEFT" then
+					ddx = 1
+				end
+				local a = 1/math.sqrt(2)
+				if mrt.orientation == "TOPLEFT" then
+					ddx = a
+					ddy = a
+				end
+				if mrt.orientation == "TOPRIGHT" then
+					ddx = -a
+					ddy = a
+				end
+				if mrt.orientation == "BOTLEFT" then
+					ddx = a
+					ddy = -a
+				end
+				if mrt.orientation == "BOTRIGHT" then
+					ddx = -a
+					ddy = -a
+				end
+
+				local atk_x, atk_y = mrt.x+mrt.width/2+ddx*38, mrt.y+mrt.height/2+ddy*38
+				if math.sqrt(math.pow(game.player.y+game.player.height/2-atk_y, 2) + math.pow(game.player.x+game.player.width/2-atk_x, 2))<= mrt.tailattackrange + game.player.height*0.67 and mrt.currentanimationToLive < 0.2  then
+					game.player.shape.damage(mrt.tailattackdamage, nil, mrt)
+				end
+
+			end
 		elseif(mrt.biteactive)then
-			print("biteactive")
 			if(mrt.currentanimationToLive < 0 )then
 				mrt.biteactive = false
-				mrt.bitedamaged = false
 				if mrt.actp == 4 then
 					mrt.currentanimation = mrt.animationWalk2
 					mrt.currentimage = mrt.imageWalk2
@@ -239,10 +288,9 @@ function getNewMrT(x,y)
 					ddy = a
 				end
 
-				local atk_x, atk_y = mrt.x+mrt.width/2+ddx*52, mrt.y+mrt.height/2+ddy*52
-				if math.sqrt(math.pow(game.player.y+game.player.height/2-atk_y, 2) + math.pow(game.player.x+game.player.width/2-atk_x, 2))<= mrt.biterange then
+				local atk_x, atk_y = mrt.x+mrt.width/2+ddx*50, mrt.y+mrt.height/2+ddy*50
+				if math.sqrt(math.pow(game.player.y+game.player.height/2-atk_y, 2) + math.pow(game.player.x+game.player.width/2-atk_x, 2))<= mrt.biterange + game.player.height*0.67 and mrt.currentanimationToLive < 0.2  then
 					game.player.shape.damage(mrt.bitedamage, nil, mrt)
-					mrt.bitedamaged = true
 				end
 
 			end
