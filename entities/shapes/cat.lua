@@ -204,7 +204,7 @@ if game.player.orientation == "upright" then
 
 
 		
-	cat.animations.current:draw(cat.images.current,game.player.col.x+14,game.player.col.y+17,angle,1,1,48,48)
+	cat.animations.current:draw(cat.images.current,game.player.col.x+14+game.player.offx,game.player.col.y+17+game.player.offy,angle,1,1,48,48)
 
 end
 function cat.updateA(dt)
@@ -244,7 +244,7 @@ if game.player.orientation == "upright" then
 
 
 
-	cat.animations.current:draw(cat.images.current,game.player.col.x+14,game.player.col.y+17,angle,1,1,48,48)
+	cat.animations.current:draw(cat.images.current,game.player.col.x+14+game.player.offx,game.player.col.y+17+game.player.offy,angle,1,1,48,48)
 end
 function cat.updateB(dt)
 	cat.timeout = cat.timeout-dt
@@ -292,7 +292,7 @@ if game.player.orientation == "upright" then
 
 
 cat.images.current = cat.images_B
-	cat.animations.current:draw(cat.images.current,game.player.col.x+14,game.player.col.y+17,angle,1,1,48,48)	
+	cat.animations.current:draw(cat.images.current,game.player.col.x+14+game.player.offx,game.player.col.y+17+game.player.offy,angle,1,1,48,48)	
 
 end
 return cat

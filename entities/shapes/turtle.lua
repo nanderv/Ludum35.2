@@ -202,7 +202,7 @@ function turtle.draw()
 		angle=45*math.pi/180
 	end
 
-	turtle.animations.current:draw(turtle.images.current,game.player.col.x+14,game.player.col.y+17,angle,1,1,48,48)
+	turtle.animations.current:draw(turtle.images.current,game.player.col.x+14+game.player.offx,game.player.col.y+17+game.player.offy,angle,1,1,48,48)
 end
 
 function turtle.updateA(dt)
@@ -286,7 +286,7 @@ function turtle.drawB()
 	end
 
 	turtle.images.current = turtle.images_B.left
-	turtle.animations.current:draw(turtle.images.current,game.player.col.x+14,game.player.col.y+17,angle,1,1,48,48)	
+	turtle.animations.current:draw(turtle.images.current,game.player.col.x+14+game.player.offx,game.player.col.y+17+game.player.offy,angle,1,1,48,48)	
 
 end
 return turtle

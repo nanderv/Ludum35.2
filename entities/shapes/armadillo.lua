@@ -116,7 +116,7 @@ function armadillo.update(dt)
   armadillo.animations.current:update(dt)
 end
 function armadillo.draw()
-	armadillo.animations.current:draw(armadillo.images.current,game.player.col.x-34,game.player.col.y-37)
+	armadillo.animations.current:draw(armadillo.images.current,game.player.col.x-34+game.player.offx,game.player.col.y-37+game.player.offy)
 
 end
 function armadillo.updateA(dt)
@@ -171,7 +171,7 @@ function armadillo.drawA()
 		angle=45*math.pi/180
 	end
 
-	armadillo.animations.current:draw(armadillo.images.current,game.player.col.x+14,game.player.col.y+17,game.player.angle,1,1,48,48)
+	armadillo.animations.current:draw(armadillo.images.current,game.player.col.x+14+game.player.offx,game.player.col.y+17+game.player.offy,game.player.angle,1,1,48,48)
 
 end
 function armadillo.updateB(dt)
