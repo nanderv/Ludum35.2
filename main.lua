@@ -2,7 +2,6 @@
 -- require("lib.debug.debug")
 game = {}
 starting_health = 4
-
 GS  = require "lib.hump.gamestate"
 sti = require 'lib.sti'
 -- load main core library
@@ -15,6 +14,7 @@ require 'entities.levelscripts.levels'
 core.states = require 'scripts.gamestates'
 require 'entities.status_effects.events'
 require 'entities.tiles'
+require 'cutscene.cutscene'
 
 core.gamepad = nil
 
