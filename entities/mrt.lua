@@ -13,7 +13,7 @@ function getNewMrT(x,y)
 	mrt.width = 64
 	mrt.orientation = "BOT"
 	mrt.speed = 60
-	mrt.turn = {0.5,0.33,0.25,0.15}
+	mrt.turn = {1,0.75,0.5,0.25}
 	mrt.dy = 0
 	mrt.dx = 0
 	mrt.path = nil
@@ -24,6 +24,8 @@ function getNewMrT(x,y)
 	mrt.p2 = 300
 	mrt.p3 = 150
 	mrt.actp = 1
+
+	mrt.entities = {}
 
 	mrt.currentanimationToLive = -1
 
@@ -36,11 +38,10 @@ function getNewMrT(x,y)
 	mrt.nuclearstrikeradius = 44
 	mrt.nuclearstrikesleft = 0
 
-	mrt.biterange = 40
+	mrt.biterange = 20
 	mrt.bitecd = {2,1,1,1}
 	mrt.bitetimer = 0
 	mrt.biteactive = false
-	mrt.bitedamaged = false
 	mrt.bitedamage = 2
 
 	mrt.wallcd = {-5,-5,10,10}
@@ -48,10 +49,11 @@ function getNewMrT(x,y)
 	mrt.wallsize = 5*32
 
 	mrt.tailattackcd = {8,8,8,8}
-	mrt.tailattacktimer = -5
-	mrt.tailattackrange = {100,100}
+	mrt.tailattacktimer = 0
+	mrt.tailattackrange = 23
 	mrt.tailattackprogress = 0
 	mrt.tailattackactive = false
+	mrt.tailattackdamage = 1
 
 	mrt.lasereyescd = {-5,-5,-5, 10}
 	mrt.lasereyesrange = 2000
@@ -104,10 +106,15 @@ function getNewMrT(x,y)
     mrt.col = game.world:add(mrt,mrt.x,mrt.y,mrt.width,mrt.height)
 
 	mrt.update = function(dt)
+		--handle ents
+		for a, entity in pairs(mrt.entities)do
+			entity.update(dt,mrt,a)
+		end
+
 		--nuke handler
 		if(mrt.nuclearstrikesleft > 0 and mrt.nuclearstriketimer<=0)then
 			--FIRE NUKE
-			createNuke(game.player.x-((44-game.player.width)/2),game.player.y -((44-game.player.height)/2))
+			table.nsert(mrt.entities,createNuke(game.player.x-((44-game.player.width)/2),game.player.y -((44-game.player.height)/2)))
 			mrt.nuclearstrikesleft = mrt.nuclearstrikesleft -1
 			mrt.nuclearstriketimeribt = 0.2
 		end
@@ -149,7 +156,7 @@ function getNewMrT(x,y)
 							buildwall(randx,randy,randx2,randy2)
 						end
 					end
-				elseif(rawdistance<mrt.biterange and mrt.bitetimer<=0) then
+				elseif (rawdistance <= mrt.biterange + game.player.height*0.67 and mrt.facingPlayer(false) and mrt.bitetimer<=0) then
 					-- bite
 					if(mrt.actp == 4)then
 						mrt.currentanimation = mrt.animationBite2
@@ -176,8 +183,18 @@ function getNewMrT(x,y)
 						mrt.currentimage = mrt.imageWalk1
 					end
 				end
-			elseif(mrt.tailattacktimer<=0 and mrt.tailattacktimer ~= -5 and rawdistance<tailattackrange and facingPlayer(true))then
-				tailattack(mrt)
+			elseif(mrt.tailattacktimer<=0 and rawdistance<mrt.tailattackrange + game.player.height*0.67 and mrt.facingPlayer(true))then
+				-- tail
+				if(mrt.actp == 4)then
+						mrt.currentanimation = mrt.animationTail2
+						mrt.currentimage = mrt.imageTail2
+					else
+						mrt.currentanimation = mrt.animationTail1
+						mrt.currentimage = mrt.imageTail1
+					end
+					mrt.tailattacktimer = mrt.tailattackcd[mrt.actp]
+					mrt.currentanimationToLive = 0.8
+					mrt.tailattackactive = true
 			else
 				--turn to player and move towards it
 				local dest = destMAKER(mrt)	
@@ -196,11 +213,57 @@ function getNewMrT(x,y)
 		elseif(mrt.lasereyesactive)then
 			-- TODO handle the las0r 3y3s
 		elseif(mrt.tailattackactive)then
-			-- TODO handle tailattack
+			if(mrt.currentanimationToLive < 0 )then
+				mrt.tailattackactive = false
+				if mrt.actp == 4 then
+					mrt.currentanimation = mrt.animationWalk2
+					mrt.currentimage = mrt.imageWalk2
+				else
+					mrt.currentanimation = mrt.animationWalk1
+					mrt.currentimage = mrt.imageWalk1
+				end
+			else
+				local ddx = 0
+				local ddy = 0
+				if mrt.orientation == "TOP" then
+					ddy = 1
+				end
+				if mrt.orientation == "BOT" then
+					ddy = -1
+				end
+				if mrt.orientation == "RIGHT" then
+					ddx = -1
+				end
+				if mrt.orientation == "LEFT" then
+					ddx = 1
+				end
+				local a = 1/math.sqrt(2)
+				if mrt.orientation == "TOPLEFT" then
+					ddx = a
+					ddy = a
+				end
+				if mrt.orientation == "TOPRIGHT" then
+					ddx = -a
+					ddy = a
+				end
+				if mrt.orientation == "BOTLEFT" then
+					ddx = a
+					ddy = -a
+				end
+				if mrt.orientation == "BOTRIGHT" then
+					ddx = -a
+					ddy = -a
+				end
+
+				local atk_x, atk_y = mrt.x+mrt.width/2+ddx*38, mrt.y+mrt.height/2+ddy*38
+				if math.sqrt(math.pow(game.player.y+game.player.height/2-atk_y, 2) + math.pow(game.player.x+game.player.width/2-atk_x, 2))<= mrt.tailattackrange + game.player.height*0.67 and mrt.currentanimationToLive < 0.2  then
+					game.player.shape.damage(mrt.tailattackdamage, nil, mrt)
+				end
+
+			end
 		elseif(mrt.biteactive)then
 			if(mrt.currentanimationToLive < 0 )then
 				mrt.biteactive = false
-				mrt.bitedamaged = false
 				if mrt.actp == 4 then
 					mrt.currentanimation = mrt.animationWalk2
 					mrt.currentimage = mrt.imageWalk2
@@ -241,10 +304,9 @@ function getNewMrT(x,y)
 					ddy = a
 				end
 
-				local atk_x, atk_y = mrt.x+mrt.width/2+ddx*52, mrt.y+mrt.height/2+ddy*52
-				if math.sqrt(math.pow(game.player.y+game.player.height/2-atk_y, 2) + math.pow(game.player.x+game.player.width/2-atk_x, 2))<= mrt.biterange then
+				local atk_x, atk_y = mrt.x+mrt.width/2+ddx*50, mrt.y+mrt.height/2+ddy*50
+				if math.sqrt(math.pow(game.player.y+game.player.height/2-atk_y, 2) + math.pow(game.player.x+game.player.width/2-atk_x, 2))<= mrt.biterange + game.player.height*0.67 and mrt.currentanimationToLive < 0.2  then
 					game.player.shape.damage(mrt.bitedamage, nil, mrt)
-					mrt.bitedamaged = true
 				end
 
 			end
@@ -323,6 +385,9 @@ function getNewMrT(x,y)
 			local angle = 0;
 			mrt.currentanimation:draw(mrt.currentimage,mrt.col.x+19,mrt.col.y+15,angle,1,1,48,48)
 			--TODO laser tekenen
+		end
+		for _, entity in pairs(mrt.entities)do
+			entity.draw()
 		end
 	end
 
@@ -454,13 +519,15 @@ function createNuke(tarx, tary)
 	nuke.explttl = 0.3
 	nuke.dim = 44
 
-	nuke.update = function ( dt )
+	nuke.update = function ( dt, mrt, a )
 		if(nuke.ttl < 0)then
 			--deal dmge to player if in range
 			if((nuke.x>player.x) and (player.x<(nuke.x+nuke.dim))and (player.y>nuke.y) and (player.y<(nuke.y+nuke.dim)))then
 				--do dmge
 				game.player.shape.damage(2)
 			end
+			nuke.explttl = nuke.explttl -1
+			table.remove(mrt.entities,a)
 			nuke.explosionani:update(dt)
 		else
 			nuke.ttl = nuke.ttl - dt
