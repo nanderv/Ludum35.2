@@ -1,3 +1,9 @@
+function draw_object(obj)
+    print(#core.objects[obj["ctype"]])
+    love.graphics.draw(core.objects[obj["ctype"]][obj.af],obj.x,obj.y)
+    
+end
+
 local ctx = GS.new()
 function ctx:enter(dt)
     GS.push(core.states.loading)
@@ -26,6 +32,7 @@ function ctx:update(dt)
         game.enemies[obj.id] = nil
         game.enemy_ids_to_delete[zz] = nil
     end
+
     game.player.update(dt)
 end
 function ctx:draw()
@@ -46,6 +53,9 @@ function ctx:draw()
     game.player.draw()
 for _,obj in pairs(game.projectiles) do
         obj:draw()
+    end
+    for v, obj in pairs(game.objects) do
+        draw_object(obj)
     end
     local x,y = game.camera:worldCoords(love.mouse.getPosition())
     love.graphics.line(game.player.x+16,game.player.y+16,x,y)

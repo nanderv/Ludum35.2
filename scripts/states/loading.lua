@@ -9,6 +9,10 @@ loading.first = true
 -- Loading screen phases, split up loading code among these phases
 loading.phases = {
     function()
+        require 'entities.objects'
+
+    end,
+    function()
         game.objects = {}
         game.objects_to_del = {}
 
@@ -21,30 +25,29 @@ loading.phases = {
 
     end,
     function()
-        end,
-        function()
-            game.enemies = {}
-            game.enemy_ids_to_delete = {}
-                    game.world = core.bump.newWorld()
+    end,
+    function()
+        game.enemies = {}
+        game.enemy_ids_to_delete = {}
+        game.world = core.bump.newWorld()
         game.objects = {}
         game.blocks = {}
-    game.n_blocks = 0
-    game.projectiles = {}
-    if current_level > #levels then
-        print(current_level)
-        GS.switch(core.states.victory)
-        return
-    end
-    game.loadMap(levels[current_level])
-
+        game.n_blocks = 0
+        game.projectiles = {}
+        if current_level > #levels then
+            print(current_level)
+            GS.switch(core.states.victory)
+            return
+        end
+        game.loadMap(levels[current_level])
     end,
     function()
           game.startX = 100
           game.startY = 100
-        require ("entities.watcher")
-        require ("entities.archer")
-        require ("entities.enemy")
-        load_objects(map)
+            require ("entities.watcher")
+            require ("entities.archer")
+            require ("entities.enemy")
+            load_objects(map)
 
    game.player = require 'entities.player'()
 
