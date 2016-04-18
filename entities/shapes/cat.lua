@@ -152,6 +152,13 @@ function cat.damage(hit, status, enemy)
 				return
 			end
 
+			if hit > 9999 and game.player.health > 1 then
+				hit = game.player.health -1
+			    local s = core.status_effects.stun(0.1,game.player)
+		    	 game.player.locked_update = s.update
+		    	 game.player.locked_draw = s.draw
+			else
+
 			-- Modifier
 			hit = hit * 1.5
 			hit = math.floor(hit)
@@ -174,13 +181,14 @@ function cat.damage(hit, status, enemy)
 				GS.push(core.states.death )
 				return
 			end
-
+		end
 	 		game.player.invincibility = 2
 		
 end	
 function cat.update(dt)
   cat.animations.current:update(dt)
-  if game.player ~= nil and game.player.shape.attack_B_pause ~= nil then
+
+  if game.player.shape.attack_B_pause ~= nil then
   	game.player.shape.attack_B_pause=game.player.shape.attack_B_pause- dt
   end
 end

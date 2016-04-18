@@ -11,7 +11,14 @@
 		if other.isHeart then
 			game.player.max_health = game.player.max_health + 1
 			game.player.health = game.player.max_health
+			game.objects_to_del[#game.objects_to_del+1] = other
 			return "slide"
+		end
+		if other.isHealth then
+			game.player.health = math.min(game.player.max_health,game.player.health+1)
+			print("FOod is good for you")
+			game.objects_to_del[#game.objects_to_del+1] = other
+
 		end
 		if other.isTarget then
 			return "slide"

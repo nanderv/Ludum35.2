@@ -22,6 +22,7 @@ local function addObject(x,y,type)
   block.af = love.math.random(1,#core.objects[type])
 
   game.objects[#game.objects+1] = block
+  block.id = #game.objects
   return block
 end
 
