@@ -3,30 +3,25 @@ cutscene = {}
 cutscene.sentences = {}
 cutscene.next = playing
 -- sentence : {text = "STRING", character = cutSceneCharacter, dt = time}
-function cutscene.start(sentences,Xnext)
+function cutscene.start(sentences)
+	print(sentences)
 	cutscene.sentences = sentences
 	cutscene.counter = 1
 	if cutscene.sentences[cutscene.counter] ~= nil then
-    	GS.switch(cutscene)
-	else
-		if Xnext == nil then
-cutscene.next = playing
-	else
-		cutscene.next = Xnext
-
-		end
-		print("Invalid sentences")
+    	GS.push(cutscene)
 	end
+	print("HOI") 
+		
 	
 end
-function cutscene.enter(from)
+function cutscene:enter(from)
 	    self.from = from -- record previous state
 
 end
 function cutscene:update(dt)
 	local scene  = cutscene.sentences[cutscene.counter] 
 	if scene == nil then 
-	  	  GS.switch(cutscene.next)
+	  	  GS.pop()
 	  	  return
  	end
 
@@ -40,16 +35,16 @@ function cutscene:update(dt)
 			FORCESKIP = true
 		end
 
-	if cutscene.sentences[cutscene.counter] == nil then
-  	  GS.switch(cutscene.next)
-	end
+	
 	
 		
     --here we are going to create some keyboard events
 end
 function cutscene.drawScene()
 	-- draw background
+	love.graphics.setColor(0,0,0,255)
 	love.graphics.rectangle("fill",1,400,40000,40000)
+	love.graphics.setColor(255,255,255,255)
 	--draw character
 	local sc =cutscene.sentences[cutscene.counter]
 	if sc~= nil then
@@ -84,44 +79,41 @@ function cutscene:draw()
 end
 
 
-cutscene.renderMe = function ()
-	local x = 60
-	local y = 420
-	love.graphics.draw(cutscene.meImg,x,y,0,2,2)
-end
-
-cutscene.renderEmployeeBoss = function ()
-	local x = 700
-	local y = 420
-	love.graphics.draw(cutscene.employeeBoss,x,y,0,-2,2)
-end
-cutscene.renderMeStartCombat = function ()
-	cutscene.renderMe()
-	character.hasSuitcase = true
-
-end
-cutscene.replaceMustacheMan = function()
-	Enemy(mustacheMan.x,mustacheMan.y,room,room.world)
-	mustacheMan.body.body:setY(-100000)
-	end
-cutscene.phone = function ()
-	local x = 700
-	local y = 420
-	love.graphics.draw(cutscene.phoneImg,x,y,0,2,2)
-end
-
-cutscene.renderMustache = function ()
-	local x = 700
-	local y = 420
-	love.graphics.draw(cutscene.mustache,x,y,0,-2,2)
-end
-
 local mrT = love.graphics.newImage("entities/hud/mrt_portrait.png")
 local porcupine = love.graphics.newImage("entities/hud/porcupine_portrait.png")
 local armadillo = love.graphics.newImage( "entities/hud/armadillo_portrait.png")
 local turtle =  love.graphics.newImage("entities/hud/turtle_portrait.png")
 local cat = love.graphics.newImage( "entities/hud/cat_portrait.png")
 local list = {mrt,cat,turtle,armadillo,porcupine}
+cutscene.renderPorcupine = function ()
+	local x = 60
+	local y = 420
+	love.graphics.draw(porcupine,x,y,0,2,2)
+end
+
+cutscene.renderArmadillo = function ()
+	local x = 60
+	local y = 420
+	love.graphics.draw(armadillo,x,y,0,2,2)
+end
+cutscene.renderTurtle = function ()
+	local x = 60
+	local y = 420
+	love.graphics.draw(turtle,x,y,0,2,2)
+end
+cutscene.renderCat = function ()
+	local x = 60
+	local y = 420
+	love.graphics.draw(cat,x,y,0,2,2)
+end
+
+cutscene.renderMRT = function ()
+	local x = 60
+	local y = 420
+	love.graphics.draw(mrT,x,y,0,2,2)
+end
+
+
 
 core.images = {love.image.newImageData( "entities/hud/porcupine_portrait.png" ), love.image.newImageData( "entities/hud/armadillo_portrait.png" ), love.image.newImageData( "entities/hud/turtle_portrait.png" ), love.image.newImageData( "entities/hud/cat_portrait.png" ), love.image.newImageData( "entities/hud/mrt_portrait.png" )}
 love.math.setRandomSeed( love.timer.getTime()*10000000 )

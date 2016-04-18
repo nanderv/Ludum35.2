@@ -84,6 +84,7 @@ function()
     end,
     function()
         game.levelscript = get_level(levels[current_level])
+        game.levelscript.bools={}
     end
 }
 
