@@ -26,6 +26,7 @@ function love.load()
     for k,v in pairs(love.joystick.getJoysticks()) do
         love.graphics.print(joystick:getName(), 10, i * 20)
     end
+    love.audio.newSource("assets/music/main1_2.ogg")
     GS.switch(core.states.menu)
 end
 
@@ -38,6 +39,7 @@ function love.keypressed(key)
         else
         	GS.pop()
         end
+
     end
     --if DEBUG and DEBUG.print then
      --   print(key)
