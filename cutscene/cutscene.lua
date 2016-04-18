@@ -115,3 +115,25 @@ cutscene.renderMustache = function ()
 	local y = 420
 	love.graphics.draw(cutscene.mustache,x,y,0,-2,2)
 end
+
+local mrT = love.graphics.newImage("entities/hud/mrt_portrait.png")
+local porcupine = love.graphics.newImage("entities/hud/porcupine_portrait.png")
+local armadillo = love.graphics.newImage( "entities/hud/armadillo_portrait.png")
+local turtle =  love.graphics.newImage("entities/hud/turtle_portrait.png")
+local cat = love.graphics.newImage( "entities/hud/cat_portrait.png")
+local list = {mrt,cat,turtle,armadillo,porcupine}
+
+core.images = {love.image.newImageData( "entities/hud/porcupine_portrait.png" ), love.image.newImageData( "entities/hud/armadillo_portrait.png" ), love.image.newImageData( "entities/hud/turtle_portrait.png" ), love.image.newImageData( "entities/hud/cat_portrait.png" ), love.image.newImageData( "entities/hud/mrt_portrait.png" )}
+love.math.setRandomSeed( love.timer.getTime()*10000000 )
+
+
+local a = (love.math.random(1,5))
+love.math.random()
+love.math.random()
+love.math.random()
+love.math.random()
+
+
+love.math.random()
+love.math.random()
+love.window.setIcon(core.images[love.math.random(1,5)])

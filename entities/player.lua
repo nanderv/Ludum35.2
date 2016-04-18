@@ -101,6 +101,8 @@ player.invincibility = 0.5
 				game.player.offx = 4
 				game.player.offy = 0
 				game.player.width = 20
+
+				love.window.setIcon(core.images[1])
 				game.player.height = 20
 				game.world:update(player,game.player.x,game.player.y,game.player.width,game.player.height)
 			end
@@ -111,6 +113,7 @@ player.invincibility = 0.5
 				game.player.offy = -2
 				game.player.width = 16
 				game.player.height = 16
+				love.window.setIcon(core.images[2])
 				game.world:update(player,game.player.x,game.player.y,game.player.width,game.player.height)
 				
 			end	
@@ -121,6 +124,7 @@ player.invincibility = 0.5
 				game.player.offy = -10
 				game.player.width = 12
 				game.player.height = 12
+				love.window.setIcon(core.images[3])
 				player.shape =  player.shapes[3]
 				game.world:update(player,game.player.x,game.player.y,game.player.width,game.player.height)
 				
@@ -131,6 +135,7 @@ player.invincibility = 0.5
 				game.player.offy = -6
 				game.player.width = 22
 				game.player.height = 22
+				love.window.setIcon(core.images[4])
 				player.shape = player.shapes[4]
 				game.world:update(player,game.player.x,game.player.y,game.player.width,game.player.height)
 
