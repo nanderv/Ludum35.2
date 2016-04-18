@@ -404,41 +404,6 @@ function buildwall(x1,x2,y1,y2)
 	--TODO spawn wall entitys, handle dmge in them
 end
 
-tailhitdimension = 30
-function tailattack(mrt)
-	magicdegreefix = 0.785398 --45graden
-	--top first, calculate others from there
-	local xje = mrt.x + 0.5*mrt.width  --hack because initially middle
-	local ytje = mrt.y + 0.5*tailhitdimension
-	--get hitbox left up
-	if(mrt.orientation == "TOP")then
-		-- niks, is al goed
-	elseif(mrt.orientation == "TOPRIGHT")then
-		xje = xje + math.cos(magicdegreefix)*xje
-		ytje = ytje + math.sin(magicdegreefix)*ytje
-	elseif(mrt.orientation == "RIGHT")then
-		xje = xje + math.cos(magicdegreefix*2)*xje
-		ytje = ytje + math.sin(magicdegreefix*2)*ytje
-	elseif(mrt.orientation == "BOTRIGHT")then
-		xje = xje + math.cos(magicdegreefix*3)*xje
-		ytje = ytje + math.sin(magicdegreefix*3)*ytje
-	elseif(mrt.orientation == "BOT")then
-		xje = xje + math.cos(magicdegreefix*4)*xje
-		ytje = ytje + math.sin(magicdegreefix*4)*ytje
-	elseif(mrt.orientation == "BOTLEFT")then
-		xje = xje + math.cos(magicdegreefix*5)*xje
-		ytje = ytje + math.sin(magicdegreefix*5)*ytje
-	elseif(mrt.orientation == "LEFT")then
-		xje = xje + math.cos(magicdegreefix*5)*xje
-		ytje = ytje + math.sin(magicdegreefix*5)*ytje
-	elseif(mrt.orientation == "TOPLEFT")then
-		xje = xje + math.cos(magicdegreefix*6)*xje
-		ytje = ytje + math.sin(magicdegreefix*6)*ytje
-	end
-	--TODO animation + hitbox op xje,ytje
-end
-
-
 function destMAKER (mrt)
 	local gx, gy = math.floor(game.player.col.x/32),math.floor(game.player.col.y/32) --prolly just player pos
 	local tx, ty = math.floor(0.5+mrt.col.x/32),math.floor(0.5+mrt.col.y/32) --prolly just player pos
