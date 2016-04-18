@@ -27,7 +27,7 @@ function getNewEnemy(x,y,patrolpoints)
 	enemy.height = 40
 	enemy.width = 30
 	enemy.aggroRange = 300
-	enemy.attackRange = 60
+	enemy.attackRange = 30
 	enemy.aggro = false
 	enemy.speed = 80
 	enemy.patrolindex = 1
@@ -62,19 +62,16 @@ function getNewEnemy(x,y,patrolpoints)
 		local rawdist = math.sqrt((math.abs(game.player.col.x-enemy.col.x)^2)+(math.abs(game.player.col.y-enemy.col.y)^2))
 		-- ai en shit
 		local dest = {}
-		if(enemy.attbool and enemy.currentanimationToLive < 0)then
+		if(enemy.attbool and enemy.attframe>0)then
 			--ATTACK
 			if(rawdist<enemy.attackRange)then
 			    game.player.shape.damage(1,s)
 			end
-			if(enemy.attbool == 1)then
+			enemy.attframe = enemy.attframe-dt
+			if(enemy.attframe<0)then
 				enemy.currentanimation = enemy.animationIdle
 				enemy.currentimage = enemy.imageIdle
-				enemy.currentanimationToLive = 1
-				enemy.attbool = false
-				enemy.attframe = 0
-			else
-				enemy.attfarme = enemy.attframe +1
+				enemy.currentanimationToLive = 0.2
 			end
 		elseif (enemy.currentanimationToLive == -1) then
 			enemy.y = enemy.col.y
@@ -122,10 +119,11 @@ function getNewEnemy(x,y,patrolpoints)
 				if((math.abs(gx-tx) < 3 or math.abs(gy-ty)<3) or enemy.aggro) then
 					if(rawdist < enemy.attackRange) then 
 						-- aanvallen!
-						enemy.currentanimationToLive = 0.5
+						enemy.currentanimationToLive = 0.3
 						enemy.currentanimation = enemy.animationAttack
 						enemy.currentimage = enemy.imageAttack
 						enemy.attbool = true
+						enemy.attframe = 0.7
 						if(not enemy.aggro)then
 							enemy.aggro =true
 						end
@@ -250,6 +248,9 @@ function getNewEnemy(x,y,patrolpoints)
 
 
 	enemy.draw = function()
+		if(enemy.currentanimation == enemy.animationAttack)then
+			print("hank")
+		end
 		local ding
 		if(enemy.dy == 0) then 
 			ding = math.abs(enemy.dx)/0.001
