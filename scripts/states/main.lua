@@ -15,7 +15,6 @@ function ctx:update(dt)
     local no_enemies = true
     for z,enemy in pairs(game.enemies) do
         no_enemies = false
-        print(enemy)
         if not enemy.update(dt) then
         end
     end
@@ -65,7 +64,7 @@ for _,obj in pairs(game.projectiles) do
     end
         local x,y = game.camera:worldCoords(love.mouse.getPosition())
         love.graphics.line(game.player.x+game.player.height/2,game.player.y+game.player.height/2,x,y)
-        --  drawBlocks()
+        drawBlocks()
 
     game.camera:detach()
 

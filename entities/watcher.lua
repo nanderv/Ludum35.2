@@ -173,7 +173,6 @@ end
 
 
 function copyPastaKiller(dest, enemy, dt,delay,mrtbool)
-	print(dest,enemy,dest.x,dest.y)
 	local dx = 0
 	local dy = 0	
 	if(dest.x < enemy.x)then

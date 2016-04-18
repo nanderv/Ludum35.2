@@ -16,6 +16,7 @@ function getNewMrT(x,y)
 	mrt.dx = 0
 	mrt.path = nil
 	mrt.isEnemy = true
+	mrt.health = 40
 
 	mrt.hp = 600
 	mrt.p1 = 450
@@ -231,12 +232,13 @@ function getNewMrT(x,y)
 		end
 		--update dat animation
 		mrt.currentanimation:update(dt)
-		print("saldkfjsl")
+		print("animation update")
 		return true;
 	end
 
 	mrt.draw = function()
 		if(not mrt.lasereyesactive)then
+			print("lasereyesactive")
 			if(mrt.orientation == "TOP")then
 				mrt.currentanimation:draw(mrt.currentimage,mrt.col.x+19,mrt.col.y+15,(180*math.pi/180),1,1,48,48)
 			elseif(mrt.orientation == "TOPRIGHT")then
@@ -257,6 +259,7 @@ function getNewMrT(x,y)
 		else
 			--TODO current angle bepalen aan de hand van de lasereyes progress
 			local angle = 0;
+			print("animation draw")
 			mrt.currentanimation:draw(mrt.currentimage,mrt.col.x+19,mrt.col.y+15,angle,1,1,48,48)
 			--TODO laser tekenen
 		end
