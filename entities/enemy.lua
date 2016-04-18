@@ -20,7 +20,7 @@ walkable = 0 -- which nodes are walkable?
 pathFinder = Pathfinder(collisionGrid, 'JPS', walkable)
 function math.round(n, deci) deci = 10^(deci or 0) return math.floor(n*deci+.5)/deci end
 --template
-function getNewEnemy()
+function getNewEnemy(x,y, patrolpoints)
 	local enemy = {}
 	enemy.x = x
 	enemy.y = y
