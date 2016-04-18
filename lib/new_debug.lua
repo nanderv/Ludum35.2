@@ -43,6 +43,8 @@ end
 
 
 function drawBlocks()
+      love.graphics.setColor(255,255,255,255)
+
   for _,block in pairs(game.blocks) do
     drawBox(block, 255,0,0)
   end
@@ -50,6 +52,10 @@ function drawBlocks()
     drawBox(block, 255,0,0)
   end
     for _,block in pairs(game.projectiles) do
+    drawBox(block, 255,0,0)
+  end
+    for _,block in pairs(game.objects) do
+      
     drawBox(block, 255,0,0)
   end
   drawBox(game.player,255,0,0)

@@ -15,7 +15,7 @@ end
 local function addObject(x,y,type)
   local w,h = 32,32
   x,y = x,y-32
-  local block = {x=x,y=y,w=w,h=h,ctype=type}
+  local block = {x=x,y=y,w=w,h=h,ctype=type,width=w,height=h}
   game.n_blocks =game.n_blocks +1
   block[type] = type
   game.blocks["a"..game.n_blocks] = block
