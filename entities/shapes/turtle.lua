@@ -1,4 +1,12 @@
 local function turtle_col_handler(self, other)
+	if other.isEnemy and self.shape.lungecooldown == false then
+		other.health = other.health - 2
+		other.aggro = 5
+		if other.health <= 0 then
+			game.enemy_ids_to_delete[#game.enemy_ids_to_delete+1] = other
+		end	
+		self.shape.lungecooldown = true
+	end
 	return "slide"
 end
 
@@ -41,12 +49,11 @@ turtle.animations.current = turtle.animations.walk
 turtle.images_idle = {}
 turtle.images_idle.down =love.graphics.newImage('entities/turtle/turtle_walking_0_Sheet.png')
 
-
 turtle.A = function(dx,dy)
 
 		game.player.locked_update = turtle.updateA
 		game.player.locked_draw = turtle.drawA
-		turtle.timeout = 0.3
+		turtle.timeout = 0.5
 		local ddx = 0
 		local ddy = 0
 		if game.player.orientation == "up" then
@@ -87,10 +94,10 @@ turtle.B = function()
 	if 	game.player.shape.attack_B_pause and game.player.shape.attack_B_pause > 0 then
 		return true
 	end
-	
+		turtle.lungecooldown = false
 		game.player.locked_update = turtle.updateB
 		game.player.locked_draw = turtle.drawB
-		turtle.timeout = 0.3
+		turtle.timeout = 0.15
 		local ddx = 0
 		local ddy = 0
 		if game.player.orientation == "up" then
@@ -236,8 +243,7 @@ end
 
 function turtle.updateB(dt)
 	turtle.timeout = turtle.timeout-dt
-	game.player.col.x , game.player.col.y, cols, len = game.world:move(game.player,game.player.col.x+game.player.ddx*dt*400,game.player.y+game.player.ddy*dt*400,turtle_col_handler)
-
+	game.player.col.x , game.player.col.y, cols, len = game.world:move(game.player,game.player.col.x+game.player.ddx*dt*450,game.player.y+game.player.ddy*dt*450,turtle_col_handler)
 
 	if love.mouse.isDown(2) then
 		turtle.animations.current:update(dt)
@@ -246,7 +252,7 @@ function turtle.updateB(dt)
 		game.player.locked_update = nil
 		game.player.locked_draw = nil
 		turtle.animations.current = turtle.animations.walk
-		game.player.shape.attack_B_pause=1.2
+		game.player.shape.attack_B_pause=1
 	
 	end
 end
