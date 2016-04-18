@@ -1,5 +1,5 @@
 love.conf = function(t)
-  t.title = "Cat"
+  t.title = "Fluffy the Porcupine Saves the World"
   t.version = "0.10.1"
   t.window.width = 1200
   t.window.height = 700
@@ -7,6 +7,7 @@ love.conf = function(t)
   t.console = true
   t.window.vsync = false
 end
+
 CONTROLS = {}
 
 CONTROLS.UP = "w"
@@ -20,7 +21,6 @@ CONTROLS.THREE = "f"
 CONTROLS.FOUR = "r"
 
 CONTROLS.RESET = 'e'
-
 CONTROLS.PAUSE = 'p'
 
 CONTROLS.ALL = {'UP', 'DOWN', 'RIGHT', 'LEFT', 'PAUSE', 'ONE', 'TWO', 'THREE', 'FOUR'}
