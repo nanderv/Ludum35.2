@@ -20,7 +20,7 @@ walkable = 0 -- which nodes are walkable?
 pathFinder = Pathfinder(collisionGrid, 'JPS', walkable)
 function math.round(n, deci) deci = 10^(deci or 0) return math.floor(n*deci+.5)/deci end
 --template
-function getNewEnemy(x,y, patrolpoints)
+function getNewEnemy(x,y,patrolpoints)
 	local enemy = {}
 	enemy.x = x
 	enemy.y = y
@@ -38,6 +38,8 @@ function getNewEnemy(x,y, patrolpoints)
 	enemy.dy = 0
 	enemy.attframe = 0
 	enemy.attbool = false
+	enemy.health = 3
+	enemy.isEnemy = true
 
 	--animations
 	enemy.imageIdle = love.graphics.newImage("entities/enemy/scorpion_0.png")
@@ -248,9 +250,6 @@ function getNewEnemy(x,y, patrolpoints)
 
 
 	enemy.draw = function()
-		love.graphics.line(enemy.col.x,enemy.col.y,enemy.x+enemy.width,enemy.col.y+enemy.col.height)
-		love.graphics.line(enemy.col.x+enemy.width,enemy.col.y,enemy.col.x,enemy.col.y+enemy.height)
-		love.graphics.line(beun1,beun2,beun3,beun4)
 		local ding
 		if(enemy.dy == 0) then 
 			ding = math.abs(enemy.dx)/0.001
