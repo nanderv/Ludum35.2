@@ -25,7 +25,7 @@
 		 if other.isEnemy then
 		 	return "slide"
 		 end
-		 if other.isWall or other.isCatWater or (other.isGate and not game.hasKey) then
+		 if other.isWall or other.isCatWater or (other.isGate and not game.hasKey) or other.isEnemy then
 		 	
 		 	return "slide"
 		 end

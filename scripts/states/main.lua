@@ -1,5 +1,4 @@
 function draw_object(obj)
-    print(#core.objects[obj["ctype"]])
     love.graphics.draw(core.objects[obj["ctype"]][obj.af],obj.x,obj.y)
     
 end
