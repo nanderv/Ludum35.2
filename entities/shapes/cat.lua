@@ -250,8 +250,8 @@ if game.player.orientation == "upright" then
 		angle=45*math.pi/180
 	end
 
-
-	love.graphics.line(game.player.x+game.player.width/2+game.player.ddx*24,game.player.y+game.player.height/2+game.player.ddy*24,game.player.x+game.player.width/2+game.player.ddx*64,game.player.y+game.player.height/2+game.player.ddy*64)
+	--debug output, line from point of attack outwards
+	--love.graphics.line(game.player.x+game.player.width/2+game.player.ddx*24,game.player.y+game.player.height/2+game.player.ddy*24,game.player.x+game.player.width/2+game.player.ddx*64,game.player.y+game.player.height/2+game.player.ddy*64)
 
 	cat.animations.current:draw(cat.images.current,game.player.col.x+14+game.player.offx,game.player.col.y+17+game.player.offy,angle,1,1,48,48)
 end
