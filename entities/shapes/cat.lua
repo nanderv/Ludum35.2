@@ -1,5 +1,5 @@
 local function cat_col_handler(self, other)
-		 if other.isWall or other.isCatWater or (other.isGate and not game.hasKey) then
+		 if other.isWall or (other.isGate and not game.hasKey) then
 		return "slide"
 	end
 	return "cross"

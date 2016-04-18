@@ -88,6 +88,8 @@ turtle.A = function(dx,dy)
 		game.player.ddx = ddx
 		game.player.ddy = ddy
 
+		--queryPoint(x+ddx*32,y+ddy*32)
+
 end
 
 turtle.B = function()
