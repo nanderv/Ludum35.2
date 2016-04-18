@@ -59,10 +59,10 @@ cat.A = function(dx,dy)
 		local ddx = 0
 		local ddy = 0
 		if game.player.orientation == "up" then
-			ddy = 1
+			ddy = -1
 		end
 		if game.player.orientation == "down" then
-			ddy = -1
+			ddy = 1
 		end
 		if game.player.orientation == "right" then
 			ddx = 1
@@ -89,6 +89,15 @@ cat.A = function(dx,dy)
 		end
 		game.player.ddx = ddx
 		game.player.ddy = ddy
+
+		local others, others_len = game.world:queryPoint(game.player.x+game.player.width/2+ddx*24,game.player.y+game.player.height/2+ddy*24,function (obj) return obj.isEnemy end)
+		if others_len > 0 then
+			others[1].health = others[1].health - 1
+			others[1].aggro = 5
+			if others[1].health <= 0 then
+				game.enemy_ids_to_delete[#game.enemy_ids_to_delete+1] = others[1]
+			end	
+		end
 
 
 		
@@ -242,7 +251,7 @@ if game.player.orientation == "upright" then
 	end
 
 
-
+	love.graphics.line(game.player.x+game.player.width/2+game.player.ddx*24,game.player.y+game.player.height/2+game.player.ddy*24,game.player.x+game.player.width/2+game.player.ddx*64,game.player.y+game.player.height/2+game.player.ddy*64)
 
 	cat.animations.current:draw(cat.images.current,game.player.col.x+14+game.player.offx,game.player.col.y+17+game.player.offy,angle,1,1,48,48)
 end
