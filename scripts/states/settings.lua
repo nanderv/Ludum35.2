@@ -3,7 +3,7 @@ local controls = GS.new()
 function controls:enter(from)
     self.from = from
     self.selected = 1
-    self.selecting = ''
+    self.selecting = nil
 
     if love.filesystem.isFile('settings.conf') then
          local res = {}
@@ -19,7 +19,6 @@ end
 
 function dictify(list)
      local val = {}
-     for i, v in ipairs(list) do print(v) end
      while #list > 0 do
           val[list[#list - 1]] = list[#list]
           list[#list] = nil
@@ -34,18 +33,22 @@ function controls:draw()
     love.graphics.setColor(0,0,0, 100)
     love.graphics.rectangle('fill', 0,0, W,H)
     love.graphics.setColor(255,255,255)
-    love.graphics.printf('Controls', 0, H/2+60, W, 'center')
-    love.graphics.printf('press ESC to return', 0, H/2+80, W, 'center')
+    love.graphics.printf('Controls', 0, H/2 - 80, W, 'center')
+    love.graphics.printf('press ESC to return', 0, H/2 - 60, W, 'center')
     
     for i, name in ipairs(CONTROLS.ALL) do
-        love.graphics.printf(name .. " : ", 0, H/2 + 100 + i*20, W / 2, 'right')
-        if name == self.selecting then
-            love.graphics.setColor(128, 128, 128)
-        elseif i == self.selected then
-            love.graphics.setColor(255, 128, 255)
+        if i == self.selected then
+            if self.selecting ~= nil then
+                love.graphics.setColor(44,88,44, 100)
+            else
+                love.graphics.setColor(44,44,44, 100)
+            end
+
+            love.graphics.rectangle('fill', (W/4 - 20), H/2 - 45 + i*20, W/2 + 40, 20)
+            love.graphics.setColor(255,255,255)
         end
-        love.graphics.printf(CONTROLS[name], W / 2, H/2 + 100 + i*20, W, 'left')
-        love.graphics.setColor(255,255,255)
+        love.graphics.printf(name .. " : ", 0, H/2 -40 + i*20, W / 2, 'right')
+        love.graphics.printf(CONTROLS[name], W / 2, H/2 - 40 + i*20, W, 'left')
     end
 end
 

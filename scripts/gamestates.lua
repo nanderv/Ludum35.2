@@ -6,4 +6,5 @@ states.loading = require 'scripts.states.loading'
 states.death = require 'scripts.states.death'
 states.victory = require 'scripts.states.victory'
 states.settingsmenu = require 'scripts.states.settings'
+states.helpmenu = require 'scripts.states.help'
 return states
