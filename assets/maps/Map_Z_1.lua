@@ -458,7 +458,7 @@ return {
     {
       type = "objectgroup",
       name = "objects",
-      visible = true,
+      visible = false,
       opacity = 0.17,
       offsetx = 0,
       offsety = 0,
@@ -868,7 +868,7 @@ return {
       y = 0,
       width = 100,
       height = 100,
-      visible = true,
+      visible = false,
       opacity = 1,
       offsetx = 0,
       offsety = 0,
