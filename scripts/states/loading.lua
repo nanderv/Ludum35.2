@@ -18,10 +18,6 @@ loading.phases = {
         game.objects = {}
         game.objects_to_del = {}
 
-        if game and game.player and game.player.health then
-            loading.health = game.player.health
-            loading.max_health = game.player.max_health
-        end
 
     require 'assets.music.script1'.load()
 
@@ -53,6 +49,8 @@ loading.phases = {
             load_objects(map)
 
    game.player = require 'entities.player'()
+   game.player.health= loading.health
+   game.player.max_health = loading.max_health
 
     game.player.load()
     
@@ -67,6 +65,16 @@ loading.phases = {
 
 function loading:enter(from)
      print("LOADING")
+
+        if game and game.player and game.player.health and game.player.health > 0 then
+            loading.health = game.player.health
+            loading.max_health = game.player.max_health
+        else
+            if not  loading.health  then
+                 loading.health = starting_health
+                loading.max_health =starting_health
+            end
+        end
      game = nil
 
      game = {}

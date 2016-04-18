@@ -1,6 +1,7 @@
 -- remove the next line to disable console
 -- require("lib.debug.debug")
 game = {}
+starting_health = 4
 
 GS  = require "lib.hump.gamestate"
 sti = require 'lib.sti'
