@@ -40,6 +40,7 @@ function getNewEnemy(x,y,patrolpoints)
 	enemy.attbool = false
 	enemy.health = 3
 	enemy.isEnemy = true
+    enemy.countdown = 0
 
 	--animations
 	enemy.imageIdle = love.graphics.newImage("entities/enemy/scorpion_0.png")
@@ -59,6 +60,13 @@ function getNewEnemy(x,y,patrolpoints)
 
     enemy.col = game.world:add(enemy,enemy.x+32,enemy.y+30,enemy.width,enemy.height)
 	enemy.update = function(dt) 
+		if enemy.countdown >= 0 then
+			enemy.countdown = enemy.countdown - dt
+		end
+		if enemy.prev_health ~= enemy.health then
+			enemy.countdown = 0.3
+		end
+		enemy.prev_health = enemy.health
 		local rawdist = math.sqrt((math.abs(game.player.col.x-enemy.col.x)^2)+(math.abs(game.player.col.y-enemy.col.y)^2))
 		-- ai en shit
 		local dest = {}
@@ -248,9 +256,14 @@ function getNewEnemy(x,y,patrolpoints)
 
 
 	enemy.draw = function()
+		if enemy.countdown > 0 then
+			love.graphics.setColor(255,255,255,128)
+			end
+
 		if(enemy.currentanimation == enemy.animationAttack)then
 			--print("hank")
 		end
+
 		local ding
 		if(enemy.dy == 0) then 
 			ding = math.abs(enemy.dx)/0.001
@@ -284,6 +297,8 @@ function getNewEnemy(x,y,patrolpoints)
 				end
 			end
 		end
+				love.graphics.setColor(255,255,255,255)
+
 	end
 	return enemy
 end

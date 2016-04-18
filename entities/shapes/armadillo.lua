@@ -176,7 +176,6 @@ function armadillo.drawA()
 	if game.player.orientation == "downleft" then
 		angle=45*math.pi/180
 	end
-	print(game.player.angle)
 	armadillo.animations.current:draw(armadillo.images.current,game.player.col.x+game.player.offx+14,game.player.col.y+10+game.player.offy,game.player.angle,1,1,48,96-53)
 
 end

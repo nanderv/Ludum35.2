@@ -34,6 +34,7 @@ function getNewWatcher(x,y,patrolpoints, conelength)
 	enemy.dy = 0
 	enemy.dx = 0
 	enemy.isEnemy=true
+    enemy.countdown = 0
 
 	enemy.path = nil
 	--animations
@@ -48,7 +49,13 @@ function getNewWatcher(x,y,patrolpoints, conelength)
     enemy.col = game.world:add(enemy,enemy.x+48,enemy.y+52,39,21)
 
 	enemy.update = function(dt) 
-
+		if enemy.countdown >= 0 then
+			enemy.countdown = enemy.countdown - dt
+		end
+		if enemy.prev_health ~= enemy.health then
+			enemy.countdown = 0.3
+		end
+		enemy.prev_health = enemy.health
 		-- ai en shit
 		local dest = {}
 
@@ -151,6 +158,9 @@ function getNewWatcher(x,y,patrolpoints, conelength)
 	end
 
 	enemy.draw = function()
+			if enemy.countdown > 0 then
+			love.graphics.setColor(255,255,255,128)
+			end
 		if(enemy.orientation == "TOP")then
 			enemy.animation:draw(enemy.image,enemy.col.x+19,enemy.col.y+15,(180*math.pi/180),1,1,48,48)
 		elseif(enemy.orientation == "TOPRIGHT")then
@@ -168,6 +178,8 @@ function getNewWatcher(x,y,patrolpoints, conelength)
 		elseif(enemy.orientation == "BOTLEFT")then
 			enemy.animation:draw(enemy.image,enemy.col.x+19,enemy.col.y+15,(45*math.pi/180),1,1,48,48)
 		end
+				love.graphics.setColor(255,255,255,255)
+
 	end
 	return enemy
 end

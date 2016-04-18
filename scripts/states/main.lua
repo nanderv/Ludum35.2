@@ -1,4 +1,7 @@
 function draw_object(obj)
+    if obj["ctype"] == "isTarget" then
+        return
+    end
     love.graphics.draw(core.objects[obj["ctype"]][obj.af],obj.x,obj.y)
     
 end
@@ -19,13 +22,10 @@ function ctx:update(dt)
     end
 
     if no_enemies and level_gates_open_when_no_enemies[current_level] then
-        if not to_load then
-
-        current_level = current_level + 1
-        GS.push(core.states.loading)
-        to_load = true
-        return
-    end
+            game.hasKey = true
+            game.map.layers['gate_closed'].visible = false
+            game.map.layers['gate_open'].visible  = true
+    
     end
 
     for _,obj in pairs(game.projectiles) do
@@ -68,7 +68,7 @@ for _,obj in pairs(game.projectiles) do
         local x,y = game.camera:worldCoords(love.mouse.getPosition())
         love.graphics.line(game.player.x+game.player.height/2,game.player.y+game.player.height/2,x,y)
         --drawBlocks()
-        game.levelscript()
+        game.levelscript.func()
     game.camera:detach()
 
       love.graphics.print(love.timer.getFPS(), 400, 20 )

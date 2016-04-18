@@ -29,15 +29,19 @@ function getNewMrT(x,y)
 
 	mrt.globalcd = 0
 
-	mrt.nuclearstrikecd = {-5, 15, 13, 10}
-	mrt.nuclearstrikes = {-5, 5, 10, 15}
-	mrt.nuclearstriketimer = -5
+	mrt.nuclearstrikecd = {2, 15, 13, 10}
+	mrt.nuclearstrikes = {5, 5, 10, 15}
+	mrt.nuclearstriketimer = 0
+	mrt.nuclearstriketimeribt = 0
 	mrt.nuclearstrikeradius = 44
+	mrt.nuclearstrikesleft = 0
 
 	mrt.biterange = 40
 	mrt.bitecd = {2,1,1,1}
 	mrt.bitetimer = 0
 	mrt.biteactive = false
+	mrt.bitedamaged = false
+	mrt.bitedamage = 2
 
 	mrt.wallcd = {-5,-5,10,10}
 	mrt.walltimer = -5
@@ -90,7 +94,7 @@ function getNewMrT(x,y)
 
     mrt.imagelasor = love.graphics.newImage("entities/mrt/muricalligator_laser_0_Sheet.png")
 	g= core.anim8.newGrid(96, 128, mrt.imagelasor:getWidth(), mrt.imagelasor:getHeight())
-    mrt.animationlasor = core.anim8.newAnimation(g('1-8',1), 0.2) 
+    mrt.animationlasor = core.anim8.newAnimation(g('1-8',1), 0.1) 
 
 
     mrt.currentanimation = mrt.animationIdle1
@@ -100,13 +104,20 @@ function getNewMrT(x,y)
     mrt.col = game.world:add(mrt,mrt.x,mrt.y,mrt.width,mrt.height)
 
 	mrt.update = function(dt)
+		--nuke handler
+		if(mrt.nuclearstrikesleft > 0 and mrt.nuclearstriketimer<=0)then
+			--FIRE NUKE
+			createNuke(game.player.x-((44-game.player.width)/2),game.player.y -((44-game.player.height)/2))
+			mrt.nuclearstrikesleft = mrt.nuclearstrikesleft -1
+			mrt.nuclearstriketimeribt = 0.2
+		end
 		mrt.x = mrt.col.x
 		mrt.y = mrt.col.y
 		--attackpatterns
 		if(mrt.globalcd<=0 and not mrt.lasereyesactive and not mrt.tailattackactive and not mrt.biteactive and mrt.currentanimationToLive < 0)then
-			rawdistance = math.sqrt((math.abs(game.player.col.x-mrt.col.x)^2)+(math.abs(game.player.col.y-mrt.col.y)^2))
-			if(mrt.nuclearstriketimer<0 and mrt.nuclearstriketimer ~= -5)then
-				nuclearstrike()
+			rawdistance = math.sqrt(((game.player.col.x-mrt.col.x)^2)+((game.player.col.y-mrt.col.y)^2))
+			if(mrt.nuclearstriketimer<=0 and mrt.nuclearstriketimer ~= -5)then
+				mrt.nuclearstrikesleft = mrt.nuclearstrikes[mrt.actp]
 				mrt.nuclearstriketimer = mrt.nuclearstrikecd[mrt.actp]
 			elseif((mrt.orientation == "BOT" or mrt.orientation == "RIGHT" or mrt.orientation == "LEFT" or mrt.orientation == "BOT") and mrt.lasereyestimer<=0 and mrt.lasereyestimer~=-5)then
 				startlasereyes()
@@ -138,16 +149,18 @@ function getNewMrT(x,y)
 							buildwall(randx,randy,randx2,randy2)
 						end
 					end
-				elseif(rawdistance<mrt.biterange and mrt.bitecd[mrt.actp]<=0) then
+				elseif(rawdistance<mrt.biterange and mrt.bitetimer<=0) then
+					-- bite
 					if(mrt.actp == 4)then
 						mrt.currentanimation = mrt.animationBite2
 						mrt.currentimage = mrt.imageBite2
 					else
-						mrt.currentanimation = mrt.imageBite1
+						mrt.currentanimation = mrt.animationBite1
 						mrt.currentimage = mrt.imageBite1
 					end
+					mrt.bitetimer = mrt.bitecd[mrt.actp]
 					mrt.currentanimationToLive = 0.8
-					mr.biteactive = true
+					mrt.biteactive = true
 				else
 					-- meh mag niet aanvallen dan maar lopen
 					local dest = destMAKER(mrt)
@@ -187,10 +200,55 @@ function getNewMrT(x,y)
 		elseif(mrt.biteactive)then
 			if(mrt.currentanimationToLive < 0 )then
 				mrt.biteactive = false
+				mrt.bitedamaged = false
+				if mrt.actp == 4 then
+					mrt.currentanimation = mrt.animationWalk2
+					mrt.currentimage = mrt.imageWalk2
+				else
+					mrt.currentanimation = mrt.animationWalk1
+					mrt.currentimage = mrt.imageWalk1
+				end
 			else
+				local ddx = 0
+				local ddy = 0
+				if mrt.orientation == "TOP" then
+					ddy = -1
+				end
+				if mrt.orientation == "BOT" then
+					ddy = 1
+				end
+				if mrt.orientation == "RIGHT" then
+					ddx = 1
+				end
+				if mrt.orientation == "LEFT" then
+					ddx = -1
+				end
+				local a = 1/math.sqrt(2)
+				if mrt.orientation == "TOPLEFT" then
+					ddx = -a
+					ddy = -a
+				end
+				if mrt.orientation == "TOPRIGHT" then
+					ddx = a
+					ddy = -a
+				end
+				if mrt.orientation == "BOTLEFT" then
+					ddx = -a
+					ddy = a
+				end
+				if mrt.orientation == "BOTRIGHT" then
+					ddx = a
+					ddy = a
+				end
 
-			-- TODO handle biteactive
+				local atk_x, atk_y = mrt.x+mrt.width/2+ddx*52, mrt.y+mrt.height/2+ddy*52
+				if math.sqrt(math.pow(game.player.y+game.player.height/2-atk_y, 2) + math.pow(game.player.x+game.player.width/2-atk_x, 2))<= mrt.biterange then
+					game.player.shape.damage(mrt.bitedamage, nil, mrt)
+					mrt.bitedamaged = true
+				end
+
 			end
+
 		else
 			--only moving left to do, yes i can move during animations
 			local dest = destMAKER(mrt)
@@ -213,9 +271,9 @@ function getNewMrT(x,y)
 			mrt.nuclearstriketimer = mrt.nuclearstriketimer-dt
 		end
 		if(mrt.bitetimer>0)then
-			mrt.nuclearstriketimer = mrt.nuclearstriketimer-dt
+			mrt.bitetimer = mrt.bitetimer-dt
 		end
-		if(mrt.bitetimer>0)then
+		if(mrt.walltimer>0)then
 			mrt.walltimer = mrt.walltimer-dt
 		end
 		if(mrt.tailattacktimer>0)then
@@ -232,6 +290,9 @@ function getNewMrT(x,y)
 		end
 		if(mrt.currentanimationToLive>0)then
 			mrt.currentanimationToLive = mrt.currentanimationToLive -dt
+		end
+		if(mrt.nuclearstriketimeribt>0)then
+			mrt.nuclearstriketimeribt = mrt.nuclearstriketimeribt - dt
 		end
 		--update dat animation
 		mrt.currentanimation:update(dt)
@@ -331,57 +392,10 @@ function getNewMrT(x,y)
 	return mrt
 end
 
-function bite(targettinginfo)
-	--TODO
-end
-
-function startlasereyes()
-	--TODO
-	print("hallo")	
-end
-
-function nuclearstrike()
-	--TODO spawn nuke on player pos with 0.5 delay, do this a certain amount of times in short succesion
-end
 
 function buildwall(x1,x2,y1,y2)
 	--TODO spawn wall entitys, handle dmge in them
 end
-
-tailhitdimension = 30
-function tailattack(mrt)
-	magicdegreefix = 0.785398 --45graden
-	--top first, calculate others from there
-	local xje = mrt.x + 0.5*mrt.width  --hack because initially middle
-	local ytje = mrt.y + 0.5*tailhitdimension
-	--get hitbox left up
-	if(mrt.orientation == "TOP")then
-		-- niks, is al goed
-	elseif(mrt.orientation == "TOPRIGHT")then
-		xje = xje + math.cos(magicdegreefix)*xje
-		ytje = ytje + math.sin(magicdegreefix)*ytje
-	elseif(mrt.orientation == "RIGHT")then
-		xje = xje + math.cos(magicdegreefix*2)*xje
-		ytje = ytje + math.sin(magicdegreefix*2)*ytje
-	elseif(mrt.orientation == "BOTRIGHT")then
-		xje = xje + math.cos(magicdegreefix*3)*xje
-		ytje = ytje + math.sin(magicdegreefix*3)*ytje
-	elseif(mrt.orientation == "BOT")then
-		xje = xje + math.cos(magicdegreefix*4)*xje
-		ytje = ytje + math.sin(magicdegreefix*4)*ytje
-	elseif(mrt.orientation == "BOTLEFT")then
-		xje = xje + math.cos(magicdegreefix*5)*xje
-		ytje = ytje + math.sin(magicdegreefix*5)*ytje
-	elseif(mrt.orientation == "LEFT")then
-		xje = xje + math.cos(magicdegreefix*5)*xje
-		ytje = ytje + math.sin(magicdegreefix*5)*ytje
-	elseif(mrt.orientation == "TOPLEFT")then
-		xje = xje + math.cos(magicdegreefix*6)*xje
-		ytje = ytje + math.sin(magicdegreefix*6)*ytje
-	end
-	--TODO animation + hitbox op xje,ytje
-end
-
 
 function destMAKER (mrt)
 	local gx, gy = math.floor(game.player.col.x/32),math.floor(game.player.col.y/32) --prolly just player pos
@@ -403,11 +417,10 @@ function destMAKER (mrt)
 
 	if not game.player.invisible then
 	path,length = pathFinder:getPath(tx,ty,gx,gy)
-		print(gx,gy,tx,ty)
-	if path == nil then
-	 	path, length = pathFinder:getPath(tx,ty,gx+1,gy+1)
+		if path == nil then
+		 	path, length = pathFinder:getPath(tx,ty,gx+1,gy+1)
 
-	end
+		end
 	end
 	if path == nil then
 		path = mrt.path 
@@ -427,4 +440,38 @@ function destMAKER (mrt)
 	dest.x = dest.x * 32
 	dest.y = dest.y * 32
 	return dest
+end
+
+function createNuke(tarx, tary)
+	local nuke = {}
+	nuke.explosion = love.graphics.newImage("entities/explosion/explosion1-sheet.png")
+	local g = core.anim8.newGrid(44, 44, nuke.explosion:getWidth(), nuke.explosion:getHeight())
+    nuke.explosionani = core.anim8.newAnimation(g('1-6',1), 0.05)
+    nuke.crosshair = love.graphics.newImage("entities/explosion/crosshairs.png")
+	nuke.x = tarx
+	nuke.y = tary
+	nuke.ttl = 0.5
+	nuke.explttl = 0.3
+	nuke.dim = 44
+
+	nuke.update = function ( dt )
+		if(nuke.ttl < 0)then
+			--deal dmge to player if in range
+			if((nuke.x>player.x) and (player.x<(nuke.x+nuke.dim))and (player.y>nuke.y) and (player.y<(nuke.y+nuke.dim)))then
+				--do dmge
+				game.player.shape.damage(2)
+			end
+			nuke.explosionani:update(dt)
+		else
+			nuke.ttl = nuke.ttl - dt
+		end
+	end
+	nuke.draw = function()
+		if(nuke.ttl>=0)then
+			love.graphics.draw(nuke.crosshair,nuke.x,nuke.y)
+		else
+			nuke.explosionani:draw(nuke.explosion,nuke.x+6,nuke.y+6)
+		end
+	end
+	return nuke
 end
