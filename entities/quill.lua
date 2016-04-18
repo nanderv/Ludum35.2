@@ -3,10 +3,14 @@ quill_image = love.graphics.newImage("entities/porcupine/quill.png")
 local function ignore_col(self,other)
 	return "cross"
 end
-
+BULLETCOUNTER = 1
 local function update(quill,dt)
 		quill.timeout = quill.timeout - dt
+
 		if not  game.world:hasItem(quill) then
+			print("AZ "..quill.id.." "..quill.timeout)
+			quill.timeout = 0
+			
 
 			game.projectiles[quill.id] = nil
 			return
@@ -129,10 +133,11 @@ function new_quill(xx,yy,dx, dy,deadly)
 	quill.isWall=false
 	quill.draw = draw
 	quill.update = update
-	game.projectiles[#game.projectiles+1] = quill
+	game.projectiles[BULLETCOUNTER] = quill
 	for k,v in pairs(quill) do
 		print(k,v)
 	end
-	quill.id = #game.projectiles
+	quill.id = BULLETCOUNTER
+	BULLETCOUNTER = BULLETCOUNTER + 1
 	
 end
