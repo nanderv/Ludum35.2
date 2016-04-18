@@ -23,13 +23,10 @@ function ctx:update(dt)
     end
 
     if no_enemies and level_gates_open_when_no_enemies[current_level] then
-        if not to_load then
-
-        current_level = current_level + 1
-        GS.push(core.states.loading)
-        to_load = true
-        return
-    end
+            game.hasKey = true
+            game.map.layers['gate_closed'].visible = false
+            game.map.layers['gate_open'].visible  = true
+    
     end
 
     for _,obj in pairs(game.projectiles) do
