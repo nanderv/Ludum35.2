@@ -29,7 +29,7 @@ function getNewMrT(x,y)
 	mrt.nuclearstriketimer = -5
 	mrt.nuclearstrikeradius = 44
 
-	mrt.biterange = 100
+	mrt.biterange = 40
 	mrt.bitecd = {2,1,1,1}
 	mrt.bitetimer = 0
 	mrt.biteactive = false
@@ -83,6 +83,11 @@ function getNewMrT(x,y)
 	g= core.anim8.newGrid(96, 128, enemy.imageBite2:getWidth(), enemy.imageBite2:getHeight())
     enemy.animationBite2 = core.anim8.newAnimation(g('1-8',1), 0.1) 
 
+    enemy.imagelasor = love.graphics.newImage("entities/mrt/muricalligator_phase4_attack_A_0_Sheet.png")
+	g= core.anim8.newGrid(96, 128, enemy.imagelasor:getWidth(), enemy.imagelasor:getHeight())
+    enemy.animationlasor = core.anim8.newAnimation(g('1-8',1), 0.2) 
+
+
     mrt.currentanimation = mrt.animationIdle1
     mrt.currentimage = mrt.imageIdle1
     mrt.currentanimationToLive = -1
@@ -134,7 +139,7 @@ function getNewMrT(x,y)
 						mrt.currentanimation = mrt.imageBite1
 						mrt.currentimage = mrt.imageBite1
 					end
-					mrt.currentanimationToLive = 1
+					mrt.currentanimationToLive = 0.8
 					mr.biteactive = true
 				else
 					-- meh mag niet aanvallen dan maar lopen
@@ -168,6 +173,7 @@ function getNewMrT(x,y)
 			if(mrt.currentanimationToLive < 0 )then
 				mrt.biteactive = false
 			else
+
 			-- TODO handle biteactive
 			end
 		else
@@ -323,8 +329,8 @@ tailhitdimension = 30
 function tailattack(mrt)
 	magicdegreefix = 0.785398 --45graden
 	--top first, calculate others from there
-	local xje = mrt.x + 0.5*mrt.width - 0.5*tailhitdimension --hack because initially middle
-	local ytje = mrt.y
+	local xje = mrt.x + 0.5*mrt.width  --hack because initially middle
+	local ytje = mrt.y + 0.5*tailhitdimension
 	--get hitbox left up
 	if(mrt.orientation == "TOP")then
 		-- niks, is al goed
