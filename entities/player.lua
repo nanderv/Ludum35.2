@@ -20,7 +20,7 @@
 			game.objects_to_del[#game.objects_to_del+1] = other
 
 		end
-		
+
 		if other.isTarget then
 			return "slide"
 		end
@@ -119,7 +119,7 @@ player.invincibility = 0.5
 				
 			end	
 			-- cat
-			if love.keyboard.isDown(CONTROLS.THREE)  and game.shape_count  >= 3 then
+			if love.keyboard.isDown(CONTROLS.FOUR)  and game.shape_count  >= 4 then
 
 				game.player.offx = -8
 				game.player.offy = -10
@@ -131,7 +131,7 @@ player.invincibility = 0.5
 				
 			end
 			-- turtle
-			if love.keyboard.isDown(CONTROLS.FOUR)  and game.shape_count  >= 4 then
+			if love.keyboard.isDown(CONTROLS.THREE)  and game.shape_count  >= 3 then
 				game.player.offx = -3
 				game.player.offy = -6
 				game.player.width = 22
