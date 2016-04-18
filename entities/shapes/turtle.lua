@@ -88,7 +88,10 @@ turtle.A = function(dx,dy)
 		game.player.ddx = ddx
 		game.player.ddy = ddy
 
-		local others, others_len = game.world:queryPoint(game.player.x+ddx*24,game.player.y+ddy*24,function (obj) return obj.isEnemy end)
+		print(game.player.height/2)
+		print(game.player.width/2)
+
+		local others, others_len = game.world:queryPoint(game.player.x+game.player.width/2+ddx*24,game.player.y+game.player.height/2+ddy*24,function (obj) return obj.isEnemy end)
 		if others_len > 0 then
 			others[1].health = others[1].health - 2
 			others[1].aggro = 5
@@ -248,8 +251,8 @@ function turtle.drawA()
 	if game.player.orientation == "downleft" then
 		angle=45*math.pi/180
 	end
-	turtle.animations.current:draw(turtle.images.current,game.player.col.x+14,game.player.col.y+17,angle,1,1,48,48)
-	love.graphics.line(game.player.x+game.player.ddx*24,game.player.y+game.player.ddy*24,game.player.x+game.player.ddx*64,game.player.y+game.player.ddy*64)
+	turtle.animations.current:draw(turtle.images.current,game.player.col.x+14+game.player.offx,game.player.col.y+17+game.player.offy,angle,1,1,48,48)
+	love.graphics.line(game.player.x+game.player.width/2+game.player.ddx*24,game.player.y+game.player.height/2+game.player.ddy*24,game.player.x+game.player.width/2+game.player.ddx*64,game.player.y+game.player.height/2+game.player.ddy*64)
 end
 
 function turtle.updateB(dt)
