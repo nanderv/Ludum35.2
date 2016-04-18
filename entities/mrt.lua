@@ -37,6 +37,8 @@ function getNewMrT(x,y)
 	mrt.bitecd = {2,1,1,1}
 	mrt.bitetimer = 0
 	mrt.biteactive = false
+	mrt.bitedamaged = false
+	mrt.bitedamage = 2
 
 	mrt.wallcd = {-5,-5,10,10}
 	mrt.walltimer = -5
@@ -101,14 +103,18 @@ function getNewMrT(x,y)
 	mrt.update = function(dt)
 		--attackpatterns
 		if(mrt.globalcd<=0 and not mrt.lasereyesactive and not mrt.tailattackactive and not mrt.biteactive and mrt.currentanimationToLive < 0)then
-			rawdistance = math.sqrt((math.abs(game.player.col.x-mrt.col.x)^2)+(math.abs(game.player.col.y-mrt.col.y)^2))
+			rawdistance = math.sqrt(((game.player.col.x-mrt.col.x)^2)+((game.player.col.y-mrt.col.y)^2))
+			print(rawdistance,mrt.biterange)
 			if(mrt.nuclearstriketimer<0 and mrt.nuclearstriketimer ~= -5)then
+				print("set nuke")
 				nuclearstrike()
 				mrt.nuclearstriketimer = mrt.nuclearstrikecd[mrt.actp]
 			elseif((mrt.orientation == "BOT" or mrt.orientation == "RIGHT" or mrt.orientation == "LEFT" or mrt.orientation == "BOT") and mrt.lasereyestimer<=0 and mrt.lasereyestimer~=-5)then
 				startlasereyes()
+				print("set laser")
 			elseif(mrt.facingPlayer(false))then
 				if(mrt.walltimer<=0 and mrt.walltimer ~= -5)then
+					print("set wall")
 					--get target coordinates
 					--get randoms for randomness
 					local bool = true
@@ -135,17 +141,21 @@ function getNewMrT(x,y)
 							buildwall(randx,randy,randx2,randy2)
 						end
 					end
-				elseif(rawdistance<mrt.biterange and mrt.bitecd[mrt.actp]<=0) then
+				elseif(rawdistance<mrt.biterange and mrt.bitetimer<=0) then
+					print("set biteactive")
+					-- bite
 					if(mrt.actp == 4)then
 						mrt.currentanimation = mrt.animationBite2
 						mrt.currentimage = mrt.imageBite2
 					else
-						mrt.currentanimation = mrt.imageBite1
+						mrt.currentanimation = mrt.animationBite1
 						mrt.currentimage = mrt.imageBite1
 					end
+					mrt.bitetimer = mrt.bitecd[mrt.actp]
 					mrt.currentanimationToLive = 0.8
-					mr.biteactive = true
+					mrt.biteactive = true
 				else
+					print("walking")
 					-- meh mag niet aanvallen dan maar lopen
 					local dest = destMAKER(mrt)
 					if(dest == {} or dest.x == nil or dest.y ==nil)then
@@ -182,12 +192,58 @@ function getNewMrT(x,y)
 		elseif(mrt.tailattackactive)then
 			-- TODO handle tailattack
 		elseif(mrt.biteactive)then
+			print("biteactive")
 			if(mrt.currentanimationToLive < 0 )then
 				mrt.biteactive = false
+				mrt.bitedamaged = false
+				if mrt.actp == 4 then
+					mrt.currentanimation = mrt.animationWalk2
+					mrt.currentimage = mrt.imageWalk2
+				else
+					mrt.currentanimation = mrt.animationWalk1
+					mrt.currentimage = mrt.imageWalk1
+				end
 			else
+				local ddx = 0
+				local ddy = 0
+				if mrt.orientation == "TOP" then
+					ddy = -1
+				end
+				if mrt.orientation == "BOT" then
+					ddy = 1
+				end
+				if mrt.orientation == "RIGHT" then
+					ddx = 1
+				end
+				if mrt.orientation == "LEFT" then
+					ddx = -1
+				end
+				local a = 1/math.sqrt(2)
+				if mrt.orientation == "TOPLEFT" then
+					ddx = -a
+					ddy = -a
+				end
+				if mrt.orientation == "TOPRIGHT" then
+					ddx = a
+					ddy = -a
+				end
+				if mrt.orientation == "BOTLEFT" then
+					ddx = -a
+					ddy = a
+				end
+				if mrt.orientation == "BOTRIGHT" then
+					ddx = a
+					ddy = a
+				end
 
-			-- TODO handle biteactive
+				local atk_x, atk_y = mrt.x+mrt.width/2+ddx*52, mrt.y+mrt.height/2+ddy*52
+				if math.sqrt(math.pow(game.player.y+game.player.height/2-atk_y, 2) + math.pow(game.player.x+game.player.width/2-atk_x, 2))<= mrt.biterange then
+					game.player.shape.damage(mrt.bitedamage, nil, mrt)
+					mrt.bitedamaged = true
+				end
+
 			end
+
 		else
 			--only moving left to do, yes i can move during animations
 			local dest = destMAKER(mrt)
@@ -210,9 +266,9 @@ function getNewMrT(x,y)
 			mrt.nuclearstriketimer = mrt.nuclearstriketimer-dt
 		end
 		if(mrt.bitetimer>0)then
-			mrt.nuclearstriketimer = mrt.nuclearstriketimer-dt
+			mrt.bitetimer = mrt.bitetimer-dt
 		end
-		if(mrt.bitetimer>0)then
+		if(mrt.walltimer>0)then
 			mrt.walltimer = mrt.walltimer-dt
 		end
 		if(mrt.tailattacktimer>0)then
@@ -382,7 +438,7 @@ end
 
 function destMAKER (mrt)
 	local gx, gy = math.floor(.5+game.player.col.x/32),math.floor(.5+game.player.col.y/32) --prolly just player pos
-	local tx, ty = math.floor(.5+(mrt.col.x/32),math.floor(.5+mrt.col.y/32) --prolly just player pos
+	local tx, ty = math.floor(.5+mrt.col.x/32),math.floor(.5+mrt.col.y/32) --prolly just player pos
 	if tx < 1 then
 		tx = 1
 	end

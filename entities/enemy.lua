@@ -65,7 +65,7 @@ function getNewEnemy(x,y,patrolpoints)
 		if(enemy.attbool and enemy.attframe>0)then
 			--ATTACK
 			if(rawdist<enemy.attackRange)then
-			    game.player.shape.damage(1,s)
+			    game.player.shape.damage(1,s,enemy)
 			end
 			enemy.attframe = enemy.attframe-dt
 			if(enemy.attframe<0)then
