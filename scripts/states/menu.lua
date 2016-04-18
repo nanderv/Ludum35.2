@@ -32,6 +32,7 @@ function menu:draw()
          end
          love.graphics.printf(name, 0, H/2 - 60 + 20*i, W, 'center')
     end
+    love.graphics.print(love.timer.getFPS(), 10, 10)
 end
 
 function menu:keypressed(key)
@@ -43,6 +44,5 @@ function menu:keypressed(key)
 	elseif (key == CONTROLS.DOWN or key == 'down') and self.selected < #menu.OPTIONS then
 		self.selected = self.selected + 1
 	end
-        core.sounds.player_death()
 end
 return menu
