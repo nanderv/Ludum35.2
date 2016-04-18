@@ -1,3 +1,7 @@
+local function turtle_col_handler(self, other)
+	return "slide"
+end
+
 require 'entities.quill'
 local turtle = {}
 
@@ -21,18 +25,24 @@ turtle.images_A.upleft =love.graphics.newImage('entities/turtle/turtle_biting_0_
 turtle.images_A.left =love.graphics.newImage('entities/turtle/turtle_biting_0_Sheet.png')
 turtle.images_A.downleft =love.graphics.newImage('entities/turtle/turtle_biting_0_Sheet.png')
 
+turtle.images_B = turtle.images_A
+
 turtle.images.current = turtle.images.right
 turtle.animations = {}
 turtle.grids = {}
 turtle.speed = 50
 turtle.grids.walk = core.anim8.newGrid(turtle.images.current:getWidth()/8, 96, turtle.images.current:getWidth(), turtle.images.current:getHeight())
 turtle.animations.walk = core.anim8.newAnimation(turtle.grids.walk('1-8',1), 0.06)
-turtle.grids.walk = core.anim8.newGrid(turtle.images_A.down:getWidth()/8, 96, turtle.images_A.down:getWidth(), turtle.images_A.down:getHeight())
+turtle.grids.A = core.anim8.newGrid(turtle.images_A.down:getWidth()/8, 96, turtle.images_A.down:getWidth(), turtle.images_A.down:getHeight())
 turtle.animations.A = core.anim8.newAnimation(turtle.grids.A('1-8',1), 0.06)
+turtle.animations.B = turtle.animations.A
 turtle.animations.current = turtle.animations.walk
 
+turtle.images_idle = {}
+turtle.images_idle.down =love.graphics.newImage('entities/turtle/turtle_walking_0_Sheet.png')
 
-turtle.A = function(dx,dy) --niet echt gecheckt, is volgens mij wel goed, maar weet niet zeker
+
+turtle.A = function(dx,dy)
 
 		game.player.locked_update = turtle.updateA
 		game.player.locked_draw = turtle.drawA
@@ -73,7 +83,7 @@ turtle.A = function(dx,dy) --niet echt gecheckt, is volgens mij wel goed, maar w
 
 end
 
-turtle.B = function() --niet helemaal gecheckt, wel wat spul aangepast. de pause moet er in blijven voor de lunge(zelfde principe, anders teveel movement)
+turtle.B = function()
 	if 	game.player.shape.attack_B_pause and game.player.shape.attack_B_pause > 0 then
 		return true
 	end
@@ -147,6 +157,128 @@ function turtle.damage(hit, status) -- zou goed moeten zijn, zie comment in func
 				return
 			end
 
-	 		game.player.invincibility = 2 --waarom dit?
-		
+	 		game.player.invincibility = 2
 end	
+
+function turtle.update(dt)
+  turtle.animations.current:update(dt)
+  if game.player.shape.attack_B_pause ~= nil then
+  	game.player.shape.attack_B_pause = game.player.shape.attack_B_pause - dt
+  end
+end
+
+function turtle.draw()
+	turtle.images.current=turtle.images.left
+	local angle = 0
+	if game.player.orientation == "up" then
+		angle=180*math.pi/180
+	end
+	if game.player.orientation == "left" then
+		angle=90*math.pi/180
+	end
+	if game.player.orientation == "right" then
+		angle=-90*math.pi/180
+	end
+
+	if game.player.orientation == "upright" then
+		angle=-135*math.pi/180
+	end
+	if game.player.orientation == "downright" then
+		angle=-45*math.pi/180
+	end
+	if game.player.orientation == "upleft" then
+		angle=135*math.pi/180
+	end
+	if game.player.orientation == "downleft" then
+		angle=45*math.pi/180
+	end
+
+	turtle.animations.current:draw(turtle.images.current,game.player.col.x+14,game.player.col.y+17,angle,1,1,48,48)
+end
+
+function turtle.updateA(dt)
+	turtle.timeout = turtle.timeout-dt
+	if turtle.timeout < 0 then
+		game.player.locked_update = nil
+		game.player.locked_draw = nil
+	end
+	turtle.animations.current:update(dt)
+end
+
+function turtle.drawA()
+	turtle.images.current=turtle.images_A.left
+	local angle = 0
+	if game.player.orientation == "up" then
+		angle=180*math.pi/180
+	end
+	if game.player.orientation == "left" then
+		angle=90*math.pi/180
+	end
+	if game.player.orientation == "right" then
+		angle=-90*math.pi/180
+	end
+
+	if game.player.orientation == "upright" then
+		angle=-135*math.pi/180
+	end
+	if game.player.orientation == "downright" then
+		angle=-45*math.pi/180
+	end
+	if game.player.orientation == "upleft" then
+		angle=135*math.pi/180
+	end
+	if game.player.orientation == "downleft" then
+		angle=45*math.pi/180
+	end
+
+	turtle.animations.current:draw(turtle.images.current,game.player.col.x+14,game.player.col.y+17,angle,1,1,48,48)
+end
+
+function turtle.updateB(dt)
+	turtle.timeout = turtle.timeout-dt
+	game.player.col.x , game.player.col.y, cols, len = game.world:move(game.player,game.player.col.x+game.player.ddx*dt*400,game.player.y+game.player.ddy*dt*400,turtle_col_handler)
+
+
+	if love.mouse.isDown(2) then
+		turtle.animations.current:update(dt)
+	end
+	if turtle.timeout < 0 then
+		game.player.locked_update = nil
+		game.player.locked_draw = nil
+		turtle.animations.current = turtle.animations.walk
+		game.player.shape.attack_B_pause=1.2
+	
+	end
+end
+
+function turtle.drawB()
+	turtle.images.current=turtle.images.left
+	local angle = 0
+	if game.player.orientation == "up" then
+		angle=180*math.pi/180
+	end
+	if game.player.orientation == "left" then
+		angle=90*math.pi/180
+	end
+	if game.player.orientation == "right" then
+		angle=-90*math.pi/180
+	end
+
+	if game.player.orientation == "upright" then
+		angle=-135*math.pi/180
+	end
+	if game.player.orientation == "downright" then
+		angle=-45*math.pi/180
+	end
+	if game.player.orientation == "upleft" then
+		angle=135*math.pi/180
+	end
+	if game.player.orientation == "downleft" then
+		angle=45*math.pi/180
+	end
+
+	turtle.images.current = turtle.images_B.left
+	turtle.animations.current:draw(turtle.images.current,game.player.col.x+14,game.player.col.y+17,angle,1,1,48,48)	
+
+end
+return turtle

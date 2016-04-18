@@ -9,6 +9,9 @@ loading.first = true
 -- Loading screen phases, split up loading code among these phases
 loading.phases = {
     function()
+        game.objects = {}
+        game.objects_to_del = {}
+
         if game and game.player and game.player.health then
             loading.health = game.player.health
             loading.max_health = game.player.max_health
@@ -50,6 +53,9 @@ loading.phases = {
     game.camera = core.camera(0,0,2)
     end,
     function()
+            game.map.layers['gate_closed'].visible = true
+            game.map.layers['gate_open'].visible  = false
+
     end
 }
 
