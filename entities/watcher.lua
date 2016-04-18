@@ -22,13 +22,13 @@ function getNewWatcher(x,y,patrolpoints, conelength)
 	enemy.offx = 28
 	enemy.offy = 40
 	enemy.aggro = 0
-	enemy.speed = 100
+	enemy.speed = 120
 	enemy.patrolindex = 1
 	enemy.conelength = conelength
 	enemy.patrol = patrolpoints
 	enemy.aggrotimer = 5
 	enemy.orientation = "BOT"
-	enemy.attackrange = 23
+	enemy.attackrange = 27
 	enemy.testcounter = 0
 	enemy.health = 5
 	enemy.dy = 0

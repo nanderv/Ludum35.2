@@ -132,7 +132,7 @@ player.invincibility = 0.5
 				game.player.width = 22
 				game.player.height = 22
 				player.shape = player.shapes[4]
-								game.world:update(player,game.player.x,game.player.y,game.player.width,game.player.height)
+				game.world:update(player,game.player.x,game.player.y,game.player.width,game.player.height)
 
 			end
 			end

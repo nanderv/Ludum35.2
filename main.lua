@@ -2,7 +2,7 @@
 -- require("lib.debug.debug")
 game = {}
 starting_health = 4
-
+require 'cutscene.cutscene'
 GS  = require "lib.hump.gamestate"
 sti = require 'lib.sti'
 -- load main core library
