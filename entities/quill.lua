@@ -1,4 +1,5 @@
 laserbolt = love.graphics.newImage("entities/archer/laser_ball_4.png")
+quill_image = love.graphics.newImage("entities/porcupine/quill.png")
 
 local function ignore_col(self,other)
 	return "cross"
@@ -77,8 +78,20 @@ local function draw(quill)
 	if(quill.deadly)then
 		love.graphics.draw(laserbolt,quill.x,quill.y)
 	else
-	
-		love.graphics.rectangle("fill",quill.x,quill.y,4,4)
+		if quill.rotation == nil then
+			local x,y = 0,0
+			if core.gamepad == nil then
+				x,y = game.camera:worldCoords(love.mouse.getPosition())
+			    x,y = x-game.player.x,y-game.player.y
+			end
+			local tanfix = 0
+			if x < 0 then
+				tanfix = math.pi
+			end
+			quill.rotation = math.atan(y/x)-0.5*math.pi+tanfix
+		end
+		love.graphics.draw(quill_image, quill.x, quill.y, quill.rotation)
+		--love.graphics.rectangle("fill",quill.x,quill.y,4,4)
 	end
 end
 function new_quill(xx,yy,dx, dy,deadly)
