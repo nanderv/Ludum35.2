@@ -81,6 +81,9 @@ function()
             game.map.layers['gate_closed'].visible = true
             game.map.layers['gate_open'].visible  = false
 
+    end,
+    function()
+        game.levelscript = get_level(filename)
     end
 }
 
