@@ -2,7 +2,7 @@ levels  = {"assets/maps/Map_Z_1.lua","assets/maps/bestmap.lua","assets/maps/test
 
 level_gates_open_when_no_enemies = {true,false,false}
 shapes = {1,1,4,4,4}
-current_level = 5
+current_level = 2
 to_load = false
 true_mode = false
 local loading = {}

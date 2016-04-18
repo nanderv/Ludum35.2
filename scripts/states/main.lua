@@ -1,4 +1,7 @@
 function draw_object(obj)
+    if obj["ctype"] == "isTarget" then
+        return
+    end
     love.graphics.draw(core.objects[obj["ctype"]][obj.af],obj.x,obj.y)
     
 end

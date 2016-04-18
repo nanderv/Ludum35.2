@@ -7,8 +7,16 @@ t.bools = {}
 			cutscene.start(t.scene_intro)
 		end
 if game.player.x > 800 and not t.bools.shooting_intro then
-			 t.bools.shooting_intro  = true
+		if game.hasKey then
+			cutscene.start(t.smartkid)
+	t.bools.gate_closed=true
+
+		t.bools.shot=true
+		else
 			cutscene.start(t.scene_shooting)
+		end
+			 t.bools.shooting_intro  = true
+			
 			 
 	end
 
@@ -21,7 +29,12 @@ if game.player.x > 800 and not t.bools.shooting_intro then
 
 
 	if game.hasKey and not t.bools.shot then
+		if game.player.x > 800 then
+
+		
 		cutscene.start(t.scene_shot)
+	end
+		t.bools.gate_closed=true
 
 		t.bools.shot=true
 
@@ -59,5 +72,6 @@ t.scene_shot = { {text="Nice shot!.",character=cutscene.renderPorcupine}}
 t.scene_dramatic = { {text="Hi! ...",character=cutscene.renderPorcupine}}
 
 t.scene_end = {}
+t.smartkid = { {text="Well, aren't you the clever kid, doing things before you're supposed to...",character=cutscene.renderPorcupine}}
 
 return t

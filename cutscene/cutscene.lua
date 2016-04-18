@@ -112,7 +112,7 @@ cutscene.renderMRT = function ()
 	local y = 420
 	love.graphics.draw(mrT,x,y,0,2,2)
 end
-
+cutscene.renderNIL = function() end
 
 
 core.images = {love.image.newImageData( "entities/hud/porcupine_portrait.png" ), love.image.newImageData( "entities/hud/armadillo_portrait.png" ), love.image.newImageData( "entities/hud/turtle_portrait.png" ), love.image.newImageData( "entities/hud/cat_portrait.png" ), love.image.newImageData( "entities/hud/mrt_portrait.png" )}
