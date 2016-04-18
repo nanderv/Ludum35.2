@@ -60,7 +60,7 @@ for _,obj in pairs(game.projectiles) do
         draw_object(obj)
     end
     local x,y = game.camera:worldCoords(love.mouse.getPosition())
-    love.graphics.line(game.player.x+16,game.player.y+16,x,y)
+    love.graphics.line(game.player.x+game.player.height/2,game.player.y+game.player.height/2,x,y)
           drawBlocks()
 
     game.camera:detach()

@@ -137,6 +137,7 @@ function armadillo.updateA(dt)
 		tanfix = math.pi
 	end
 	game.player.angle = math.atan(y/x)-0.5*math.pi+tanfix
+	armadillo.secret_speed=0
 	game.player.col.x,game.player.col.y =game.world:move(game.player,x*armadillo.secret_speed+(game.player.x),game.player.y+y*armadillo.secret_speed )
 	armadillo.secret_speed = armadillo.secret_speed + 60*dt
 	if armadillo.secret_speed > 300 then
@@ -171,7 +172,7 @@ function armadillo.drawA()
 		angle=45*math.pi/180
 	end
 
-	armadillo.animations.current:draw(armadillo.images.current,game.player.col.x+14+game.player.offx,game.player.col.y+17+game.player.offy,game.player.angle,1,1,48,48)
+	armadillo.animations.current:draw(armadillo.images.current,game.player.col.x+1+game.player.offx,game.player.col.y+10+game.player.offy,game.player.angle,1,1,48,48)
 
 end
 function armadillo.updateB(dt)

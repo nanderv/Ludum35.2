@@ -37,13 +37,14 @@ local player = {}
 player.image = love.graphics.newImage( "assets/ugly_sprite.png")
 player.x = game.startX
 player.y = game.startY
-player.width = 16
-player.height = 16
+player.offx = 4
+player.offy = 0
+player.width = 20
+player.height = 20
 player.health = 4
-player.offx = 6
 player.offcx = 4
 player.offcy = 4
-player.offy = 5
+
 player.max_health = 4
 player.invisible = false
 player.invincibility = 0.5
@@ -94,10 +95,10 @@ player.invincibility = 0.5
 			-- armadillo 
 		if love.keyboard.isDown(CONTROLS.TWO) then
 				player.shape =  player.shapes[2]
-				game.player.offx = -3
-				game.player.offy = -6
-				game.player.width = 32
-				game.player.height = 32
+				game.player.offx = -4
+				game.player.offy = 0
+				game.player.width = 16
+				game.player.height = 16
 				game.world:remove(player)
 				player.load()
 			end	
