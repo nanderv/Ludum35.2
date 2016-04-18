@@ -61,12 +61,19 @@ local function update(quill,dt)
 	
 	if self.deadly then
 		print("HOI")
-		if other == game.player then
-	     local s = core.status_effects.knockback(0.5,game.player,self.dx*100, self.dy*100)
+			if other == game.player then
+				if game.player.locked_update == game.player.shapes[2].updateB then
+			
+			print("COL")
+	     	local s = core.status_effects.knockback(0.5,game.player,self.dx*100, self.dy*100)
 
 			game.player.shape.damage(1,s)
 				self.delete = true
-		end
+			else
+				break
+			end
+		
+			end
 	else
 		print("IA")
 		if other.isEnemy then
