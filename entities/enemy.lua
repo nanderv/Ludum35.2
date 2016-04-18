@@ -27,7 +27,7 @@ function getNewEnemy(x,y, patrolpoints)
 	enemy.height = 40
 	enemy.width = 30
 	enemy.aggroRange = 300
-	enemy.attackRange = 35
+	enemy.attackRange = 60
 	enemy.aggro = false
 	enemy.speed = 80
 	enemy.patrolindex = 1
@@ -62,17 +62,17 @@ function getNewEnemy(x,y, patrolpoints)
 		local dest = {}
 		if(enemy.attbool and enemy.currentanimationToLive < 0)then
 			--ATTACK
-			if(rawdist<attackRange)then
+			if(rawdist<enemy.attackRange)then
 			    game.player.shape.damage(1,s)
 			end
-			if(attbool == 1)then
+			if(enemy.attbool == 1)then
 				enemy.currentanimation = enemy.animationIdle
 				enemy.currentimage = enemy.imageIdle
 				enemy.currentanimationToLive = 1
-				attbool = false
-				attframe = 0
+				enemy.attbool = false
+				enemy.attframe = 0
 			else
-				attfarme = attframe +1
+				enemy.attfarme = enemy.attframe +1
 			end
 		elseif (enemy.currentanimationToLive == -1) then
 			enemy.y = enemy.col.y

@@ -30,7 +30,11 @@ local function get_col(self, other)
 		end
 		if other.isEnemy then
 			if other.health then
-				other.health = other.health - 2
+				other.health = other.health - 1
+				print(other.health)
+				if other.health <= 0 then
+					game.enemy_ids_to_delete[#game.enemy_ids_to_delete+1] = other
+				end	
 			else
 					game.enemy_ids_to_delete[#game.enemy_ids_to_delete+1] = other
 			end
