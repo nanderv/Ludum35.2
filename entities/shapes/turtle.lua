@@ -147,6 +147,9 @@ turtle.B = function()
 end
 
 function turtle.damage(hit, status) -- zou goed moeten zijn, zie comment in functie !
+			if game.player.health <= 0 then
+				return
+			end
 			if game.player.invincibility > 0 then
 				return
 			end

@@ -148,6 +148,9 @@ cat.B = function()
 		cat.images.current = cat.images_B
 end
 function cat.damage(hit, status, enemy)
+			if game.player.health <= 0 then
+				return
+			end
 			if game.player.invincibility > 0 then
 				return
 			end

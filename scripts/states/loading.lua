@@ -1,8 +1,8 @@
-levels  = {"assets/maps/1.lua","assets/maps/bestmap.lua","assets/maps/3.lua","assets/maps/4.lua","assets/maps/Map_Boss_1.lua"}
+levels  = {"assets/maps/1.lua","assets/maps/2.lua","assets/maps/3.lua","assets/maps/4.lua","assets/maps/Map_Boss_1.lua"}
 
-level_gates_open_when_no_enemies = {true,false,false}
+level_gates_open_when_no_enemies = {true,true,false,false,false}
 shapes = {1,2,3,4,4}
-current_level = 1
+current_level = 2
 to_load = false
 true_mode = false
 local loading = {}
