@@ -1,3 +1,5 @@
+HEART = love.graphics.newImage('entities/hud/heart.png')
+EMPTYHEART = love.graphics.newImage('entities/hud/heart_empty.png')
 function draw_object(obj)
     if obj["ctype"] == "isTarget" then
         return
@@ -37,9 +39,11 @@ function ctx:update(dt)
         game.enemy_ids_to_delete[zz] = nil
     end
     for v, obj in pairs(game.objects_to_del) do
-        game.objects_to_del[v] = nil
-        game.objects[obj.id] = nil
-        game.world:remove(obj)
+        if game.world:hasItem(obj) then
+            game.objects_to_del[v] = nil
+            game.objects[obj.id] = nil
+            game.world:remove(obj)
+        end
     end
     game.player.update(dt)
 end
@@ -70,6 +74,13 @@ for _,obj in pairs(game.projectiles) do
         --drawBlocks()
         game.levelscript.func()
     game.camera:detach()
+    for i=1, game.player.max_health do
+        if game.player.health >= i then
+            love.graphics.draw(HEART,600-(-i+0.5*game.player.max_health)*32,40)
+        else
+            love.graphics.draw(EMPTYHEART,600-(-i+0.5*game.player.max_health)*32,40)
+        end
+    end
 
       love.graphics.print(love.timer.getFPS(), 400, 20 )
       love.graphics.print(game.player.health, 400, 30 )
