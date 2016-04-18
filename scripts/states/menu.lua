@@ -15,6 +15,9 @@ function menu:enter(from)
     self.from = from -- record previous state
 end
 
+function menu:update(dt)
+    
+end
 function menu:draw()
     local W, H = love.graphics.getWidth(), love.graphics.getHeight()
     -- draw previous screen
@@ -43,6 +46,6 @@ function menu:keypressed(key)
 	elseif (key == CONTROLS.DOWN or key == 'down') and self.selected < #menu.OPTIONS then
 		self.selected = self.selected + 1
 	end
-        core.sounds.player_death()
+        
 end
 return menu
