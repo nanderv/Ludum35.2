@@ -86,7 +86,6 @@ local function update(quill,dt)
 
 		game.world:update(quill, quill.x+quill.dx*dt*250, quill.y+quill.dy*dt*250)
 		quill.x,quill.y =  quill.x+quill.dx*dt*250, quill.y+quill.dy*dt*250
-		print(quill.x,quill.y)
 		if quill.delete then
 
 				game.projectiles[quill.id] = nil
@@ -110,9 +109,6 @@ function new_quill(xx,yy,dx, dy,deadly)
 	
 	quill = game.world:add(quill, xx,yy,4,4)
 
-	for k,v in pairs( quill )do
-		print(k,v)
-	end
 	
 	quill.deadly = deadly
 	quill.timeout = 0

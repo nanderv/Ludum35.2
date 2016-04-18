@@ -235,7 +235,6 @@ function player.draw(a )
 	end
 
 	
-	love.graphics.rectangle("fill",player.col.x,player.col.y,player.col.width,player.col.height)
 	player.shape.draw()
 
 end
