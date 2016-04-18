@@ -57,9 +57,12 @@ function getNewMrT(x,y)
 
 	mrt.lasereyescd = {-5,-5,-5, 10}
 	mrt.lasereyesrange = 2000
+	mrt.lasereyescenteroffset = 22
 	mrt.lasereyestimer = -5
 	mrt.lasereyesprogress = 0
 	mrt.lasereyesactive = false
+	mrt.lasereyesdamage = 1
+	mrt.lasereyesvisited = false
 
 	--TODO add all animations
 	mrt.imageIdle1 = love.graphics.newImage("entities/mrt/mr.t_0.png")
@@ -96,7 +99,11 @@ function getNewMrT(x,y)
 
     mrt.imagelasor = love.graphics.newImage("entities/mrt/muricalligator_laser_0_Sheet.png")
 	g= core.anim8.newGrid(96, 128, mrt.imagelasor:getWidth(), mrt.imagelasor:getHeight())
-    mrt.animationlasor = core.anim8.newAnimation(g('1-8',1), 0.1) 
+    mrt.animationlasor = core.anim8.newAnimation(g('1-8',1), 0.1)
+
+    mrt.imagelasorrot = love.graphics.newImage("entities/mrt/muricalligator_laser_0_image.png") 
+    g= core.anim8.newGrid(96, 128, mrt.imagelasorrot:getWidth(), mrt.imagelasorrot:getHeight())
+    mrt.animationlasorrot = core.anim8.newAnimation(g('1-1',1), 0.1)
 
 
     mrt.currentanimation = mrt.animationIdle1
@@ -127,7 +134,13 @@ function getNewMrT(x,y)
 				mrt.nuclearstrikesleft = mrt.nuclearstrikes[mrt.actp]
 				mrt.nuclearstriketimer = mrt.nuclearstrikecd[mrt.actp]
 			elseif((mrt.orientation == "BOT" or mrt.orientation == "RIGHT" or mrt.orientation == "LEFT" or mrt.orientation == "BOT") and mrt.lasereyestimer<=0 and mrt.lasereyestimer~=-5)then
-				startlasereyes()
+				--laz0r activation
+				mrt.currentanimation = mrt.animationlasor
+				mrt.currentimage = mrt.imagelasor
+				mrt.lasereyestimer = mrt.lasereyescd[mrt.actp]
+				mrt.currentanimationToLive = 2.8
+				mrt.lasereyesactive = true
+				mrt.lasereyesprogress = 0
 			elseif(mrt.facingPlayer(false))then
 				if(mrt.walltimer<=0 and mrt.walltimer ~= -5)then
 					--get target coordinates
@@ -211,7 +224,29 @@ function getNewMrT(x,y)
 				end
 			end
 		elseif(mrt.lasereyesactive)then
-			-- TODO handle the las0r 3y3s
+			-- TODO handle the laz0r 3y3s
+			if(mrt.currentanimationToLive < 0 )then
+				--stop laser eyes attack
+				mrt.lasereyesactive = false
+				mrt.currentanimation = mrt.animationWalk2
+				mrt.currentimage = mrt.imageWalk2
+			elseif mrt.currentanimationToLive <= 2 then
+				--laser rotation
+				if not mrt.lasereyesvisited then --set new animation
+					mrt.currentimage = mrt.imagelasorrot
+					mrt.currentanimation = mrt.imagelasorrot
+					mrt.lasereyesvisited = true
+				end
+				mrt.progress = mrt.progress + dt
+				local rotation = 2*math.pi*(mrt.progress/2)
+				local middle_x, middle_y = mrt.x+mrt.width/2, mrt.y+mrt.height/2
+				local origin_x, origin_y = middle_x+mrt.lasereyescenteroffset*math.cos(rotation), middle_y+mrt.lasereyescenteroffset*math.sin(rotation)
+				local end_x, end_y = middle_x+(mrt.lasereyescenteroffset+mrt.lasereyesrange)*math.cos(rotation), middle_y+(mrt.lasereyescenteroffset+mrt.lasereyesrange)*math.sin(rotation)
+				love.graphics.line(origin_x, origin_y, end_x, end_y)
+			else
+				--charge animation
+				--do nothing here
+			end
 		elseif(mrt.tailattackactive)then
 			if(mrt.currentanimationToLive < 0 )then
 				mrt.tailattackactive = false
