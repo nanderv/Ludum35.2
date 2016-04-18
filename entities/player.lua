@@ -95,8 +95,8 @@ player.invincibility = 0.5
 			-- armadillo 
 		if love.keyboard.isDown(CONTROLS.TWO) then
 				player.shape =  player.shapes[2]
-				game.player.offx = -4
-				game.player.offy = 0
+				game.player.offx = -6
+				game.player.offy = -2
 				game.player.width = 16
 				game.player.height = 16
 				game.world:remove(player)

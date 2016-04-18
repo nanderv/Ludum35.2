@@ -77,14 +77,14 @@ local function draw(quill)
 	if(quill.deadly)then
 		love.graphics.draw(laserbolt,quill.x,quill.y)
 	else
-		love.graphics.print("*",quill.x,quill.y)
-		love.graphics.rectangle("fill",quill.x,quill.y,10,10)
+	
+		love.graphics.rectangle("fill",quill.x,quill.y,4,4)
 	end
 end
 function new_quill(xx,yy,dx, dy,deadly)
-	local quill={isQuill=true,x=xx,y=yy,width=1,height=1}
+	local quill={isQuill=true,x=xx,y=yy,width=4,height=4}
 
-	quill =game.world:add(quill, xx,yy,1,1)
+	quill =game.world:add(quill, xx,yy,4,4)
 	quill.deadly = deadly
 	quill.timeout = 0.1
 
