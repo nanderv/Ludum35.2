@@ -82,9 +82,9 @@ local function draw(quill)
 	end
 end
 function new_quill(xx,yy,dx, dy,deadly)
-	local quill={isQuill=true,x=xx,y=yy,width=4,height=4}
+	local quill={isQuill=true,x=xx,y=yy,width=1,height=1}
 
-	quill =game.world:add(quill, xx,yy,4,4)
+	quill =game.world:add(quill, xx,yy,1,1)
 	quill.deadly = deadly
 	quill.timeout = 0.1
 

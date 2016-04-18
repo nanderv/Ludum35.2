@@ -31,12 +31,20 @@ end
 -- helper function
  function drawBox(box, r,g,b)
   love.graphics.setColor(r,g,b,40)
-  if box.width == nil then
+  if box.w == nil then
+    if box.width == nil then
+      return
+      
+    end
+      love.graphics.rectangle("fill", box.x, box.y, box.width, box.height)
+      love.graphics.setColor(r,g,b)
+      love.graphics.rectangle("line", box.x, box.y,box.width, box.height)
+
     return
   end
-  love.graphics.rectangle("fill", box.x, box.y, box.width, box.height)
+  love.graphics.rectangle("fill", box.x, box.y, box.w, box.h)
   love.graphics.setColor(r,g,b)
-  love.graphics.rectangle("line", box.x, box.y,box.width, box.height)
+  love.graphics.rectangle("line", box.x, box.y,box.w, box.h)
 
 
 end

@@ -14,13 +14,15 @@
 		end
 		if other.isExit then
 			
-			print("AAAAA")
+			
 			if not to_load then
 				current_level = current_level + 1
 				GS.push(core.states.loading)
+				to_load = true
+				return
 			end
-			to_load = true
-			return
+			
+			
 		end
 		 if other.isEnemy then
 		 	return "slide"
@@ -41,7 +43,7 @@ player.offx = 4
 player.offy = 0
 player.width = 20
 player.height = 20
-player.health = 4
+player.health = 40000
 player.offcx = 4
 player.offcy = 4
 

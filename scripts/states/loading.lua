@@ -12,7 +12,6 @@ loading.first = true
 loading.phases = {
     function()
         require 'entities.objects'
-
     end,
     function()
         game.objects = {}
@@ -36,8 +35,9 @@ loading.phases = {
         game.blocks = {}
         game.n_blocks = 0
         game.projectiles = {}
+        print("CURRENT_LOAD: "..current_level)
+
         if current_level > #levels then
-            print(current_level)
             GS.switch(core.states.victory)
             return
         end
@@ -54,8 +54,8 @@ loading.phases = {
    game.player = require 'entities.player'()
 
     game.player.load()
-    print(game.player)
-    game.camera = core.camera(0,0,2)
+    
+    game.camera = core.camera(0,0,1)
     end,
     function()
             game.map.layers['gate_closed'].visible = true
@@ -75,14 +75,14 @@ function loading:enter(from)
     if loading.first then
      loading.loaded = 1
     else
-    loading.loaded=2
+        loading.loaded=1
     end
 
 end
 -- Leave loading screen
 function loading:leave(from)
-    print("GAME LOADED")
     to_load = false
+    print("STOPPED LOADING")
 end
 function loading:update()
     if self.loaded <= #self.phases then

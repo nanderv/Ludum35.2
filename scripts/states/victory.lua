@@ -14,7 +14,7 @@ function ctx:draw()
     love.graphics.rectangle('fill', 0,0, 1200,800)
     love.graphics.setColor(255,255,255)
 
-    love.graphics.printf('LOL U WON', 0, H/2, W, 'center')
+    love.graphics.printf('LOL U WON after...'.. current_level, 0, H/2, W, 'center')
 end
 
 
