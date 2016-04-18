@@ -11,6 +11,10 @@
 		if other.isHeart then
 			game.player.max_health = game.player.max_health + 1
 			game.player.health = game.player.max_health
+			return "slide"
+		end
+		if other.isTarget then
+			return "slide"
 		end
 		if other.isExit then
 			
