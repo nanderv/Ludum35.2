@@ -1,4 +1,4 @@
-levels  = {"assets/maps/bestmap.lua","assets/maps/testmap.lua","assets/maps/bestmap.lua"}
+levels  = {"assets/maps/Map_Boss_1.lua","assets/maps/bestmap.lua","assets/maps/testmap.lua","assets/maps/bestmap.lua"}
 current_level = 1
 to_load = false
 true_mode = false
