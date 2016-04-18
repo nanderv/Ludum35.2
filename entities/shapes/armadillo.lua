@@ -69,6 +69,12 @@ function armadillo.damage(hit, status, enemy)
 		return
 	end
 
+	if hit > 9999 and game.player.health > 1 then
+		hit = game.player.health -1
+	    local s = core.status_effects.stun(0.1,game.player)
+    	 game.player.locked_update = s.update
+    	 game.player.locked_draw = s.draw
+	else
 
 	-- Apply condition
 	if status and status.draw then
@@ -89,12 +95,12 @@ function armadillo.damage(hit, status, enemy)
 
 
 	-- Modifier
-	hit = hit * 1
+	hit = hit * 0.5
 	hit = math.floor(hit)
 	if hit <1 then
 		hit = 1
 	end
-
+	end
 
 	-- Apply damage
 	game.player.health = game.player.health - hit

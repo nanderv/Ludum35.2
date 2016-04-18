@@ -88,12 +88,7 @@ local function update(quill,dt)
 
 		game.world:update(quill, quill.x+quill.dx*dt*250, quill.y+quill.dy*dt*250)
 		quill.x,quill.y =  quill.x+quill.dx*dt*250, quill.y+quill.dy*dt*250
-		if quill.delete then
 
-				game.projectiles[quill.id] = nil
-				game.world:remove(quill)
-
-		end	
 
 
 	end

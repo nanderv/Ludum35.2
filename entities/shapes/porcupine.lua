@@ -13,7 +13,7 @@ porcupine.images.downleft =love.graphics.newImage('entities/porcupine/porcupine_
 porcupine.images.current = porcupine.images.right
 porcupine.animations = {}
 porcupine.grids = {}
-porcupine.speed = 100
+porcupine.speed = 80
 porcupine.grids.walk = core.anim8.newGrid(porcupine.images.current:getWidth()/8, 96, porcupine.images.current:getWidth(), porcupine.images.current:getHeight())
 porcupine.animations.walk = core.anim8.newAnimation(porcupine.grids.walk('1-8',1), 0.06)
 porcupine.animations.current = porcupine.animations.walk
@@ -46,7 +46,7 @@ porcupine.animations.B = core.anim8.newAnimation(porcupine.grids.B('1-8',1), 0.0
 porcupine.A = function(dx,dy)
 		game.player.locked_update = porcupine.updateA
 		game.player.locked_draw = porcupine.drawA
-		porcupine.timeout = 0.8
+		porcupine.timeout = 0.6
 
 		new_quill(game.player.x+game.player.width/2,game.player.y+game.player.height/2,dx,dy,false)
 end
@@ -62,8 +62,15 @@ function porcupine.damage(hit, status, enemy)
 				return
 			end
 
+			if hit > 9999 and game.player.health > 1 then
+				hit = game.player.health -1
+			    local s = core.status_effects.stun(0.1,game.player)
+		    	 game.player.locked_update = s.update
+		    	 game.player.locked_draw = s.draw
+			else
+
 			-- Modifier
-			hit = hit * 1
+			hit = hit * 0.5
 			hit = math.floor(hit)
 			if hit <1 then
 				hit = 1
@@ -84,7 +91,7 @@ function porcupine.damage(hit, status, enemy)
 				GS.push(core.states.death )
 				return
 			end
-
+		end
 	 		game.player.invincibility = 1
 		
 end	

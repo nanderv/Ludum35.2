@@ -17,7 +17,7 @@ function getNewMrT(x,y)
 	mrt.path = nil
 	mrt.isEnemy = true
 
-	mrt.hp = 600
+	mrt.health = 600
 	mrt.p1 = 450
 	mrt.p2 = 300
 	mrt.p3 = 150
@@ -58,7 +58,7 @@ function getNewMrT(x,y)
 	local g = core.anim8.newGrid(96, 128, mrt.imageIdle1:getWidth(), mrt.imageIdle1:getHeight())
     mrt.animationIdle1 = core.anim8.newAnimation(g('1-1',1), 0.1)
 
-    mrt.imageIdle2 = love.graphics.newImage("entities/mrt/mr.t_0.png")
+    mrt.imageIdle2 = love.graphics.newImage("entities/mrt/mr.t_2.png")
 	g = core.anim8.newGrid(96, 128, mrt.imageIdle2:getWidth(), mrt.imageIdle2:getHeight())
     mrt.animationIdle2 = core.anim8.newAnimation(g('1-1',1), 0.1)
 
@@ -86,7 +86,7 @@ function getNewMrT(x,y)
 	g= core.anim8.newGrid(96, 128, mrt.imageBite2:getWidth(), mrt.imageBite2:getHeight())
     mrt.animationBite2 = core.anim8.newAnimation(g('1-8',1), 0.1) 
 
-    mrt.imagelasor = love.graphics.newImage("entities/mrt/muricalligator_phase4_attack_A_0_Sheet.png")
+    mrt.imagelasor = love.graphics.newImage("entities/mrt/muricalligator_laser_0_Sheet.png")
 	g= core.anim8.newGrid(96, 128, mrt.imagelasor:getWidth(), mrt.imagelasor:getHeight())
     mrt.animationlasor = core.anim8.newAnimation(g('1-8',1), 0.2) 
 
@@ -104,7 +104,7 @@ function getNewMrT(x,y)
 			if(mrt.nuclearstriketimer<0 and mrt.nuclearstriketimer ~= -5)then
 				nuclearstrike()
 				mrt.nuclearstriketimer = mrt.nuclearstrikecd[mrt.actp]
-			elseif((mrt.orientation == "BOT" or mrt.orientation == "RIGHT" or mrt.orientation == "LEFT" or mrt.orientation == "BOT") and lasereyestimer<=0 and lasereyestimer~=-5)then
+			elseif((mrt.orientation == "BOT" or mrt.orientation == "RIGHT" or mrt.orientation == "LEFT" or mrt.orientation == "BOT") and mrt.lasereyestimer<=0 and mrt.lasereyestimer~=-5)then
 				startlasereyes()
 			elseif(mrt.facingPlayer(false))then
 				if(mrt.walltimer<=0 and mrt.walltimer ~= -5)then
@@ -134,7 +134,7 @@ function getNewMrT(x,y)
 							buildwall(randx,randy,randx2,randy2)
 						end
 					end
-				elseif(rawdistance<mrt.biterange and mrt.bitecd<=0) then
+				elseif(rawdistance<mrt.biterange and mrt.bitecd[mrt.actp]<=0) then
 					if(mrt.actp == 4)then
 						mrt.currentanimation = mrt.animationBite2
 						mrt.currentimage = mrt.imageBite2
@@ -231,7 +231,6 @@ function getNewMrT(x,y)
 		end
 		--update dat animation
 		mrt.currentanimation:update(dt)
-		print("saldkfjsl")
 		return true;
 	end
 
@@ -263,19 +262,19 @@ function getNewMrT(x,y)
 	end
 
 	mrt.hit = function(dmge)
-		mrt.hp = mrt.hp - dmge
-		if(mrt.hp<mrt.p3)then
+		mrt.health = mrt.health - dmge
+		if(mrt.health<mrt.p3)then
 			mrt.actp = 4
 			--resetcd's
 			mrt.nuclearstriketimer = 0
 			mrt.walltimer = 0
 			mrt.lasereyestimer = 0
-		elseif(mrt.hp<mrt.p2)then
+		elseif(mrt.health<mrt.p2)then
 			mrt.actp = 3
 			--resetcd's
 			mrt.nuclearstriketimer = 0
 			mrt.walltimer = 0
-		elseif(mrt.hp<mrt.p1)then
+		elseif(mrt.health<mrt.p1)then
 			mrt.act = 2
 			--resetcd's
 			mrt.nuclearstriketimer = 0
@@ -334,6 +333,7 @@ end
 
 function startlasereyes()
 	--TODO
+	print("hallo")	
 end
 
 function nuclearstrike()
