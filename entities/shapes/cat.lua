@@ -180,7 +180,7 @@ function cat.damage(hit, status, enemy)
 end	
 function cat.update(dt)
   cat.animations.current:update(dt)
-  if game.player.shape.attack_B_pause ~= nil then
+  if game.player ~= nil and game.player.shape.attack_B_pause ~= nil then
   	game.player.shape.attack_B_pause=game.player.shape.attack_B_pause- dt
   end
 end
