@@ -14,6 +14,7 @@ local function update(quill,dt)
 		if quill.timeout < -10 then
 				game.projectiles[quill.id] = nil
 				game.world:remove(quill)
+
 				return
 		end
 		if quill.delete then
@@ -27,9 +28,11 @@ local function update(quill,dt)
 		for k,other in pairs(objs) do
 				
 		if other.isCatWater then
+
 				break
 		end
 		if other.isTarget then
+
 			game.hasKey = true
 			game.map.layers['gate_closed'].visible = false
 			game.map.layers['gate_open'].visible  = true
@@ -52,7 +55,7 @@ local function update(quill,dt)
 	
 	
 	if self.deadly then
-
+		print("HOI")
 		if other == game.player then
 	     local s = core.status_effects.knockback(0.5,game.player,self.dx*100, self.dy*100)
 
@@ -60,13 +63,13 @@ local function update(quill,dt)
 				self.delete = true
 		end
 	else
-		if other == game.player then
-			break
-		end
+		print("IA")
 		if other.isEnemy then
+
 			if other.health then
 				other.health = other.health - 1
 				other.aggro = 5
+				print("A>")
 				print(other.health)
 					if other.health <= 0 then
 						game.enemy_ids_to_delete[#game.enemy_ids_to_delete+1] = other
@@ -74,14 +77,12 @@ local function update(quill,dt)
 				else
 					game.enemy_ids_to_delete[#game.enemy_ids_to_delete+1] = other
 				end
-		end
-		self.delete = true
-
-		
+						self.delete = true
 
 		end
-	
 
+
+		end
 	end
 		
 

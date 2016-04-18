@@ -95,8 +95,7 @@ player.invincibility = 0.5
 				game.player.offy = 0
 				game.player.width = 20
 				game.player.height = 20
-				game.world:remove(player)
-				player.load()
+				game.world:update(player,game.player.x,game.player.y,game.player.width,game.player.height)
 			end
 			-- armadillo 
 		if love.keyboard.isDown(CONTROLS.TWO) then
@@ -105,8 +104,8 @@ player.invincibility = 0.5
 				game.player.offy = -2
 				game.player.width = 16
 				game.player.height = 16
-				game.world:remove(player)
-				player.load()
+				game.world:update(player,game.player.x,game.player.y,game.player.width,game.player.height)
+				
 			end	
 			-- cat
 			if love.keyboard.isDown(CONTROLS.THREE) then
@@ -116,8 +115,8 @@ player.invincibility = 0.5
 				game.player.width = 12
 				game.player.height = 12
 				player.shape =  player.shapes[3]
-				game.world:remove(player)
-				player.load()
+				game.world:update(player,game.player.x,game.player.y,game.player.width,game.player.height)
+				
 			end
 			-- turtle
 			if love.keyboard.isDown(CONTROLS.FOUR) then
@@ -126,8 +125,8 @@ player.invincibility = 0.5
 				game.player.width = 22
 				game.player.height = 22
 				player.shape = player.shapes[4]
-				game.world:remove(player)
-				player.load()
+								game.world:update(player,game.player.x,game.player.y,game.player.width,game.player.height)
+
 			end
 			end
 			if is_armadillo_move and not love.mouse.isDown(2) then
