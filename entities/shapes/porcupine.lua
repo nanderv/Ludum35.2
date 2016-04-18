@@ -58,6 +58,9 @@ porcupine.B = function()
 		porcupine.images.current = porcupine.images_B[game.player.orientation]
 end
 function porcupine.damage(hit, status, enemy)
+		if game.player.health <= 0 then
+			return
+		end
 		if game.player.invincibility > 0 then
 				return
 			end

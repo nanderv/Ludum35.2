@@ -15,6 +15,9 @@ function menu:enter(from)
     self.from = from -- record previous state
 end
 
+function menu:update(dt)
+    
+end
 function menu:draw()
     local W, H = love.graphics.getWidth(), love.graphics.getHeight()
     -- draw previous screen
