@@ -48,6 +48,7 @@ function getNewWatcher(x,y,patrolpoints, conelength)
     enemy.col = game.world:add(enemy,enemy.x+48,enemy.y+52,39,21)
 
 	enemy.update = function(dt) 
+
 		-- ai en shit
 		local dest = {}
 
