@@ -72,8 +72,10 @@ for _,obj in pairs(game.projectiles) do
         local x,y = game.camera:worldCoords(love.mouse.getPosition())
         love.graphics.line(game.player.x+game.player.height/2,game.player.y+game.player.height/2,x,y)
        -- drawBlocks()
-        game.levelscript.func()
     game.camera:detach()
+
+            game.levelscript.func()
+
     for i=1, game.player.max_health do
         if game.player.health >= i then
             love.graphics.draw(HEART,600-(-i+0.5*game.player.max_health)*32,40)
