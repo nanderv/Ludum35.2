@@ -40,7 +40,7 @@ function getNewMrT(x,y)
 	mrt.nuclearstrikeradius = 44
 	mrt.nuclearstrikesleft = 0
 
-	mrt.biterange = 20
+	mrt.biterange = 30
 	mrt.bitecd = {2,1,1,1}
 	mrt.bitetimer = 0
 	mrt.biteactive = false
@@ -51,7 +51,7 @@ function getNewMrT(x,y)
 
 	mrt.tailattackcd = {8,8,8,8}
 	mrt.tailattacktimer = 0
-	mrt.tailattackrange = 23
+	mrt.tailattackrange = 30
 	mrt.tailattackprogress = 0
 	mrt.tailattackactive = false
 	mrt.tailattackdamage = 1
