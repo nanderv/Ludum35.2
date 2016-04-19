@@ -590,11 +590,15 @@ function createNuke(tarx, tary)
 	nuke.ttl = 0.5
 	nuke.explttl = 0.6
 	nuke.dim = 44
+	nuke.sound = false
 
 	nuke.update = function ( dt, mrt, a )	
 
 		if(nuke.ttl < 0)then
 			--deal dmge to player if in range
+			if(not nuke.sound)then
+				core.sounds.explosion()
+			end
 			local midx = nuke.x + 0.5*nuke.dim
 			local midy = nuke.y + 0.5*nuke.dim
 			local playx = game.player.x + 0.5 * game.player.width
