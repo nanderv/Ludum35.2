@@ -20,11 +20,10 @@ function getNewMrT(x,y)
 	mrt.path = nil
 	mrt.isEnemy = true
 
-	mrt.last_health = 20
-	mrt.health = 20
-	mrt.p1 = 15
-	mrt.p2 = 10
-	mrt.p3 = 5
+	mrt.health = 60
+	mrt.p1 = 45
+	mrt.p2 = 30
+	mrt.p3 = 15
 	mrt.actp = 1
 
 	mrt.entities = {}
@@ -40,7 +39,7 @@ function getNewMrT(x,y)
 	mrt.nuclearstrikeradius = 44
 	mrt.nuclearstrikesleft = 0
 
-	mrt.biterange = 20
+	mrt.biterange = 30
 	mrt.bitecd = {2,1,1,1}
 	mrt.bitetimer = 0
 	mrt.biteactive = false
@@ -51,7 +50,7 @@ function getNewMrT(x,y)
 
 	mrt.tailattackcd = {8,8,8,8}
 	mrt.tailattacktimer = 0
-	mrt.tailattackrange = 23
+	mrt.tailattackrange = 30
 	mrt.tailattackprogress = 0
 	mrt.tailattackactive = false
 	mrt.tailattackdamage = 1
