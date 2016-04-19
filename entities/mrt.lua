@@ -20,10 +20,10 @@ function getNewMrT(x,y)
 	mrt.path = nil
 	mrt.isEnemy = true
 
-	mrt.health = 20
-	mrt.p1 = 15
-	mrt.p2 = 10
-	mrt.p3 = 5
+	mrt.health = 60
+	mrt.p1 = 45
+	mrt.p2 = 30
+	mrt.p3 = 15
 	mrt.actp = 1
 
 	mrt.entities = {}
