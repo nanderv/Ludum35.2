@@ -64,7 +64,7 @@ function getNewArcher(x,y,patrolpoints)
 			enemy.countdown = enemy.countdown - dt
 		end
 		if enemy.prev_health ~= enemy.health then
-			core.sound.playSound('enemy_hit')
+			core.sounds.enemy_hit()
 			enemy.countdown = 0.3
 		end
 		enemy.prev_health = enemy.health
