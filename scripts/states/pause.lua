@@ -1,5 +1,19 @@
 local pause = GS.new()
 
+function return_to(gamestate)
+    GS.pop()
+    GS.switch(gamestate)
+    core.music.script.pause()
+end
+
+pause.options = {'CONTROLS', 'RETURN', 'MAIN MENU'}
+pause.selections = {
+    CONTROLS={'settingsmenu', GS.push},
+    RETURN={'', GS.pop},
+    ['MAIN MENU']={'menu', return_to}
+}
+pause.selected = 1
+
 -- Enter pause screen
 function pause:enter(from)
     self.from = from -- record previous state
@@ -24,7 +38,25 @@ function pause:draw()
     love.graphics.rectangle('fill', 0,0, W,H)
     love.graphics.setColor(255,255,255)
 
-    love.graphics.printf('GAME PAUSED', 0, H/2, W, 'center')
+    love.graphics.printf('GAME PAUSED', 0, H/2 - 60, W, 'center')
+    for i, text in ipairs(pause.options) do
+         if i == self.selected then
+              love.graphics.setColor(44,44,44, 50)
+              love.graphics.rectangle('fill', W/4 - 20, H/2 - 45 + i*20, W/2 + 40, 20)
+              love.graphics.setColor(255,255,255)
+         end
+         love.graphics.printf(text, 0, H/2 - 40 + i*20, W, 'center')
+    end
+end
+function pause:keypressed(key)
+    if key == 'up' and self.selected > 1 then
+        self.selected = self.selected - 1
+    elseif key == 'down' and self.selected < #self.options then
+        self.selected = self.selected + 1
+    elseif key == 'return' then
+        local sel = self.selections[self.options[self.selected]]
+        sel[2](core.states[sel[1]])
+    end
 end
 
 return pause

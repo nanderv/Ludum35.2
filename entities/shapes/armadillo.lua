@@ -66,11 +66,14 @@ armadillo.A = function(dx,dy)
 
 
 end
-function armadillo.damage(hit, status, enemy)
+function armadillo.damage(hit, status, enemy, direct)
 	if game.player.health <= 0 then
 		return
 	end
 	if game.player.invincibility > 0 then
+		return
+	end
+	if not direct and game.player.locked_update == armadillo.updateB then
 		return
 	end
 

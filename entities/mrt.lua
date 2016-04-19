@@ -6,6 +6,7 @@
 
 require "entities.watcher"
 function getNewMrT(x,y)
+	math.randomseed(1234)
 	local mrt = {}
 	mrt.x = x
 	mrt.y = y
@@ -32,7 +33,7 @@ function getNewMrT(x,y)
 	mrt.globalcd = 0
 
 	mrt.nuclearstrikecd = {2, 15, 13, 10}
-	mrt.nuclearstrikes = {5, 5, 10, 15}
+	mrt.nuclearstrikes = {-5, 5, 10, 15}
 	mrt.nuclearstriketimer = -5
 	mrt.nuclearstriketimeribt = 0
 	mrt.nuclearstrikeradius = 44
@@ -44,9 +45,9 @@ function getNewMrT(x,y)
 	mrt.biteactive = false
 	mrt.bitedamage = 2
 
-	mrt.wallcd = {-5,-5,10,10}
-	mrt.walltimer = -5
-	mrt.wallsize = 5*32
+	mrt.wallcd = {2,-5,10,10}
+	mrt.walltimer = 2
+	mrt.wallsize = 124
 
 	mrt.tailattackcd = {8,8,8,8}
 	mrt.tailattacktimer = 0
@@ -166,30 +167,22 @@ function getNewMrT(x,y)
 				if(mrt.walltimer<=0 and mrt.walltimer ~= -5)then
 					--get target coordinates
 					--get randoms for randomness
-					local bool = true
-					while bool do
-						local randx = math.random(50,200)
-						local randy = math.random(50,200)
-						local randsign1 = math.random(0,1)
-						local randsign2 = math.random(0,1)
-						local randdir = math.floor(math.random(0,2))
-						if(randsign>0.5)then
-							randx = -randx
-						end
-						if(randsign2>0.5)then
-							randy = -randy
-						end
-						randx = game.player.x + randx
-						randy = game.player.y + randy
-						--check for collisions with anything
-						local randx2 = randx+mrt.wallsize
-						local randy2 = randy+mrt.wallsize
-						local items, length = game.world:querySegment(randx,randy,randx2,randy2)
-						if(#length == 0)then
-							bool =true
-							buildwall(randx,randy,randx2,randy2)
-						end
+					local randx = 0
+					local randy = 0
+					if(math.random(100)>50)then
+						randx = game.player.col.x - 50
+					else
+						randx = game.player.col.x + 50
 					end
+					if(math.random(100)>50)then
+						randy = game.player.col.y + 75
+					else
+						randy = game.player.col.y - 25
+					end
+
+					table.insert(mrt.entities,buildwall(randx,randy))
+					mrt.walltimer = mrt.wallcd[mrt.actp]
+
 				elseif (rawdistance <= mrt.biterange + game.player.height*0.67 and mrt.facingPlayer(false) and mrt.bitetimer<=0) then
 					-- bite
 					if(mrt.actp == 4)then
@@ -514,8 +507,36 @@ function getNewMrT(x,y)
 end
 
 
-function buildwall(x1,x2,y1,y2)
-	--TODO spawn wall entitys, handle dmge in them
+function buildwall(x,y)
+	local wall = {}
+	wall.ttl = 5
+	wall.x = x
+	wall.y = y
+	wall.width = 32
+	wall.height = 25
+	wall.col = game.world:add(wall,wall.x,wall.y,wall.width*3,25)
+
+    wall.image = love.graphics.newImage("entities/explosion/wall.png")
+	wall.update = function( dt, mrt, a)
+
+		if(game.player.x>wall.x and game.player.x<(wall.x+96) and game.player.y > wall.y and game.player.y < (wall.y+25))then
+			--dmge
+			game.player.shape.damage(1)
+		end
+		wall.ttl =  wall.ttl - dt
+		if(wall.ttl <0)then
+			game.world:remove(wall)
+			table.remove(mrt.entities,a)
+		end
+	end
+	wall.draw = function()
+		for i=1,5 do
+			for j=1,3 do
+				love.graphics.draw(wall.image,(wall.x+32*(j-1)),(wall.y+5*(i-1)))
+			end
+		end
+	end
+	return wall
 end
 
 function destMAKER (mrt)
