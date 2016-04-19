@@ -12,7 +12,7 @@ t.bools = {}
 
 	end
 	love.graphics.setColor(128,128,128)
-	love.graphics.rectangle("fill",300,650, 900,680 )
+	love.graphics.rectangle("fill",300,650, 700,680 )
 	love.graphics.setColor(255,0,0)
 	love.graphics.rectangle("fill",300,650, 100+ (600* game.enemies[1].health/60),680 )
 	love.graphics.setColor(255,255,255)

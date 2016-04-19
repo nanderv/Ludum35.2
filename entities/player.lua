@@ -30,7 +30,6 @@
 		if other.isHealth then
 			game.player.health = game.player.health+1
 			game.player.max_health = math.max(game.player.health,game.player.max_health )
-			print("FOod is good for you")
 			game.objects_to_del[#game.objects_to_del+1] = other
 
 		end
@@ -164,7 +163,6 @@ player.invincibility = 0.5
 
 
 		else
-			print(core.gamepad)
 		end
 
 
