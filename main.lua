@@ -39,19 +39,7 @@ function love.keypressed(key)
         end
 
     end
-    --if DEBUG and DEBUG.print then
-     --   print(key)
-    --end
-    if key == CONTROLS.RESET  then
-                GS.push(core.states.loading)
-    end
-    if key == "q" then
-     local s = core.status_effects.knockback(1,game.player,100,100)
-     game.player.locked_update = s.update
-     game.player.locked_draw = s.draw
-    end
-    if key == "1" then
-    end
+  
 
 end
 function love.gamepadpressed( joystick, button )
