@@ -1,4 +1,36 @@
 local function turtle_col_handler(self, other)
+
+	if other.isHeart then
+			game.player.max_health = game.player.max_health + 1
+			game.player.health = game.player.max_health
+			game.objects_to_del[#game.objects_to_del+1] = other
+			return "'touch'"
+		end
+		if other.isHealth then
+			game.player.health = game.player.health+1
+			game.player.max_health = math.max(game.player.health,game.player.max_health )
+			print("FOod is good for you")
+			game.objects_to_del[#game.objects_to_del+1] = other
+
+		end
+
+		if other.isTarget then
+			return "touch"
+		end
+		if other.isExit then
+			
+			
+			if not to_load then
+				current_level = current_level + 1
+				GS.push(core.states.loading)
+				to_load = true
+				return
+			end
+			
+			
+		end
+
+
 	if other.isEnemy and self.shape.lungecooldown == false then
 		other.health = other.health - 3
 		other.aggro = 5
@@ -7,11 +39,13 @@ local function turtle_col_handler(self, other)
 		end	
 		self.shape.lungecooldown = true
 	end
-	return "slide"
+	return "touch"
 end
 
 require 'entities.quill'
 local turtle = {}
+
+turtle.isPlayer = true
 
 turtle.images = {}
 turtle.images.down =love.graphics.newImage('entities/turtle/turtle_walking_0_Sheet.png')

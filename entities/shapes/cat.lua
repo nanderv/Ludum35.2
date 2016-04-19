@@ -1,12 +1,49 @@
 local function cat_col_handler(self, other)
+if other.isHeart then
+			game.player.max_health = game.player.max_health + 1
+			game.player.health = game.player.max_health
+			game.objects_to_del[#game.objects_to_del+1] = other
+			return "touch"
+		end
+		if other.isHealth then
+			game.player.health = game.player.health+1
+			game.player.max_health = math.max(game.player.health,game.player.max_health )
+			print("FOod is good for you")
+			game.objects_to_del[#game.objects_to_del+1] = other
+
+		end
+
+		if other.isTarget then
+			return "touch"
+		end
+		if other.isExit then
+			
+			
+			if not to_load then
+				current_level = current_level + 1
+				GS.push(core.states.loading)
+				to_load = true
+				return
+			end
+			
+			
+		end
+		 if other.isEnemy then
+		 	return "touch"
+		 end
+
+
+
 		 if other.isWall or (other.isGate and not game.hasKey) or other.isEnemy then
-		return "slide"
+		return "touch"
 	end
 	return "cross"
 end
 
 require 'entities.quill'
 local cat = {}
+
+cat.isPlayer = true
 
 cat.images = {}
 cat.images.down =love.graphics.newImage('entities/cat/cat_walking_0_Sheet.png')

@@ -29,10 +29,7 @@ end
 
 function controls:draw()
     local W, H = love.graphics.getWidth(), love.graphics.getHeight()
-    
-    love.graphics.setColor(0,0,0, 100)
-    love.graphics.rectangle('fill', 0,0, W,H)
-    love.graphics.setColor(255,255,255)
+        self.from:draw(true)
     love.graphics.printf('Controls', 0, H/2 - 80, W, 'center')
     love.graphics.printf('press ESC to return', 0, H/2 - 60, W, 'center')
     

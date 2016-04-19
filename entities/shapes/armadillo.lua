@@ -1,6 +1,8 @@
 require 'entities.quill'
 local armadillo = {}
 
+armadillo.isPlayer = true
+
 armadillo.images = {}
 armadillo.images.down =love.graphics.newImage('entities/armadillo/armadillo_walking_0_Sheet.png')
 armadillo.images.downright =love.graphics.newImage('entities/armadillo/armadillo_walking_1_Sheet.png')
@@ -123,8 +125,17 @@ end
 armadillo.B = function()
 		game.player.locked_update = armadillo.updateB
 		game.player.locked_draw = armadillo.drawB
+		game.player.timeout = 3
 end
 function armadillo.update(dt)
+	if game.player.lockoutB then 
+		game.player.lockoutB = game.player.lockoutB - dt
+		print(game.player.lockoutB)
+		if game.player.lockoutB <= 0 then
+
+			game.player.lockoutB = nil
+		end
+	end
   armadillo.animations.current:update(dt)
 end
 function armadillo.draw()
@@ -149,7 +160,8 @@ function armadillo.updateA(dt)
 		tanfix = math.pi
 	end
 	game.player.angle = math.atan(y/x)-0.5*math.pi+tanfix
-	game.player.col.x,game.player.col.y =game.world:move(game.player,x*armadillo.secret_speed+(game.player.x),game.player.y+y*armadillo.secret_speed )
+
+	game.player.col.x,game.player.col.y =game.world:move(game.player,x*armadillo.secret_speed+(game.player.x),game.player.y+y*armadillo.secret_speed , regularmove)
 	armadillo.secret_speed = armadillo.secret_speed + 60*dt
 	if armadillo.secret_speed > 300 then
 		armadillo.secret_speed = 300
@@ -186,7 +198,15 @@ function armadillo.drawA()
 
 end
 function armadillo.updateB(dt)
+		game.player.timeout = game.player.timeout - dt
+	if game.player.timeout <= 0 then
+			game.player.lockoutB = 1
+
+		game.player.locked_update = nil
+		game.player.locked_draw = nil
+	end
 	game.player.update_player(dt,false,true)
+
 	
 end
 function armadillo.drawB()

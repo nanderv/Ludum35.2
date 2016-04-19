@@ -1,6 +1,8 @@
 require 'entities.quill'
 local porcupine = {}
 
+porcupine.isPlayer = true
+
 porcupine.images = {}
 porcupine.images.down =love.graphics.newImage('entities/porcupine/porcupine_walk_0_Sheet.png')
 porcupine.images.downright =love.graphics.newImage('entities/porcupine/porcupine_walk_1_Sheet.png')

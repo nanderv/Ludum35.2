@@ -20,10 +20,10 @@ function getNewMrT(x,y)
 	mrt.path = nil
 	mrt.isEnemy = true
 
-	mrt.health = 600
-	mrt.p1 = 450
-	mrt.p2 = 300
-	mrt.p3 = 150
+	mrt.health = 20
+	mrt.p1 = 15
+	mrt.p2 = 10
+	mrt.p3 = 5
 	mrt.actp = 1
 
 	mrt.entities = {}
@@ -35,7 +35,7 @@ function getNewMrT(x,y)
 	mrt.nuclearstrikecd = {2, 15, 13, 10}
 	mrt.nuclearstrikes = {-5, 5, 10, 15}
 	mrt.nuclearstriketimer = -5
-	mrt.nuclearstriketimeribt = 0
+	mrt.nuclearstriketimeribt = 2
 	mrt.nuclearstrikeradius = 44
 	mrt.nuclearstrikesleft = 0
 
@@ -45,9 +45,8 @@ function getNewMrT(x,y)
 	mrt.biteactive = false
 	mrt.bitedamage = 2
 
-	mrt.wallcd = {2,-5,10,10}
-	mrt.walltimer = 2
-	mrt.wallsize = 124
+	mrt.wallcd = {-5,-5,10,10}
+	mrt.walltimer = -5
 
 	mrt.tailattackcd = {8,8,8,8}
 	mrt.tailattacktimer = 0
@@ -56,14 +55,22 @@ function getNewMrT(x,y)
 	mrt.tailattackactive = false
 	mrt.tailattackdamage = 1
 
-	mrt.lasereyescd = {-5,-5,-5, 10}
+	mrt.lasereyescd = {-5,-5,-5, 5}
 	mrt.lasereyesrange = 2000
-	mrt.lasereyescenteroffset = 22
+	mrt.lasereyescenteroffset = 54
 	mrt.lasereyestimer = -5
 	mrt.lasereyesprogress = 0
 	mrt.lasereyesactive = false
 	mrt.lasereyesdamage = 1
 	mrt.lasereyesvisited = false
+	mrt.lasereyesdamage = 2
+	mrt.rotation = 0
+	mrt.middle_x = 0
+	mrt.middle_y = 0
+	mrt.origin_x = 0
+	mrt.origin_y = 0
+	mrt.end_x = 0
+	mrt.end_y = 0
 
 	--TODO add all animations
 	mrt.imageIdle1 = love.graphics.newImage("entities/mrt/mr.t_0.png")
@@ -114,6 +121,22 @@ function getNewMrT(x,y)
     mrt.col = game.world:add(mrt,mrt.x,mrt.y,mrt.width,mrt.height)
 
 	mrt.update = function(dt)
+		if(mrt.health<mrt.p3)then
+			mrt.actp = 4
+			--resetcd's
+			mrt.nuclearstriketimer = 0
+			mrt.walltimer = 0
+			mrt.lasereyestimer = 0
+		elseif(mrt.health<mrt.p2)then
+			mrt.actp = 3
+			--resetcd's
+			mrt.nuclearstriketimer = 0
+			mrt.walltimer = 0
+		elseif(mrt.health<mrt.p1)then
+			mrt.act = 2
+			--resetcd's
+			mrt.nuclearstriketimer = 0
+		end	
 		--handle ents
 		for a, entity in pairs(mrt.entities)do
 			entity.update(dt,mrt,a)
@@ -134,14 +157,27 @@ function getNewMrT(x,y)
 			if(mrt.nuclearstriketimer<=0 and mrt.nuclearstriketimer ~= -5)then
 				mrt.nuclearstrikesleft = mrt.nuclearstrikes[mrt.actp]
 				mrt.nuclearstriketimer = mrt.nuclearstrikecd[mrt.actp]
-			elseif((mrt.orientation == "BOT" or mrt.orientation == "RIGHT" or mrt.orientation == "LEFT" or mrt.orientation == "BOT") and mrt.lasereyestimer<=0 and mrt.lasereyestimer~=-5)then
+			elseif((mrt.orientation == "BOT" or mrt.orientation == "RIGHT" or mrt.orientation == "LEFT" or mrt.orientation == "TOP") and mrt.lasereyestimer<=0 and mrt.lasereyestimer~=-5 and not mrt.lasereyesactive)then
 				--laz0r activation
 				mrt.currentanimation = mrt.animationlasor
 				mrt.currentimage = mrt.imagelasor
 				mrt.lasereyestimer = mrt.lasereyescd[mrt.actp]
-				mrt.currentanimationToLive = 2.8
+				mrt.currentanimationToLive = 4.8
 				mrt.lasereyesactive = true
 				mrt.lasereyesprogress = 0
+				if mrt.orientation == "TOP" then
+					mrt.rotation = 1*math.pi
+				end
+				if mrt.orientation == "BOT" then
+					mrt.rotation = 0*math.pi
+				end
+				if mrt.orientation == "RIGHT" then
+					mrt.rotation = 1.5*math.pi
+				end
+				if mrt.orientation == "LEFT" then
+					mrt.rotation = 0.5*math.pi
+				end
+
 			elseif(mrt.facingPlayer(false))then
 				if(mrt.walltimer<=0 and mrt.walltimer ~= -5)then
 					--get target coordinates
@@ -223,19 +259,22 @@ function getNewMrT(x,y)
 				mrt.lasereyesactive = false
 				mrt.currentanimation = mrt.animationWalk2
 				mrt.currentimage = mrt.imageWalk2
-			elseif mrt.currentanimationToLive <= 2 then
+			elseif mrt.currentanimationToLive <= 4 then
 				--laser rotation
 				if not mrt.lasereyesvisited then --set new animation
 					mrt.currentimage = mrt.imagelasorrot
-					mrt.currentanimation = mrt.imagelasorrot
+					mrt.currentanimation = mrt.animationlasorrot
 					mrt.lasereyesvisited = true
 				end
-				mrt.progress = mrt.progress + dt
-				local rotation = 2*math.pi*(mrt.progress/2)
-				local middle_x, middle_y = mrt.x+mrt.width/2, mrt.y+mrt.height/2
-				local origin_x, origin_y = middle_x+mrt.lasereyescenteroffset*math.cos(rotation), middle_y+mrt.lasereyescenteroffset*math.sin(rotation)
-				local end_x, end_y = middle_x+(mrt.lasereyescenteroffset+mrt.lasereyesrange)*math.cos(rotation), middle_y+(mrt.lasereyescenteroffset+mrt.lasereyesrange)*math.sin(rotation)
-				love.graphics.line(origin_x, origin_y, end_x, end_y)
+				mrt.lasereyesprogress = mrt.lasereyesprogress + dt
+				mrt.rotation = mrt.rotation + 2*math.pi*(dt/4)
+				mrt.middle_x, mrt.middle_y = mrt.x+mrt.width/2, mrt.y+mrt.height/2
+				mrt.origin_x, mrt.origin_y = mrt.middle_x+mrt.lasereyescenteroffset*math.cos(mrt.rotation+0.5*math.pi), mrt.middle_y+mrt.lasereyescenteroffset*math.sin(mrt.rotation+0.5*math.pi)
+				mrt.end_x, mrt.end_y = mrt.middle_x+(mrt.lasereyescenteroffset+mrt.lasereyesrange)*math.cos(mrt.rotation+0.5*math.pi), mrt.middle_y+(mrt.lasereyescenteroffset+mrt.lasereyesrange)*math.sin(mrt.rotation+0.5*math.pi)
+				local others, others_len = game.world:querySegment(mrt.origin_x, mrt.origin_y, mrt.end_x, mrt.end_y, function (obj) return obj.isPlayer end)
+				if others_len > 0 then
+					game.player.shape.damage(mrt.lasereyesdamage, nil, nil, false)
+				end
 			else
 				--charge animation
 				--do nothing here
@@ -378,9 +417,6 @@ function getNewMrT(x,y)
 		if(mrt.globalcd>0)then
 			mrt.globalcd = mrt.globalcd-dt
 		end
-		if(mrt.currentanimationToLive>0)then
-			mrt.currentanimationToLive = mrt.currentanimationToLive -dt
-		end
 		if(mrt.nuclearstriketimeribt>0)then
 			mrt.nuclearstriketimeribt = mrt.nuclearstriketimeribt - dt
 		end
@@ -409,34 +445,14 @@ function getNewMrT(x,y)
 				mrt.currentanimation:draw(mrt.currentimage,mrt.col.x+38,mrt.col.y+25,(45*math.pi/180),1,1,48,48)
 			end
 		else
-			--TODO current angle bepalen aan de hand van de lasereyes progress
-			local angle = 0;
-			mrt.currentanimation:draw(mrt.currentimage,mrt.col.x+19,mrt.col.y+15,angle,1,1,48,48)
-			--TODO laser tekenen
+			mrt.currentanimation:draw(mrt.currentimage,mrt.col.x+31,mrt.col.y+24,mrt.rotation,1,1,48,48)
+			if (mrt.currentanimationToLive <= 4) then
+				love.graphics.line(mrt.origin_x, mrt.origin_y, mrt.end_x, mrt.end_y)
+			end
 		end
 		for _, entity in pairs(mrt.entities)do
 			entity.draw()
 		end
-	end
-
-	mrt.hit = function(dmge)
-		mrt.health = mrt.health - dmge
-		if(mrt.health<mrt.p3)then
-			mrt.actp = 4
-			--resetcd's
-			mrt.nuclearstriketimer = 0
-			mrt.walltimer = 0
-			mrt.lasereyestimer = 0
-		elseif(mrt.health<mrt.p2)then
-			mrt.actp = 3
-			--resetcd's
-			mrt.nuclearstriketimer = 0
-			mrt.walltimer = 0
-		elseif(mrt.health<mrt.p1)then
-			mrt.act = 2
-			--resetcd's
-			mrt.nuclearstriketimer = 0
-		end	
 	end
 
 	mrt.facingPlayer = function(booltail)
