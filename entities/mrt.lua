@@ -35,7 +35,7 @@ function getNewMrT(x,y)
 	mrt.nuclearstrikecd = {2, 15, 13, 10}
 	mrt.nuclearstrikes = {-5, 5, 10, 15}
 	mrt.nuclearstriketimer = -5
-	mrt.nuclearstriketimeribt = 0
+	mrt.nuclearstriketimeribt = 2
 	mrt.nuclearstrikeradius = 44
 	mrt.nuclearstrikesleft = 0
 

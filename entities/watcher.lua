@@ -54,6 +54,7 @@ function getNewWatcher(x,y,patrolpoints, conelength)
 		end
 		if enemy.prev_health ~= enemy.health then
 			enemy.countdown = 0.3
+			core.sound.playSound('enemy_hit')
 		end
 		enemy.prev_health = enemy.health
 		-- ai en shit
