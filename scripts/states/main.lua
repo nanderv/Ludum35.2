@@ -84,9 +84,8 @@ for _,obj in pairs(game.projectiles) do
         end
     end
 
-      love.graphics.print(love.timer.getFPS(), 400, 20 )
-      love.graphics.print(game.player.health, 400, 30 )
-
+      
+      
 end
 function ctx:leave()
     love.mouse.setGrabbed(false)
