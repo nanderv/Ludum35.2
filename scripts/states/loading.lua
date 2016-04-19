@@ -1,7 +1,7 @@
-levels  = {"assets/maps/1.lua","assets/maps/2.lua","assets/maps/3.lua","assets/maps/4.lua","assets/maps/Map_Boss_1.lua"}
+levels  = {"assets/maps/1.lua","assets/maps/2.lua","assets/maps/4.lua","assets/maps/Map_Boss_1.lua"}
 
-level_gates_open_when_no_enemies = {true,true,false,false,false}
-shapes = {1,2,3,4,4}
+level_gates_open_when_no_enemies = {false,true,false,false,false}
+shapes = {1,2,4,4}
 
 current_level = 1
 to_load = false
@@ -113,14 +113,7 @@ function loading:update()
 end
 -- Draw loading screen
 function loading:draw()
-    local W, H = love.graphics.getWidth(), love.graphics.getHeight()
-    -- draw previous screen
-    -- overlay with pause message
-    love.graphics.setColor(0,0,0, 100)
-    love.graphics.rectangle('fill', 0,0, W,H)
-    love.graphics.setColor(255,255,255)
-  love.graphics.print("Loading", 400, 20 )
-  love.graphics.rectangle( "fill", 50, 50, (loading.loaded/#loading.phases)*100, 50 )
+    
 end
 function loading:keypressed(key)
 
