@@ -42,16 +42,8 @@ core.status_effects.knockback = function(t, obj,dx,dy)
 
 		end
 		function st.update(dt)
-			st.t = st.t - dt
-			if st.t < 0 or game.player.health <= 0  then
-				obj.locked_update = nil
-				obj.locked_draw = nil
-			end
-			obj.x,obj.y = game.world:move(obj, obj.x+ dx * dt /10, obj.y + dy * dt/10)
-			if st.t < 0 then
-				obj.locked_update = nil
-				obj.locked_draw = nil
-			end
+			obj.locked_update = nil
+			obj.locked_draw = nil
+			return
 		end
-		return st
 	end
