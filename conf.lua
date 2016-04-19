@@ -3,8 +3,8 @@ love.conf = function(t)
   t.version = "0.10.1"
   t.window.width = 1200
   t.window.height = 700
-  t.window.resizable = true
-  t.console = true
+  t.window.resizable = false
+  t.console = false
   t.window.vsync = false
 end
 
