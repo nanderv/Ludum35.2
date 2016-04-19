@@ -20,10 +20,10 @@ function getNewMrT(x,y)
 	mrt.path = nil
 	mrt.isEnemy = true
 
-	mrt.health = 600
-	mrt.p1 = 450
-	mrt.p2 = 300
-	mrt.p3 = 150
+	mrt.health = 20
+	mrt.p1 = 15
+	mrt.p2 = 10
+	mrt.p3 = 5
 	mrt.actp = 1
 
 	mrt.entities = {}
@@ -45,9 +45,8 @@ function getNewMrT(x,y)
 	mrt.biteactive = false
 	mrt.bitedamage = 2
 
-	mrt.wallcd = {2,-5,10,10}
-	mrt.walltimer = 2
-	mrt.wallsize = 124
+	mrt.wallcd = {-5,-5,10,10}
+	mrt.walltimer = -5
 
 	mrt.tailattackcd = {8,8,8,8}
 	mrt.tailattacktimer = 0
@@ -114,6 +113,22 @@ function getNewMrT(x,y)
     mrt.col = game.world:add(mrt,mrt.x,mrt.y,mrt.width,mrt.height)
 
 	mrt.update = function(dt)
+		if(mrt.health<mrt.p3)then
+			mrt.actp = 4
+			--resetcd's
+			mrt.nuclearstriketimer = 0
+			mrt.walltimer = 0
+			mrt.lasereyestimer = 0
+		elseif(mrt.health<mrt.p2)then
+			mrt.actp = 3
+			--resetcd's
+			mrt.nuclearstriketimer = 0
+			mrt.walltimer = 0
+		elseif(mrt.health<mrt.p1)then
+			mrt.act = 2
+			--resetcd's
+			mrt.nuclearstriketimer = 0
+		end	
 		--handle ents
 		for a, entity in pairs(mrt.entities)do
 			entity.update(dt,mrt,a)
@@ -417,26 +432,6 @@ function getNewMrT(x,y)
 		for _, entity in pairs(mrt.entities)do
 			entity.draw()
 		end
-	end
-
-	mrt.hit = function(dmge)
-		mrt.health = mrt.health - dmge
-		if(mrt.health<mrt.p3)then
-			mrt.actp = 4
-			--resetcd's
-			mrt.nuclearstriketimer = 0
-			mrt.walltimer = 0
-			mrt.lasereyestimer = 0
-		elseif(mrt.health<mrt.p2)then
-			mrt.actp = 3
-			--resetcd's
-			mrt.nuclearstriketimer = 0
-			mrt.walltimer = 0
-		elseif(mrt.health<mrt.p1)then
-			mrt.act = 2
-			--resetcd's
-			mrt.nuclearstriketimer = 0
-		end	
 	end
 
 	mrt.facingPlayer = function(booltail)

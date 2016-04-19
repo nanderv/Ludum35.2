@@ -31,7 +31,7 @@ function()
      game.shape_count = shapes[current_level]
      game.abstractmap={}
      game.loadMap = core.loadMap
-   collectgarbage("collect") 
+    collectgarbage("collect") 
     end,
     function()
         require 'entities.objects'
