@@ -10,11 +10,9 @@ function ctx:draw()
      local W, H = love.graphics.getWidth(), love.graphics.getHeight()
     -- draw previous screen
     -- overlay with pause message
-    love.graphics.setColor(0,0,0, 100)
-    love.graphics.rectangle('fill', 0,0, 1200,800)
-    love.graphics.setColor(255,255,255)
+    self.from:draw(true)
 
-    love.graphics.printf('LOL U WON after...'.. current_level, 0, H/2, W, 'center')
+    love.graphics.printf('Congratulations, you have won!!!!', 0, H/2, W, 'center')
 end
 
 
