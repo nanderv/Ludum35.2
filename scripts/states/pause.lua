@@ -1,9 +1,15 @@
 local pause = GS.new()
 
-pause.options = {'CONTROLS', 'RETURN'}
+function return_to(gamestate)
+    GS.pop()
+    GS.switch(gamestate)
+end
+
+pause.options = {'CONTROLS', 'RETURN', 'MAIN MENU'}
 pause.selections = {
     CONTROLS={'settingsmenu', GS.push},
-    RETURN={'', GS.pop}
+    RETURN={'', GS.pop},
+    ['MAIN MENU']={'menu', return_to}
 }
 pause.selected = 1
 
@@ -41,7 +47,6 @@ function pause:draw()
          love.graphics.printf(text, 0, H/2 - 40 + i*20, W, 'center')
     end
 end
-
 function pause:keypressed(key)
     if key == 'up' and self.selected > 1 then
         self.selected = self.selected - 1
