@@ -121,7 +121,6 @@ function getNewMrT(x,y)
     mrt.col = game.world:add(mrt,mrt.x,mrt.y,mrt.width,mrt.height)
 
 	mrt.update = function(dt)
-	print(mrt.actp)
 		if mrt.health ~= mrt.last_health then
 			core.sounds.enemy_hit()
 			mrt.last_health = mrt.health

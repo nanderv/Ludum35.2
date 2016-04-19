@@ -257,7 +257,6 @@ end
 
       hax = hax + 1
       if hax > 10 then
-        print("library hack activated")
         return nil
       end
       node = openList:pop()
