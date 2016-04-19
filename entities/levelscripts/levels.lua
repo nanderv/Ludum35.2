@@ -16,7 +16,6 @@ function get_level(filename)
 
 	return {func=function()
 	if not error then
-		print("This level has no levelscript, help!!!" .. filename)
 	end
 	error = true
 end}

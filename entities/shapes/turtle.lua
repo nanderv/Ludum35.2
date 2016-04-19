@@ -187,6 +187,8 @@ function turtle.damage(hit, status) -- zou goed moeten zijn, zie comment in func
 			if game.player.invincibility > 0 then
 				return
 			end
+
+			core.sounds.player_hit()
 				if hit > 9999 and game.player.health > 1 then
 						hit = game.player.health -1
 					    local s = core.status_effects.stun(0.1,game.player)

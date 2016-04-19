@@ -191,6 +191,7 @@ function cat.damage(hit, status, enemy)
 			if game.player.invincibility > 0 then
 				return
 			end
+			core.sounds.player_hit()
 
 			if hit > 9999 and game.player.health > 1 then
 				hit = game.player.health -1

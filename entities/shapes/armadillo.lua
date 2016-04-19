@@ -77,6 +77,8 @@ function armadillo.damage(hit, status, enemy, direct)
 		return
 	end
 
+	core.sounds.player_hit()
+
 	if hit > 9999 and game.player.health > 1 then
 		hit = game.player.health -1
 	    local s = core.status_effects.stun(0.1,game.player)
