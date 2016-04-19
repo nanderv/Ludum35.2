@@ -1,4 +1,15 @@
 local ctx = GS.new()
+local options = {
+"LOL U DIED",
+"You have perished",
+"You're dead. Again.",
+"Nope.",
+"The maidens question your virality...",
+"Squik",
+"Mr. T. the Famous Muricalligator did not give a shit. \n He lend it.",
+"Goodnight"
+}
+
 function ctx:enter(from)
        self.from = from -- record previous state
    if true_mode then
@@ -17,7 +28,7 @@ function ctx:draw()
     love.graphics.rectangle('fill', 0,0, W,H)
     love.graphics.setColor(255,255,255)
 
-    love.graphics.printf('LOL U DIED', 0, H/2, W, 'center')
+    love.graphics.printf(options[love.math.random(1, #options)], 0, H/2, W, 'center')
 end
 
 
