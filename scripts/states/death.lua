@@ -11,7 +11,8 @@ local options = {
 }
 
 function ctx:enter(from)
-       self.from = from -- record previous state
+   self.choice = love.math.random(1, #options)    
+   self.from = from -- record previous state
    if true_mode then
             current_level = 1
         end
@@ -28,7 +29,7 @@ function ctx:draw()
     love.graphics.rectangle('fill', 0,0, W,H)
     love.graphics.setColor(255,255,255)
 
-    love.graphics.printf(options[love.math.random(1, #options)], 0, H/2, W, 'center')
+    love.graphics.printf(options[self.choice], 0, H/2, W, 'center')
 end
 
 
