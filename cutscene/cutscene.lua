@@ -24,7 +24,7 @@ function cutscene:update(dt)
 	  	  return
  	end
 
-		if love.keyboard.isDown("return") then
+		if love.keyboard.isDown("return") or love.keyboard.isDown("space") then
 
 			if FORCESKIP then
 				cutscene.counter = cutscene.counter +1

@@ -1,7 +1,7 @@
 local t = {}
 t.bools = {}
  t.func =  function()
- 	if t.bools.check == true and game.enemies[1] == nil and t.bools.done == false then
+ 	if t.bools.check  and game.enemies[1] == nil and not t.bools.done  then
  		t.bools.done = true
 		GS.push(core.states.victory)
 		return

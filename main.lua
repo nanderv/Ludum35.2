@@ -21,9 +21,7 @@ core.gamepad = nil
 
 function love.load()
     GS.registerEvents()
-    for k,v in pairs(love.joystick.getJoysticks()) do
-        love.graphics.print(joystick:getName(), 10, i * 20)
-    end
+
     
     GS.switch(core.states.menu)
 end
@@ -40,9 +38,5 @@ function love.keypressed(key)
 
     end
   
-
-end
-function love.gamepadpressed( joystick, button )
-    core.gamepad = joystick
 
 end
