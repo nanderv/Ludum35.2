@@ -20,6 +20,7 @@ function getNewMrT(x,y)
 	mrt.path = nil
 	mrt.isEnemy = true
 
+	mrt.last_health = 20
 	mrt.health = 20
 	mrt.p1 = 15
 	mrt.p2 = 10
@@ -121,19 +122,24 @@ function getNewMrT(x,y)
     mrt.col = game.world:add(mrt,mrt.x,mrt.y,mrt.width,mrt.height)
 
 	mrt.update = function(dt)
-		if(mrt.health<mrt.p3)then
+	print(mrt.actp)
+		if mrt.health ~= mrt.last_health then
+			core.sounds.enemy_hit()
+			mrt.last_health = mrt.health
+		end
+		if(mrt.health<mrt.p3 and mrt.actp == 3)then
 			mrt.actp = 4
 			--resetcd's
 			mrt.nuclearstriketimer = 0
 			mrt.walltimer = 0
 			mrt.lasereyestimer = 0
-		elseif(mrt.health<mrt.p2)then
+		elseif(mrt.health<mrt.p2 and mrt.actp == 2)then
 			mrt.actp = 3
 			--resetcd's
 			mrt.nuclearstriketimer = 0
 			mrt.walltimer = 0
-		elseif(mrt.health<mrt.p1)then
-			mrt.act = 2
+		elseif(mrt.health<mrt.p1 and mrt.actp == 1)then
+			mrt.actp = 2
 			--resetcd's
 			mrt.nuclearstriketimer = 0
 		end	
@@ -177,7 +183,7 @@ function getNewMrT(x,y)
 				if mrt.orientation == "LEFT" then
 					mrt.rotation = 0.5*math.pi
 				end
-
+				core.sounds.laser()
 			elseif(mrt.facingPlayer(false))then
 				if(mrt.walltimer<=0 and mrt.walltimer ~= -5)then
 					--get target coordinates
