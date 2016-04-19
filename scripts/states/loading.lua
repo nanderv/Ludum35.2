@@ -3,7 +3,7 @@ levels  = {"assets/maps/1.lua","assets/maps/2.lua","assets/maps/3.lua","assets/m
 level_gates_open_when_no_enemies = {true,true,false,false,false}
 shapes = {1,2,3,4,4}
 
-current_level = 51
+current_level = 1
 to_load = false
 true_mode = false
 local loading = {}
@@ -13,7 +13,6 @@ loading.first = true
 -- Loading screen phases, split up loading code among these phases
 loading.phases = {
 function()
-         print("LOADING")
 
         if game and game.player and game.player.health and game.player.health > 0 then
             loading.health = game.player.health
@@ -102,7 +101,6 @@ end
 -- Leave loading screen
 function loading:leave(from)
     to_load = false
-    print("STOPPED LOADING")
 end
 function loading:update()
     if self.loaded <= #self.phases then
