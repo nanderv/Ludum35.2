@@ -8,6 +8,8 @@ end
 require 'entities.quill'
 local cat = {}
 
+cat.isPlayer = true
+
 cat.images = {}
 cat.images.down =love.graphics.newImage('entities/cat/cat_walking_0_Sheet.png')
 cat.images.up =love.graphics.newImage('entities/cat/cat_walking_0_Sheet.png')

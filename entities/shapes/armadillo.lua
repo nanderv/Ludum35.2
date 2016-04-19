@@ -1,6 +1,8 @@
 require 'entities.quill'
 local armadillo = {}
 
+armadillo.isPlayer = true
+
 armadillo.images = {}
 armadillo.images.down =love.graphics.newImage('entities/armadillo/armadillo_walking_0_Sheet.png')
 armadillo.images.downright =love.graphics.newImage('entities/armadillo/armadillo_walking_1_Sheet.png')

@@ -13,6 +13,8 @@ end
 require 'entities.quill'
 local turtle = {}
 
+turtle.isPlayer = true
+
 turtle.images = {}
 turtle.images.down =love.graphics.newImage('entities/turtle/turtle_walking_0_Sheet.png')
 turtle.images.downright =love.graphics.newImage('entities/turtle/turtle_walking_0_Sheet.png')
