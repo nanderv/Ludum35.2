@@ -3,6 +3,7 @@ local pause = GS.new()
 function return_to(gamestate)
     GS.pop()
     GS.switch(gamestate)
+    core.music.script.pause()
 end
 
 pause.options = {'CONTROLS', 'RETURN', 'MAIN MENU'}
