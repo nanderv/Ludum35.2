@@ -16,8 +16,6 @@ require 'entities.status_effects.events'
 require 'entities.tiles'
 require 'cutscene.cutscene'
 
-core.sounds = require 'sounds'
-
 core.gamepad = nil
 
 function love.load()
@@ -26,7 +24,7 @@ function love.load()
     for k,v in pairs(love.joystick.getJoysticks()) do
         love.graphics.print(joystick:getName(), 10, i * 20)
     end
-    love.audio.newSource("assets/music/main1_2.ogg")
+    
     GS.switch(core.states.menu)
 end
 
