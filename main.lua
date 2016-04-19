@@ -21,7 +21,6 @@ core.gamepad = nil
 
 function love.load()
     GS.registerEvents()
-    print(     #love.joystick.getJoysticks())
     for k,v in pairs(love.joystick.getJoysticks()) do
         love.graphics.print(joystick:getName(), 10, i * 20)
     end
@@ -52,12 +51,10 @@ function love.keypressed(key)
      game.player.locked_draw = s.draw
     end
     if key == "1" then
-        print(game.player.x,game.player.y)
     end
 
 end
 function love.gamepadpressed( joystick, button )
-    print("HOI")
     core.gamepad = joystick
 
 end
