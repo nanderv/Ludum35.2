@@ -2,6 +2,8 @@ local ctx = GS.new()
 function ctx:enter(from)
    self.from = from -- record previous state
     true_mode = true
+     core.states.loading.health = 4
+     core.states.loading.max_health = 4
 end
 function ctx:update(dt)
 

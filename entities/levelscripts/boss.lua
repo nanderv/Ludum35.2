@@ -1,10 +1,8 @@
-local check = false
 local t = {}
-local done = false
 t.bools = {}
  t.func =  function()
- 	if check == true and game.enemies[1] == nil and done == false then
- 		done = true
+ 	if t.bools.check == true and game.enemies[1] == nil and t.bools.done == false then
+ 		t.bools.done = true
 		GS.push(core.states.victory)
 		return
 	end
@@ -19,7 +17,7 @@ t.bools = {}
 	if not t.bools.p2 and game.enemies[1].health < game.enemies[1].p2 then
 			t.bools.p2 = true
 			cutscene.start(t.scene_4)
-			check = true
+			t.bools.check = true
 	end
 	love.graphics.setColor(128,128,128)
 	love.graphics.rectangle("fill",300,650, 700,680 )
