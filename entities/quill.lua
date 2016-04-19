@@ -8,7 +8,6 @@ local function update(quill,dt)
 		quill.timeout = quill.timeout - dt
 
 		if not  game.world:hasItem(quill) then
-			print("AZ "..quill.id.." "..quill.timeout)
 			quill.timeout = 0
 			
 
@@ -19,13 +18,11 @@ local function update(quill,dt)
 			quill.timeout = 0
 				game.projectiles[quill.id] = nil
 				game.world:remove(quill)
-			print("1HOË DAN")
 				return
 		end
 		if quill.delete then
 			game.projectiles[quill.id] = nil
 			game.world:remove(quill)
-			print("2HOË DAN")
 			return
 		end
 		
@@ -34,11 +31,9 @@ local function update(quill,dt)
 		for k,other in pairs(objs) do
 				
 		if other.isCatWater then
-			print("3HOË DAN")
 				break
 		end
 		if other.isTarget then
-			print("4HOË DAN")
 			game.hasKey = true
 			game.map.layers['gate_closed'].visible = false
 			game.map.layers['gate_open'].visible  = true
@@ -47,14 +42,12 @@ local function update(quill,dt)
 				return
 		end
 	if other.isQuill and other.deadly ~= self.deadly then
-		print("5HOË DAN")
 		game.projectiles[quill.id] = nil
 		game.world:remove(quill)
 		other.delete = true
 		return 
 			end
 	if other.isWall then
-		print("HOË DAN")
 		game.projectiles[quill.id] = nil
 		game.world:remove(quill)
 
@@ -63,27 +56,24 @@ local function update(quill,dt)
 	
 	
 	if self.deadly then
-		print("HOI")
 			if other == game.player then
-				if game.player.locked_update == game.player.shapes[2].updateB then
-			
-			print("COL")
-	     	local s = core.status_effects.knockback(0.5,game.player,self.dx*100, self.dy*100)
 
-			game.player.shape.damage(1,s)
-				self.delete = true
-			else
+				if not  game.player.locked_update or  not game.player.shapes[2].updateB or not game.player.locked_update == game.player.shapes[2].updateB then
+			
+	     			local s = core.status_effects.knockback(0.5,game.player,self.dx*100, self.dy*100)
+
+					game.player.shape.damage(1,s)
+					self.delete = true
+					else
 				break
 			end
 		
 			end
 	else
 		if other.isEnemy then
-			print("HOË DAN")
 			if other.health then
 				other.health = other.health - 1
 				other.aggro = 5
-				print("A>")
 				print(other.health)
 					if other.health <= 0 then
 						game.enemy_ids_to_delete[#game.enemy_ids_to_delete+1] = other
@@ -143,9 +133,7 @@ function new_quill(xx,yy,dx, dy,deadly)
 	quill.draw = draw
 	quill.update = update
 	game.projectiles[BULLETCOUNTER] = quill
-	for k,v in pairs(quill) do
-		print(k,v)
-	end
+	
 	quill.id = BULLETCOUNTER
 	BULLETCOUNTER = BULLETCOUNTER + 1
 	

@@ -10,7 +10,6 @@ function cutscene.start(sentences)
 	if cutscene.sentences[cutscene.counter] ~= nil then
     	GS.push(cutscene)
 	end
-	print("HOI") 
 		
 	
 end

@@ -1,4 +1,17 @@
 		local function armadillo_move(item, other)
+
+		if other.isExit then
+			
+			
+			if not to_load then
+				current_level = current_level + 1
+				GS.push(core.states.loading)
+				to_load = true
+				return
+			end
+			
+			
+		end
 		 if other.isPorcupine or other.isCatWater or (other.isGate and not game.hasKey) then
 
 		 	return "slide"
@@ -15,7 +28,8 @@
 			return "slide"
 		end
 		if other.isHealth then
-			game.player.health = math.min(game.player.max_health,game.player.health+1)
+			game.player.health = game.player.health+1
+			game.player.max_health = math.max(game.player.health,game.player.max_health )
 			print("FOod is good for you")
 			game.objects_to_del[#game.objects_to_del+1] = other
 
@@ -90,7 +104,7 @@ player.invincibility = 0.5
 					return
 
 				end
-				if love.mouse.isDown(2) then
+				if love.mouse.isDown(2) and not game.player.lockoutB then
 
 					if not  player.shape.B() then
 						return
@@ -142,7 +156,7 @@ player.invincibility = 0.5
 
 			end
 			end
-			if is_armadillo_move and not love.mouse.isDown(2) then
+			if is_armadillo_move and ( not love.mouse.isDown(2) or  game.player.lockoutB ) then
 					sto_arma = true
 			else
 					sto_arma = false

@@ -36,7 +36,7 @@ function getNewMrT(x,y)
 	mrt.nuclearstrikecd = {2, 15, 13, 10}
 	mrt.nuclearstrikes = {-5, 5, 10, 15}
 	mrt.nuclearstriketimer = -5
-	mrt.nuclearstriketimeribt = 0
+	mrt.nuclearstriketimeribt = 2
 	mrt.nuclearstrikeradius = 44
 	mrt.nuclearstrikesleft = 0
 
@@ -596,11 +596,16 @@ function createNuke(tarx, tary)
 	nuke.ttl = 0.5
 	nuke.explttl = 0.6
 	nuke.dim = 44
+	nuke.sound = false
 
 	nuke.update = function ( dt, mrt, a )	
 
 		if(nuke.ttl < 0)then
 			--deal dmge to player if in range
+			if(not nuke.sound)then
+				core.sounds.explosion()
+				nuke.sound = true
+			end
 			local midx = nuke.x + 0.5*nuke.dim
 			local midy = nuke.y + 0.5*nuke.dim
 			local playx = game.player.x + 0.5 * game.player.width
