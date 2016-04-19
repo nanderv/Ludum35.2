@@ -1,7 +1,7 @@
 local menu = GS.new()
 
 menu.OPTIONS = {'PLAY', 'SETTINGS', 'HELP', 'EXIT'}
-
+menu.IMG = love.graphics.newImage('assets/splash.png')
 menu.selected = 1
 
 menu._OPTIONS = {
@@ -18,14 +18,17 @@ end
 function menu:update(dt)
     
 end
-function menu:draw()
+function menu:draw(dondraw)
     local W, H = love.graphics.getWidth(), love.graphics.getHeight()
     -- draw previous screen
     -- overlay with pause message
-    love.graphics.setColor(0,0,0, 100)
-    love.graphics.rectangle('fill', 0,0, W,H)
+    
+    
     love.graphics.setColor(255,255,255)
+    love.graphics.draw(menu.IMG,1,1)
+    if not dondraw then
     love.graphics.printf('MENU', 0, H/2-80, W, 'center')
+
     
     for i, name in ipairs(self.OPTIONS) do
          if i == self.selected then
@@ -36,6 +39,7 @@ function menu:draw()
          love.graphics.printf(name, 0, H/2 - 60 + 20*i, W, 'center')
     end
     love.graphics.print(love.timer.getFPS(), 10, 10)
+end
 end
 
 function menu:keypressed(key)
