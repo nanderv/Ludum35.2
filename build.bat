@@ -21,7 +21,7 @@ del love.exe
 cd ../
 xcopy /s 32 %game%_32\
 jar -cMf %game%_Win_32.zip %game%_32
-xcopy /s 32 %game%_64\
+xcopy /s 64 %game%_64\
 jar -cMf %game%_Win_64.zip %game%_64
 rmdir 32 /s /Q
 rmdir 64 /s /Q
