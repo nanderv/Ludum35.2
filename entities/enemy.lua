@@ -16,6 +16,8 @@ end
 Grid = require ("lib.jumper.jumper.grid") -- The grid class
 Pathfinder = require ("lib.jumper.jumper.pathfinder") -- The pathfinder lass
 collisionGrid = Grid(game.abstractmap)
+require 'core.connected_components'
+ccmap = connected_components(game.abstractmap, 0)
 walkable = 0 -- which nodes are walkable?
 pathFinder = Pathfinder(collisionGrid, 'JPS', walkable)
 function math.round(n, deci) deci = 10^(deci or 0) return math.floor(n*deci+.5)/deci end
@@ -58,8 +60,21 @@ function getNewEnemy(x,y,patrolpoints)
     enemy.currentimage = enemy.imageIdle
     enemy.currentanimationToLive = -1
 
+
     enemy.col = game.world:add(enemy,enemy.x+32,enemy.y+30,enemy.width,enemy.height)
 	enemy.update = function(dt) 
+
+
+ local items, length = game.world:querySegment(enemy.x,enemy.y,game.player.x,game.player.y)
+    for k,v in pairs( items ) do
+    	if v.isWall or v.isCatWater then
+    		break
+    	end
+    	if v == game.player then
+    		enemy.aggro = 10
+    	end
+    end
+
 		if enemy.countdown >= 0 then
 			enemy.countdown = enemy.countdown - dt
 		end
@@ -185,7 +200,18 @@ function getNewEnemy(x,y,patrolpoints)
 					end
 					enemy.currentanimation = enemy.animationWalk
 					enemy.currentimage = enemy.imageWalk
-					enemy.col.x,enemy.col.y = game.world:move(enemy,enemy.col.x+enemy.dx,enemy.col.y+enemy.dy,regularmove)
+					
+					local oldx = enemy.x
+					local oldy = enemy.y
+					enemy.col.x,enemy.col.y = game.world:move(enemy,enemy.col.x+enemy.dx,enemy.col.y+enemy.dy,regularmove)	
+					if oldx == enemy.x and oldy == enemy.y then
+
+						if(#enemy.patrol>0) then
+							enemy.patrolindex = (enemy.patrolindex+1)%(#enemy.patrol)
+							dest.x = enemy.patrol[enemy.patrolindex+1].x
+							dest.y = enemy.patrol[enemy.patrolindex+1].y
+						end
+					end
 					-- now aggroed
 					if(not enemy.aggro)then
 						enemy.aggro =true
@@ -235,7 +261,17 @@ function getNewEnemy(x,y,patrolpoints)
 					if enemy.y + enemy.dy > dest.y and enemy.dy > 0 then
 							enemy.dy = dest.y - enemy.y
 					end
+					local oldx = enemy.x
+					local oldy = enemy.y
 					enemy.col.x,enemy.col.y = game.world:move(enemy,enemy.col.x+enemy.dx,enemy.col.y+enemy.dy,regularmove)	
+					if oldx == enemy.x and oldy == enemy.y then
+
+						if(#enemy.patrol>0) then
+							enemy.patrolindex = (enemy.patrolindex+1)%(#enemy.patrol)
+							dest.x = enemy.patrol[enemy.patrolindex+1].x
+							dest.y = enemy.patrol[enemy.patrolindex+1].y
+						end
+					end
 					enemy.currentanimation = enemy.animationWalk
 					enemy.currentimage = enemy.imageWalk	
 			end 

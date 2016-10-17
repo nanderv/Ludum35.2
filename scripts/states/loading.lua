@@ -3,7 +3,7 @@ levels  = {"assets/maps/1.lua","assets/maps/2.lua","assets/maps/4.lua","assets/m
 level_gates_open_when_no_enemies = {false,true,false,false,false}
 shapes = {1,2,4,4}
 
-current_level = 1
+current_level = 2
 to_load = false
 true_mode = false
 local loading = {}
@@ -26,6 +26,8 @@ function()
      game = nil
 
      game = {}
+     ccmap = {}
+     game.player = {}
      game.shape_count = shapes[current_level]
      game.abstractmap={}
      game.loadMap = core.loadMap

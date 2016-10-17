@@ -245,18 +245,21 @@ end
   return function(finder, startNode, endNode, clearance, toClear)
 
     startNode._g, startNode._f, startNode._h = 0,0,0
+    print(finder._nodes)
 		local openList = Heap()
     openList:push(startNode)
     startNode._opened = true
     toClear[startNode] = true
-
+    if ccmap[startNode:getX()][ startNode:getY()] ~= ccmap[endNode:getX()][ endNode:getY()] then
+      return nil
+    end
     local node
     local hax = 0 
     while not openList:empty() do
       -- Pops the lowest F-cost node, moves it in the closed list
 
       hax = hax + 1
-      if hax > 10 then
+      if hax > 4 then
         return nil
       end
       node = openList:pop()

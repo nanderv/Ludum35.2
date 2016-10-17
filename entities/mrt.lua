@@ -555,7 +555,7 @@ function destMAKER (mrt)
 	end
 	local path, length = nil,nil
 	local dest = {}
-
+	print(tx,ty, gx,gy)
 	if not game.player.invisible then
 	path,length = pathFinder:getPath(tx,ty,gx,gy)
 		if path == nil then

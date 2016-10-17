@@ -100,6 +100,8 @@ local function load_cat_water(map)
         for x = 1, map.width do
 
           if layer.data[y][x] then
+                        game.abstractmap[y][x] = 1
+
               addBlock((x-1)*tile_width,(y-1)*tile_height,tile_width,tile_height,game,"isCatWater")
 
 
@@ -140,7 +142,8 @@ local function load_exit_walls(map)
         for x = 1, map.width do
 
           if layer.data[y][x] then
-            
+                                    game.abstractmap[y][x] = 1
+
              addBlock((x-1)*tile_width,(y-1)*tile_height,tile_width,tile_height,game,"isExit")
 
 
@@ -164,6 +167,7 @@ local function       load_gate_closed(map)
             
              addBlock((x-1)*tile_width,(y-1)*tile_height,tile_width,tile_height,game,"isGate")
 
+            game.abstractmap[y][x] = 1
 
         
           end
